@@ -44,6 +44,7 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </v-toolbar>
+        <plot-tree />
       </pane>
       <pane>
         <v-toolbar height="40px" flat>
@@ -51,6 +52,9 @@
           <v-spacer />
           <v-btn icon small>
             <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+          <v-btn icon small>
+            <v-icon>mdi-magnify-plus-outline</v-icon>
           </v-btn>
           <v-btn icon small>
             <v-icon>mdi-tray-arrow-down</v-icon>
@@ -69,6 +73,7 @@
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import ActivityBar from '@/components/ActivityBar.vue';
+import PlotTree from './PlotTree.vue';
 </script>
 
 <style lang="scss" scoped>
