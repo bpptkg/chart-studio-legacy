@@ -13,6 +13,9 @@
       <v-btn icon class="mt-2">
         <v-icon>mdi-tune</v-icon>
       </v-btn>
+      <v-btn icon class="mt-2">
+        <v-icon>mdi-code-greater-than</v-icon>
+      </v-btn>
     </activity-bar>
     <splitpanes class="default-theme" style="left: 48px; position: absolute">
       <pane>
@@ -26,10 +29,10 @@
             <v-icon>mdi-minus</v-icon>
           </v-btn>
           <v-btn icon small>
-            <v-icon>mdi-arrow-u-left-top</v-icon>
+            <v-icon>mdi-undo</v-icon>
           </v-btn>
           <v-btn icon small>
-            <v-icon>mdi-arrow-u-right-top</v-icon>
+            <v-icon>mdi-redo</v-icon>
           </v-btn>
           <v-btn icon small>
             <v-icon>mdi-collapse-all-outline</v-icon>
