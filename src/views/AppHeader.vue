@@ -1,6 +1,8 @@
 <template>
   <v-app-bar app flat dense color="white">
-    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon
+      @click.stop="drawerStore.toggleDrawer"
+    ></v-app-bar-nav-icon>
 
     <div>
       <v-tabs>
@@ -28,6 +30,9 @@
       <v-btn icon width="40" height="40">
         <v-icon>mdi-cog-outline</v-icon>
       </v-btn>
+      <v-btn icon width="40" height="40">
+        <v-icon>mdi-share-variant-outline</v-icon>
+      </v-btn>
     </div>
 
     <div>
@@ -39,6 +44,12 @@
     </div>
   </v-app-bar>
 </template>
+
+<script setup lang="ts">
+import { useDrawerStore } from '@/store/drawer';
+
+const drawerStore = useDrawerStore();
+</script>
 
 <style lang="css">
 .v-toolbar__content {

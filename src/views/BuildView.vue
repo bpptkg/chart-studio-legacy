@@ -2,22 +2,19 @@
   <div class="buildview">
     <activity-bar>
       <v-btn icon class="mt-2">
-        <v-icon>mdi-chart-scatter-plot</v-icon>
+        <v-icon>mdi-chart-bell-curve</v-icon>
       </v-btn>
       <v-btn icon class="mt-2">
         <v-icon>mdi-clock-outline</v-icon>
       </v-btn>
       <v-btn icon class="mt-2">
-        <v-icon>mdi-fountain-pen-tip</v-icon>
+        <v-icon>mdi-brush-outline</v-icon>
       </v-btn>
       <v-btn icon class="mt-2">
-        <v-icon>mdi-tune</v-icon>
+        <v-icon>mdi-message-text-outline</v-icon>
       </v-btn>
       <v-btn icon class="mt-2">
-        <v-icon>mdi-google-analytics</v-icon>
-      </v-btn>
-      <v-btn icon class="mt-2">
-        <v-icon>mdi-code-greater-than</v-icon>
+        <v-icon>mdi-xml</v-icon>
       </v-btn>
     </activity-bar>
     <splitpanes class="default-theme" style="left: 48px; position: absolute">
