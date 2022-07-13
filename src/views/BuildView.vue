@@ -14,6 +14,9 @@
         <v-icon>mdi-tune</v-icon>
       </v-btn>
       <v-btn icon class="mt-2">
+        <v-icon>mdi-google-analytics</v-icon>
+      </v-btn>
+      <v-btn icon class="mt-2">
         <v-icon>mdi-code-greater-than</v-icon>
       </v-btn>
     </activity-bar>
@@ -48,6 +51,9 @@
           <v-spacer />
           <v-btn icon small>
             <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+          <v-btn icon small>
+            <v-icon>mdi-tray-arrow-down</v-icon>
           </v-btn>
           <v-btn icon small>
             <v-icon>mdi-dots-vertical</v-icon>

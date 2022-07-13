@@ -11,6 +11,13 @@
 
     <v-spacer />
 
+    <v-app-bar-title>Chart Studio</v-app-bar-title>
+    <v-btn icon width="24" height="24" class="ml-1">
+      <v-icon size="18">mdi-chevron-down</v-icon>
+    </v-btn>
+
+    <v-spacer />
+
     <div class="mr-2">
       <v-btn icon width="40" height="40">
         <v-icon>mdi-cloud-check-outline</v-icon>
