@@ -1,5 +1,5 @@
-import { createPinia, PiniaVuePlugin } from "pinia";
-import Vue from "vue";
+import { createPinia, PiniaVuePlugin } from 'pinia';
+import Vue from 'vue';
 
 Vue.use(PiniaVuePlugin);
 
