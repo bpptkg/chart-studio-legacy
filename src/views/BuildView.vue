@@ -29,12 +29,6 @@
             <v-icon>mdi-minus</v-icon>
           </v-btn>
           <v-btn icon small>
-            <v-icon>mdi-undo</v-icon>
-          </v-btn>
-          <v-btn icon small>
-            <v-icon>mdi-redo</v-icon>
-          </v-btn>
-          <v-btn icon small>
             <v-icon>mdi-collapse-all-outline</v-icon>
           </v-btn>
           <v-btn icon small>

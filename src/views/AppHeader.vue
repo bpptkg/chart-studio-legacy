@@ -1,14 +1,35 @@
 <template>
   <v-app-bar app flat dense color="white">
-    <v-app-bar-nav-icon
-      @click.stop="drawerStore.toggleDrawer"
-    ></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click.stop="drawerStore.toggleDrawer">
+      <v-icon>mdi-menu</v-icon>
+    </v-app-bar-nav-icon>
 
-    <div>
-      <v-tabs>
-        <v-tab>Build</v-tab>
-        <v-tab>Compare</v-tab>
-      </v-tabs>
+    <div class="mr-2">
+      <v-btn text>
+        <v-icon>mdi-view-agenda-outline</v-icon>
+        Build
+        <v-icon size="18">mdi-chevron-down</v-icon>
+      </v-btn>
+    </div>
+
+    <v-divider vertical inset />
+
+    <div class="ml-2">
+      <v-btn icon small>
+        <v-icon size="18">mdi-file-outline</v-icon>
+      </v-btn>
+      <v-btn icon small>
+        <v-icon size="18">mdi-folder-open-outline</v-icon>
+      </v-btn>
+      <v-btn icon small>
+        <v-icon size="18">mdi-printer-outline</v-icon>
+      </v-btn>
+      <v-btn icon small>
+        <v-icon size="18">mdi-undo</v-icon>
+      </v-btn>
+      <v-btn icon small>
+        <v-icon size="18">mdi-redo</v-icon>
+      </v-btn>
     </div>
 
     <v-spacer />
