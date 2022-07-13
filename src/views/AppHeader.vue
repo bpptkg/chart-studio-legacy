@@ -32,3 +32,9 @@
     </div>
   </v-app-bar>
 </template>
+
+<style lang="css">
+.v-toolbar__content {
+  border-bottom: 1px solid #dadce0;
+}
+</style>
