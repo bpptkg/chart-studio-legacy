@@ -1,4 +1,4 @@
-import { assert } from '@/utils/assertions';
+import { assert } from '../shared/assertions';
 import { Series } from './series';
 import { SeriesOptionsMap, SeriesType } from './seriesOptions';
 
