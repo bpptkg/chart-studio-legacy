@@ -20,7 +20,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { EdmParameterConfig } from '@/model/types';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+
+interface Props {
+  config?: EdmParameterConfig;
+}
+
+interface Emits {
+  (event: 'change', config: EdmParameterConfig): void;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const benchmarks = ref([
   { value: 'BAB0', text: 'Babadan 0' },
@@ -42,7 +54,24 @@ const reflectors = computed(() => {
   return reflectorsMap[benchmark.value];
 });
 
-watch(benchmark, (newBenchmark) => {
-  reflector.value = reflectorsMap[newBenchmark][0];
+watch(benchmark, (value) => {
+  reflector.value = reflectorsMap[value][0];
+
+  emit('change', {
+    benchmark: value,
+    reflector: reflector.value,
+  } as EdmParameterConfig);
+});
+
+watch(reflector, (value) => {
+  emit('change', {
+    benchmark: benchmark.value,
+    reflector: value,
+  } as EdmParameterConfig);
+});
+
+onMounted(() => {
+  benchmark.value = props.config?.benchmark || 'BAB0';
+  reflector.value = props.config?.reflector || 'RB1';
 });
 </script>
