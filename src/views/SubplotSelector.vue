@@ -71,7 +71,6 @@ const selected: Ref<DataType> = ref('Seismicity');
 const config: Ref<ParameterConfigMap[DataType]> = ref({ eventType: 'VTA' });
 
 function handleChange<T extends DataType>(obj: ParameterConfigMap[T]): void {
-  console.log('config:', obj);
   config.value = obj;
 }
 
