@@ -12,7 +12,7 @@
       <v-card-text>
         <v-select v-model="selected" :items="dataTypes" solo></v-select>
         <component
-          :is="componentOptionsMap[selected]"
+          :is="ComponentOptionsMap[selected]"
           :config="config"
           @change="handleChange"
         ></component>
@@ -34,28 +34,7 @@
 import { DataType, ParameterConfigMap } from '@/model/types';
 import { useChartStore } from '@/store/chart';
 import { Ref, ref } from 'vue';
-
-import EdmOptions from './EdmOptions.vue';
-import RfapEnergyOptions from './RfapEnergyOptions.vue';
-import SeismicEnergyOptions from './SeismicEnergyOptions.vue';
-import SeismicityOptions from './SeismicityOptions.vue';
-
-type ComponentOptions =
-  | typeof SeismicityOptions
-  | typeof EdmOptions
-  | typeof SeismicEnergyOptions
-  | typeof RfapEnergyOptions;
-
-interface ComponentOptionsMap {
-  [k: string]: ComponentOptions;
-}
-
-const componentOptionsMap: ComponentOptionsMap = {
-  Seismicity: SeismicityOptions,
-  Edm: EdmOptions,
-  SeismicEnergy: SeismicEnergyOptions,
-  RfapEnergy: RfapEnergyOptions,
-};
+import { ComponentOptionsMap } from './componentOptions';
 
 const chartStore = useChartStore();
 
