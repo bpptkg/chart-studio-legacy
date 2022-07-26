@@ -20,15 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { EdmParameterConfig } from '@/model/types';
+import { EdmConfig } from '@/model/types';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 
 interface Props {
-  config?: EdmParameterConfig;
+  config?: EdmConfig;
 }
 
 interface Emits {
-  (event: 'change', config: EdmParameterConfig): void;
+  (event: 'update', config: EdmConfig): void;
 }
 
 const props = defineProps<Props>();
@@ -50,6 +50,7 @@ const reflectorsMap: ReflectorMap = reactive({
 
 const benchmark = ref('BAB0');
 const reflector = ref('RB1');
+
 const reflectors = computed(() => {
   return reflectorsMap[benchmark.value];
 });
@@ -57,17 +58,17 @@ const reflectors = computed(() => {
 watch(benchmark, (value) => {
   reflector.value = reflectorsMap[value][0];
 
-  emit('change', {
+  emit('update', {
     benchmark: value,
     reflector: reflector.value,
-  } as EdmParameterConfig);
+  } as EdmConfig);
 });
 
 watch(reflector, (value) => {
-  emit('change', {
+  emit('update', {
     benchmark: benchmark.value,
     reflector: value,
-  } as EdmParameterConfig);
+  } as EdmConfig);
 });
 
 onMounted(() => {

@@ -9,15 +9,15 @@
 </template>
 
 <script setup lang="ts">
-import { SeismicityParameterConfig } from '@/model/types';
+import { SeismicityConfig } from '@/model/types';
 import { onMounted, ref, watch } from 'vue';
 
 interface Props {
-  config?: SeismicityParameterConfig;
+  config?: SeismicityConfig;
 }
 
 interface Emits {
-  (event: 'change', config: SeismicityParameterConfig): void;
+  (event: 'update', config: SeismicityConfig): void;
 }
 
 const props = defineProps<Props>();
@@ -27,12 +27,15 @@ const eventTypes = ref([
   { value: 'VTA', text: 'VTA' },
   { value: 'VTB', text: 'VTB' },
   { value: 'MP', text: 'MP' },
+  { value: 'ROCKFALL', text: 'ROCKFALL' },
 ]);
 
 const eventType = ref('VTA');
 
 watch(eventType, (value) => {
-  emit('change', { eventType: value } as SeismicityParameterConfig);
+  emit('update', {
+    eventType: value,
+  } as SeismicityConfig);
 });
 
 onMounted(() => {

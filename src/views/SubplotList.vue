@@ -3,10 +3,10 @@
     <v-expansion-panels>
       <v-expansion-panel v-for="(subplot, index) in subplots" :key="index">
         <v-expansion-panel-header>{{
-          `${index}: ${subplot.type}`
+          `${index}: ${subplot.dataType}`
         }}</v-expansion-panel-header>
         <v-expansion-panel-content>
-          <component :is="ComponentOptionsMap[subplot.type]"></component>
+          <component :is="ComponentOptionsMap[subplot.dataType]"></component>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>

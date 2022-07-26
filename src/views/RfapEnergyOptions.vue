@@ -3,14 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import { RfapEnergyParameterConfig } from '@/model/types';
+import { RfapEnergyConfig } from '@/model/types';
 
 interface Props {
-  config?: RfapEnergyParameterConfig;
+  config?: RfapEnergyConfig;
 }
 
 interface Emits {
-  (event: 'change', config: RfapEnergyParameterConfig): void;
+  (event: 'update', config: RfapEnergyConfig): void;
 }
 
 defineProps<Props>();

@@ -14,7 +14,7 @@
         <component
           :is="ComponentOptionsMap[selected]"
           :config="config"
-          @change="handleChange"
+          @update="handleUpdate"
         ></component>
       </v-card-text>
 
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { DataType, ParameterConfigMap } from '@/model/types';
 import { useChartStore } from '@/store/chart';
-import { Ref, ref } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import { ComponentOptionsMap } from './componentOptions';
 
 const chartStore = useChartStore();
@@ -47,16 +47,34 @@ const dataTypes = ref([
 ]);
 
 const selected: Ref<DataType> = ref('Seismicity');
-const config: Ref<ParameterConfigMap[DataType]> = ref({ eventType: 'VTA' });
+const config: Ref<ParameterConfigMap[DataType]> = ref({
+  eventType: 'VTA',
+  visible: true,
+});
 
-function handleChange<T extends DataType>(obj: ParameterConfigMap[T]): void {
-  config.value = obj;
+watch(selected, (value) => {
+  if (value === 'Seismicity') {
+    config.value = { eventType: 'VTA', visible: true };
+  } else if (value === 'Edm') {
+    config.value = { benchmark: 'BAB0', reflector: 'RB1', visible: true };
+  }
+});
+
+function handleUpdate<T extends DataType = DataType>(
+  payload: ParameterConfigMap[T]
+): void {
+  config.value = payload;
 }
 
 function handleAdd(): void {
-  chartStore.subplots.push({
-    type: selected.value,
-    config: config.value,
+  chartStore.addSubplot({
+    dataType: selected.value,
+    series: [
+      {
+        dataType: selected.value,
+        config: { ...config.value, visible: true },
+      },
+    ],
   });
 
   dialog.value = false;

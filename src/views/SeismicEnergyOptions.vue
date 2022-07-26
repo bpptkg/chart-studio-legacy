@@ -5,15 +5,15 @@
 </template>
 
 <script setup lang="ts">
-import { SeismicEnergyParameterConfig } from '@/model/types';
+import { SeismicEnergyConfig } from '@/model/types';
 import { ref, onMounted, watch } from 'vue';
 
 interface Props {
-  config?: SeismicEnergyParameterConfig;
+  config?: SeismicEnergyConfig;
 }
 
 interface Emits {
-  (event: 'change', config: SeismicEnergyParameterConfig): void;
+  (event: 'update', config: SeismicEnergyConfig): void;
 }
 
 const props = defineProps<Props>();
@@ -28,7 +28,7 @@ const types = ref([
 const type = ref('total');
 
 watch(type, (value) => {
-  emit('change', { type: value } as SeismicEnergyParameterConfig);
+  emit('update', { type: value } as SeismicEnergyConfig);
 });
 
 onMounted(() => {
