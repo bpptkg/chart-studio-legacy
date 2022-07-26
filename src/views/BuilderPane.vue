@@ -3,7 +3,6 @@
     <v-toolbar height="40px" flat>
       <div>Plot</div>
       <v-spacer></v-spacer>
-      <subplot-selector></subplot-selector>
       <v-btn icon small>
         <v-icon>mdi-undo</v-icon>
       </v-btn>
@@ -21,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import SubplotSelector from './SubplotSelector.vue';
 import RangeSelector from './RangeSelector.vue';
 import SubplotList from './SubplotList.vue';
 </script>

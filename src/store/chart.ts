@@ -27,7 +27,7 @@ export const useChartStore = defineStore('chart', {
     removeSubplot(index: number): void {
       const length = this.subplots.length;
       assert(index >= 0 && index < length, 'Subplot index out of range');
-      this.subplots.splice(index, 0);
+      this.subplots.splice(index, 1);
     },
 
     moveSubplot(from: number, to: number): void {
