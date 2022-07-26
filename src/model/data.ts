@@ -15,7 +15,7 @@ export const controller = new AbortController();
 export function createRequest<T extends DataType>(
   interval: DateInterval,
   seriesConfig: SeriesConfig<T>
-): Promise<AxiosResponse<DataItemTypeMap[T][], any>> {
+): Promise<AxiosResponse<DataItemTypeMap[T][]>> {
   const { dataType } = seriesConfig;
   const { start, end } = interval;
 
