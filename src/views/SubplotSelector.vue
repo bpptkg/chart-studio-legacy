@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
+import { ComponentOptionsMap } from '@/components/options';
 import { DataType, ParameterConfigMap } from '@/model/types';
 import { useChartStore } from '@/store/chart';
 import { Ref, ref, watch } from 'vue';
-import { ComponentOptionsMap } from './componentOptions';
 
 const chartStore = useChartStore();
 

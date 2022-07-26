@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { ComponentOptionsMap } from '@/components/options';
 import { useChartStore } from '@/store/chart';
 import { storeToRefs } from 'pinia';
-import { ComponentOptionsMap } from './componentOptions';
 
 const store = useChartStore();
 const { subplots } = storeToRefs(store);
