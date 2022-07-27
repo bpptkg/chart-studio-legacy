@@ -1,9 +1,19 @@
 <template>
   <v-dialog v-model="dialog" scrollable width="400px">
-    <template #activator="{ on, attrs }">
-      <v-btn icon small v-on="on" v-bind="attrs">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+    <template #activator="{ on: dialog, attrs }">
+      <v-tooltip
+        bottom
+        :open-delay="500"
+        :open-on-click="false"
+        :open-on-focus="false"
+      >
+        <template v-slot:activator="{ on: tooltip }">
+          <v-btn icon small v-on="{ ...tooltip, ...dialog }" v-bind="attrs">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+        <span>Add Subplot</span>
+      </v-tooltip>
     </template>
 
     <v-card>

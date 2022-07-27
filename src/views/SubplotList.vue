@@ -4,15 +4,48 @@
       <v-subheader>Subplots</v-subheader>
       <div class="d-flex align-center pr-2">
         <subplot-selector></subplot-selector>
-        <v-btn icon small @click="deleteSubplot">
-          <v-icon>mdi-minus</v-icon>
-        </v-btn>
-        <v-btn icon small @click="moveSubplotUp">
-          <v-icon>mdi-arrow-up</v-icon>
-        </v-btn>
-        <v-btn icon small @click="moveSubplotDown">
-          <v-icon>mdi-arrow-down</v-icon>
-        </v-btn>
+
+        <v-tooltip
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small @click="deleteSubplot" v-on="on" v-bind="attrs">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </template>
+          <span>Remove Subplot</span>
+        </v-tooltip>
+
+        <v-tooltip
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small @click="moveSubplotUp" v-on="on" v-bind="attrs">
+              <v-icon>mdi-arrow-up</v-icon>
+            </v-btn>
+          </template>
+          <span>Move Subplot Up</span>
+        </v-tooltip>
+
+        <v-tooltip
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small @click="moveSubplotDown" v-on="on" v-bind="attrs">
+              <v-icon>mdi-arrow-down</v-icon>
+            </v-btn>
+          </template>
+          <span>Move Subplot Down</span>
+        </v-tooltip>
       </div>
     </div>
 

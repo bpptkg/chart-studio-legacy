@@ -1,22 +1,28 @@
 <template>
-  <div>
+  <div v-if="subplots.length > 0">
     <div class="d-flex align-center justify-space-between">
       <v-subheader>Series</v-subheader>
+
       <div class="d-flex align-center pr-2">
         <series-selector></series-selector>
-        <v-btn icon small @click="removeSeries">
-          <v-icon>mdi-minus</v-icon>
-        </v-btn>
+
+        <v-tooltip
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon small @click="removeSeries" v-on="on" v-bind="attrs">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </template>
+          <span>Remove Series</span>
+        </v-tooltip>
       </div>
     </div>
 
-    <v-expansion-panels
-      v-if="seriesConfig.length > 0"
-      v-model="seriesIndex"
-      flat
-      focusable
-      dense
-    >
+    <v-expansion-panels v-model="seriesIndex" flat focusable dense tile>
       <v-expansion-panel v-for="(series, index) in seriesConfig" :key="index">
         <v-expansion-panel-header> Series {{ index }}</v-expansion-panel-header>
         <v-expansion-panel-content>
