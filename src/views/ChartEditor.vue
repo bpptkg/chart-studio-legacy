@@ -3,7 +3,7 @@
     <app-header></app-header>
     <v-main>
       <splitpanes class="default-theme">
-        <pane size="30"><builder-pane></builder-pane></pane>
+        <pane size="25"><builder-pane></builder-pane></pane>
         <pane><preview-pane></preview-pane></pane>
         <pane size="20"><property-pane></property-pane></pane>
       </splitpanes>

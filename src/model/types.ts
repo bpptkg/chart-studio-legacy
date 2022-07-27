@@ -8,16 +8,10 @@ export interface SeismicityParameterConfig {
   eventType: string;
 }
 
-export enum EdmParameterType {
-  SlopeDistance,
-  CSD,
-  Rate,
-}
-
 export interface EdmParameterConfig {
   benchmark: string;
   reflector: string;
-  type: EdmParameterType;
+  type: 'slope' | 'csd' | 'rate';
 }
 
 export interface SeismicEnergyParameterConfig {

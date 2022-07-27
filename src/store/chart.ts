@@ -1,4 +1,10 @@
-import type { SeriesConfig, SubplotConfig, DateInterval } from '@/model/types';
+import type {
+  SeriesConfig,
+  SubplotConfig,
+  DateInterval,
+  DataType,
+  ParameterConfigMap,
+} from '@/model/types';
 import { assert } from '@/shared/assertions';
 import { defineStore } from 'pinia';
 
@@ -59,7 +65,25 @@ export const useChartStore = defineStore('chart', {
       const series = this.subplots[subplotIndex].series;
       const length = series.length;
       assert(index >= 0 && index < length, 'Series index out of range');
-      series.splice(index, 0);
+      series.splice(index, 1);
+    },
+
+    updateSeriesConfig<T extends DataType = DataType>(
+      config: ParameterConfigMap[T],
+      subplotIndex: number,
+      index: number
+    ): void {
+      const subplotLength = this.subplots.length;
+      assert(
+        subplotIndex >= 0 && subplotIndex < subplotLength,
+        'Subplot index out of range'
+      );
+
+      const series = this.subplots[subplotIndex].series;
+      const length = series.length;
+      assert(index >= 0 && index < length, 'Series index out of range');
+
+      series[index].config = config;
     },
   },
 });

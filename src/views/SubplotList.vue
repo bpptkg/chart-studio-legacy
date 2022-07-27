@@ -17,7 +17,7 @@
     </div>
 
     <v-list v-if="subplots.length > 0">
-      <v-list-item-group mandatory v-model="selected">
+      <v-list-item-group mandatory v-model="subplotIndex">
         <v-list-item
           v-for="(subplot, subplotIndex) in subplots"
           :key="subplotIndex"
@@ -38,35 +38,36 @@
 import SubplotSelector from './SubplotSelector.vue';
 import { useChartStore } from '@/store/chart';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { useSubplotStore } from '@/store/subplot';
 
-const store = useChartStore();
-const { subplots } = storeToRefs(store);
+const chartStore = useChartStore();
+const { subplots } = storeToRefs(chartStore);
 
-const selected = ref(0);
+const subplotStore = useSubplotStore();
+const { subplotIndex } = storeToRefs(subplotStore);
 
 function deleteSubplot(): void {
-  store.removeSubplot(selected.value);
-  // Reset selected index to 0.
-  selected.value = 0;
+  chartStore.removeSubplot(subplotIndex.value);
+  // Reset index to 0.
+  subplotIndex.value = 0;
 }
 
 function moveSubplotUp(): void {
-  if (selected.value > 0 && subplots.value.length > 1) {
-    const from = selected.value;
+  if (subplotIndex.value > 0 && subplots.value.length > 1) {
+    const from = subplotIndex.value;
     const to = from - 1;
-    store.moveSubplot(from, to);
-    selected.value = to;
+    chartStore.moveSubplot(from, to);
+    subplotIndex.value = to;
   }
 }
 
 function moveSubplotDown(): void {
   const length = subplots.value.length;
-  if (selected.value < length - 1 && length > 1) {
-    const from = selected.value;
+  if (subplotIndex.value < length - 1 && length > 1) {
+    const from = subplotIndex.value;
     const to = from + 1;
-    store.moveSubplot(from, to);
-    selected.value = to;
+    chartStore.moveSubplot(from, to);
+    subplotIndex.value = to;
   }
 }
 </script>

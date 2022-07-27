@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" scrollable width="400px">
+  <v-dialog v-model="dialog" scrollable width="400px" v-if="subplot">
     <template #activator="{ on, attrs }">
       <v-btn icon small v-on="on" v-bind="attrs">
         <v-icon>mdi-plus</v-icon>
@@ -7,12 +7,11 @@
     </template>
 
     <v-card>
-      <v-card-title>Add Subplot</v-card-title>
+      <v-card-title>Add Series</v-card-title>
       <v-divider></v-divider>
       <v-card-text class="mt-2">
-        <v-select v-model="selected" :items="dataTypes" solo></v-select>
         <component
-          :is="ComponentOptionsMap[selected]"
+          :is="ComponentOptionsMap[subplot.dataType]"
           :config="config"
           @update="handleUpdate"
         ></component>
@@ -33,32 +32,28 @@
 <script setup lang="ts">
 import { ComponentOptionsMap } from '@/components/options';
 import { DataType, ParameterConfigMap } from '@/model/types';
+import { createSeriesConfig } from '@/model/config';
 import { useChartStore } from '@/store/chart';
-import { Ref, ref, watch } from 'vue';
+import { useSubplotStore } from '@/store/subplot';
+import { storeToRefs } from 'pinia';
+import { computed, ref, Ref } from 'vue';
 
 const chartStore = useChartStore();
+const { subplots } = storeToRefs(chartStore);
+
+const subplotStore = useSubplotStore();
+const { subplotIndex, seriesIndex } = storeToRefs(subplotStore);
+
+const subplot = computed(() => {
+  return subplots.value.length > 0
+    ? subplots.value[subplotIndex.value]
+    : undefined;
+});
 
 const dialog = ref(false);
-const dataTypes = ref([
-  { value: 'Seismicity', text: 'Seismicity' },
-  { value: 'Edm', text: 'EDM' },
-  { value: 'SeismicEnergy', text: 'Seismic Energy' },
-  { value: 'RfapEnergy', text: 'RF & AP Energy' },
-]);
-
-const selected: Ref<DataType> = ref('Seismicity');
-const config: Ref<ParameterConfigMap[DataType]> = ref({
-  eventType: 'VTA',
-  visible: true,
-});
-
-watch(selected, (value) => {
-  if (value === 'Seismicity') {
-    config.value = { eventType: 'VTA', visible: true };
-  } else if (value === 'Edm') {
-    config.value = { benchmark: 'BAB0', reflector: 'RB1', visible: true };
-  }
-});
+const config: Ref<ParameterConfigMap[DataType]> = ref(
+  createSeriesConfig(subplot.value?.dataType)
+);
 
 function handleUpdate<T extends DataType = DataType>(
   payload: ParameterConfigMap[T]
@@ -67,15 +62,17 @@ function handleUpdate<T extends DataType = DataType>(
 }
 
 function handleAdd(): void {
-  chartStore.addSubplot({
-    dataType: selected.value,
-    series: [
+  if (subplot.value) {
+    chartStore.addSeries(
       {
-        dataType: selected.value,
-        config: { ...config.value, visible: true },
+        dataType: subplot.value.dataType,
+        config: config.value,
       },
-    ],
-  });
+      subplotIndex.value
+    );
+
+    seriesIndex.value = subplot.value.series.length - 1;
+  }
 
   dialog.value = false;
 }
