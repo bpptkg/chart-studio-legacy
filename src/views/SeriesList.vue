@@ -64,7 +64,7 @@ const seriesConfig = computed(() => {
 function removeSeries(): void {
   if (seriesConfig.value.length > 0 && seriesIndex.value !== undefined) {
     chartStore.removeSeries(subplotIndex.value, seriesIndex.value);
-    seriesIndex.value = undefined;
+    subplotStore.resetSeriesIndex();
   }
 }
 

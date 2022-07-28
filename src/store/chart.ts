@@ -83,7 +83,7 @@ export const useChartStore = defineStore('chart', {
       const length = series.length;
       assert(index >= 0 && index < length, 'Series index out of range');
 
-      series[index].config = config;
+      this.subplots[subplotIndex].series[index].config = config;
     },
   },
 });

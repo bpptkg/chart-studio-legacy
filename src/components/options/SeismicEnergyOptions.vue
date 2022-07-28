@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { SeismicEnergyConfig } from '@/model/types';
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed } from 'vue';
 
 interface Props {
   config?: SeismicEnergyConfig;
@@ -25,13 +25,17 @@ const types = ref([
   { value: 'vtbmp', text: 'VTB+MP' },
 ]);
 
-const type = ref('total');
-
-watch(type, (value) => {
-  emit('update', { type: value } as SeismicEnergyConfig);
-});
-
-onMounted(() => {
-  type.value = props.config?.type || 'total';
+const type = computed({
+  get() {
+    return props.config?.type || 'total';
+  },
+  set(value) {
+    emit(
+      'update',
+      Object.assign({}, props.config, {
+        type: value,
+      })
+    );
+  },
 });
 </script>

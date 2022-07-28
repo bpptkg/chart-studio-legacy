@@ -72,6 +72,7 @@ import SubplotSelector from './SubplotSelector.vue';
 import { useChartStore } from '@/store/chart';
 import { storeToRefs } from 'pinia';
 import { useSubplotStore } from '@/store/subplot';
+import { watch } from 'vue';
 
 const chartStore = useChartStore();
 const { subplots } = storeToRefs(chartStore);
@@ -82,7 +83,7 @@ const { subplotIndex } = storeToRefs(subplotStore);
 function deleteSubplot(): void {
   chartStore.removeSubplot(subplotIndex.value);
   // Reset index to 0.
-  subplotIndex.value = 0;
+  subplotStore.resetSubplotIndex();
 }
 
 function moveSubplotUp(): void {
@@ -90,7 +91,7 @@ function moveSubplotUp(): void {
     const from = subplotIndex.value;
     const to = from - 1;
     chartStore.moveSubplot(from, to);
-    subplotIndex.value = to;
+    subplotStore.setSubplotIndex(to);
   }
 }
 
@@ -100,7 +101,12 @@ function moveSubplotDown(): void {
     const from = subplotIndex.value;
     const to = from + 1;
     chartStore.moveSubplot(from, to);
-    subplotIndex.value = to;
+    subplotStore.setSubplotIndex(to);
   }
 }
+
+// Reset seriesIndex every time subplotIndex changed.
+watch(subplotIndex, () => {
+  subplotStore.resetSeriesIndex();
+});
 </script>

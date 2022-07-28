@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { SeismicityConfig } from '@/model/types';
-import { onMounted, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Props {
   config?: SeismicityConfig;
@@ -24,21 +24,37 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const eventTypes = ref([
-  { value: 'VTA', text: 'VTA' },
-  { value: 'VTB', text: 'VTB' },
+  { value: 'ANTRHOP', text: 'ANTRHOP' },
+  { value: 'AUTO', text: 'AUTO' },
+  { value: 'EXPLOSION', text: 'EXPLOSION' },
+  { value: 'GASBURST', text: 'GASBURST' },
+  { value: 'LF', text: 'LF' },
   { value: 'MP', text: 'MP' },
   { value: 'ROCKFALL', text: 'ROCKFALL' },
+  { value: 'SOUND', text: 'SOUND' },
+  { value: 'TECLOC', text: 'TECLOC' },
+  { value: 'TECT', text: 'TECT' },
+  { value: 'TELE', text: 'TELE' },
+  { value: 'TPHASE', text: 'TPHASE' },
+  { value: 'TREMOR', text: 'TREMOR' },
+  { value: 'UNKNOWN', text: 'UNKNOWN' },
+  { value: 'VTA', text: 'VTA' },
+  { value: 'VTB', text: 'VTB' },
+  { value: 'AWANPANAS', text: 'AWANPANAS' },
+  { value: 'LAHAR', text: 'LAHAR' },
 ]);
 
-const eventType = ref('VTA');
-
-watch(eventType, (value) => {
-  emit('update', {
-    eventType: value,
-  } as SeismicityConfig);
-});
-
-onMounted(() => {
-  eventType.value = props.config?.eventType || 'VTA';
+const eventType = computed({
+  get() {
+    return props.config?.eventType || 'VTA';
+  },
+  set(value) {
+    emit(
+      'update',
+      Object.assign({}, props.config, {
+        eventType: value,
+      })
+    );
+  },
 });
 </script>

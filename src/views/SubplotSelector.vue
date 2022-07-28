@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { ComponentOptionsMap } from '@/components/options';
+import { createSeriesConfig } from '@/model/config';
 import { DataType, ParameterConfigMap } from '@/model/types';
 import { useChartStore } from '@/store/chart';
 import { Ref, ref, watch } from 'vue';
@@ -57,17 +58,12 @@ const dataTypes = ref([
 ]);
 
 const selected: Ref<DataType> = ref('Seismicity');
-const config: Ref<ParameterConfigMap[DataType]> = ref({
-  eventType: 'VTA',
-  visible: true,
-});
+const config: Ref<ParameterConfigMap[DataType]> = ref(
+  createSeriesConfig('Seismicity')
+);
 
 watch(selected, (value) => {
-  if (value === 'Seismicity') {
-    config.value = { eventType: 'VTA', visible: true };
-  } else if (value === 'Edm') {
-    config.value = { benchmark: 'BAB0', reflector: 'RB1', visible: true };
-  }
+  config.value = createSeriesConfig(value);
 });
 
 function handleUpdate<T extends DataType = DataType>(
@@ -82,7 +78,7 @@ function handleAdd(): void {
     series: [
       {
         dataType: selected.value,
-        config: { ...config.value, visible: true },
+        config: { ...config.value },
       },
     ],
   });
