@@ -70,17 +70,23 @@ const reflectorsMap: ReflectorMap = reactive({
   TRI0: ['RK2', 'RK3'],
 });
 
+const isBenchmarkUpdating = ref(false);
+
 const benchmark = computed({
   get() {
     return props.config?.benchmark || 'BAB0';
   },
   set(value) {
+    isBenchmarkUpdating.value = true;
+    reflector.value = reflectorsMap[value][0];
     emit(
       'update',
       Object.assign({}, props.config, {
         benchmark: value,
+        reflector: reflectorsMap[value][0],
       })
     );
+    isBenchmarkUpdating.value = false;
   },
 });
 
@@ -89,12 +95,14 @@ const reflector = computed({
     return props.config?.reflector || 'RB1';
   },
   set(value) {
-    emit(
-      'update',
-      Object.assign({}, props.config, {
-        reflector: value,
-      })
-    );
+    if (!isBenchmarkUpdating.value) {
+      emit(
+        'update',
+        Object.assign({}, props.config, {
+          reflector: value,
+        })
+      );
+    }
   },
 });
 

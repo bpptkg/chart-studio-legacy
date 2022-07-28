@@ -69,7 +69,7 @@ watch(selected, (value) => {
 function handleUpdate<T extends DataType = DataType>(
   payload: ParameterConfigMap[T]
 ): void {
-  config.value = payload;
+  config.value = { ...config.value, ...payload };
 }
 
 function handleAdd(): void {

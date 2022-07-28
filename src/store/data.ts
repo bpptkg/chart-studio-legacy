@@ -1,6 +1,6 @@
 import { createRequest, SeriesDataRequest } from '@/model/data';
-import { DataRepository } from '@/model/types';
-import hash from 'object-hash';
+import { DataRepository, RenderModel, SeriesDataKey } from '@/model/types';
+import objectHash from 'object-hash';
 import { defineStore } from 'pinia';
 import { useChartStore } from './chart';
 
@@ -9,23 +9,37 @@ export interface UpdateOptions {
 }
 
 export const useDataStore = defineStore('data', {
-  state() {
+  state: () => {
     return {
-      isUpdating: false,
+      isFetching: false,
       data: {} as DataRepository,
       error: null as Error | null,
     };
   },
-  getters: {},
+  getters: {
+    renderModel: (state): RenderModel => {
+      const chartStore = useChartStore();
+      return {
+        subplots: chartStore.subplots,
+        interval: chartStore.interval,
+        dataRepository: state.data,
+      };
+    },
+  },
   actions: {
-    update() {
+    async update() {
+      this.isFetching = true;
       const chartStore = useChartStore();
       const interval = chartStore.interval;
       const requestData = [] as SeriesDataRequest[];
 
       chartStore.subplots.forEach((subplotConfig) => {
         subplotConfig.series.forEach((seriesConfig) => {
-          const key = hash.sha1({ interval, seriesConfig });
+          const dataKey: SeriesDataKey = {
+            interval,
+            series: seriesConfig,
+          };
+          const key = objectHash.sha1(dataKey);
           if (!(key in this.data)) {
             requestData.push({
               key,
@@ -39,7 +53,7 @@ export const useDataStore = defineStore('data', {
 
       const requests = requestData.map((v) => v.request);
 
-      Promise.all(requests)
+      await Promise.all(requests)
         .then((responses) => {
           const data = responses.map((response) => response.data);
           this.$patch((state) => {
@@ -51,6 +65,9 @@ export const useDataStore = defineStore('data', {
         })
         .catch((error) => {
           this.error = error;
+        })
+        .finally(() => {
+          this.isFetching = false;
         });
     },
   },

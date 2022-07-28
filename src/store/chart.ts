@@ -12,7 +12,7 @@ export const useChartStore = defineStore('chart', {
   state: () => {
     return {
       subplots: [] as SubplotConfig[],
-      interval: { start: '2022-07-20', end: '2022-07-22' } as DateInterval,
+      interval: { start: '2022-07-01', end: '2022-07-28' } as DateInterval,
       intervals: [] as DateInterval[],
       width: 100,
       height: 100,

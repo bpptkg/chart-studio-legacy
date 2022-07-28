@@ -1,59 +1,44 @@
 <template>
   <div>
-    <v-chart class="chart" :option="option"></v-chart>
+    <v-chart
+      class="chart"
+      :option="option"
+      :update-options="updateOptions"
+      :autoresize="true"
+    ></v-chart>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import 'echarts';
 import VChart from 'vue-echarts';
+import { ref } from 'vue';
 import { useChartStore } from '@/store/chart';
 import { useDataStore } from '@/store/data';
+import { storeToRefs } from 'pinia';
+import { renderToECharts } from '@/renderer/echarts/render';
 
 const chartStore = useChartStore();
 const dataStore = useDataStore();
+const { renderModel } = storeToRefs(dataStore);
 
-chartStore.$subscribe(async () => {
-  dataStore.update();
+const option = ref({});
+const updateOptions = ref({
+  notMerge: true,
+  lazyUpdate: true,
 });
 
-const option = ref({
-  title: {
-    text: 'Traffic Sources',
-    left: 'center',
-  },
-  tooltip: {
-    trigger: 'item',
-    formatter: '{a} <br/>{b} : {c} ({d}%)',
-  },
-  legend: {
-    orient: 'vertical',
-    left: 'left',
-    data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
-  },
-  series: [
-    {
-      name: 'Traffic Sources',
-      type: 'pie',
-      radius: '55%',
-      center: ['50%', '60%'],
-      data: [
-        { value: 335, name: 'Direct' },
-        { value: 310, name: 'Email' },
-        { value: 234, name: 'Ad Networks' },
-        { value: 135, name: 'Video Ads' },
-        { value: 1548, name: 'Search Engines' },
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)',
-        },
-      },
-    },
-  ],
+dataStore.$onAction(({ name, after }) => {
+  if (name === 'update') {
+    // Rerender chart configuration after data update.
+    after(async () => {
+      option.value = renderToECharts(renderModel.value);
+    });
+  }
+});
+
+chartStore.$subscribe(() => {
+  dataStore.update();
 });
 </script>
 

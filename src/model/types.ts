@@ -97,3 +97,14 @@ export interface SubplotConfig<T extends DataType = DataType> {
   dataType: T;
   series: SeriesConfig[];
 }
+
+export interface SeriesDataKey<T extends DataType = DataType> {
+  interval: DateInterval;
+  series: SeriesConfig<T>;
+}
+
+export interface RenderModel {
+  subplots: SubplotConfig[];
+  interval: DateInterval;
+  dataRepository: DataRepository;
+}
