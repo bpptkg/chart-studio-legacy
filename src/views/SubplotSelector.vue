@@ -45,9 +45,11 @@ import { ComponentOptionsMap } from '@/components/options';
 import { createSeriesConfig } from '@/model/config';
 import { DataType, ParameterConfigMap } from '@/model/types';
 import { useChartStore } from '@/store/chart';
+import { useSubplotStore } from '@/store/subplot';
 import { Ref, ref, watch } from 'vue';
 
 const chartStore = useChartStore();
+const subplotStore = useSubplotStore();
 
 const dialog = ref(false);
 const dataTypes = ref([
@@ -84,5 +86,8 @@ function handleAdd(): void {
   });
 
   dialog.value = false;
+
+  // Set index to newly created subplot.
+  subplotStore.setSubplotIndex(chartStore.subplots.length - 1);
 }
 </script>
