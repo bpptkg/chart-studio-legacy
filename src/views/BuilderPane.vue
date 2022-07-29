@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="builder-pane">
     <v-toolbar height="40px" flat>
       <div>Plot</div>
 
@@ -47,13 +47,35 @@
         <span>More Actions...</span>
       </v-tooltip>
     </v-toolbar>
-    <v-subheader>Period</v-subheader>
-    <range-selector></range-selector>
-    <subplot-list></subplot-list>
+
+    <div class="builder-pane-content">
+      <scroll-wrapper>
+        <v-subheader>Period</v-subheader>
+        <range-selector></range-selector>
+        <subplot-list></subplot-list>
+      </scroll-wrapper>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import RangeSelector from './RangeSelector.vue';
 import SubplotList from './SubplotList.vue';
+import ScrollWrapper from '../components/ScrollWrapper.vue';
 </script>
+
+<style lang="scss" scoped>
+.builder-pane {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &-content {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    top: 40px;
+  }
+}
+</style>

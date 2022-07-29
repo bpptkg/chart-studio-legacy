@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="d-flex align-center justify-space-between">
+    <div class="d-flex align-center justify-space-between pr-2">
       <v-subheader>Subplots</v-subheader>
-      <div class="d-flex align-center pr-2">
+
+      <div class="d-flex align-center">
         <subplot-selector></subplot-selector>
 
         <v-tooltip

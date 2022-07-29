@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <div>
     <v-col>
       <v-dialog
         ref="dialog"
@@ -52,7 +52,7 @@
         </v-date-picker>
       </v-dialog>
     </v-col>
-  </v-row>
+  </div>
 </template>
 
 <script setup lang="ts">

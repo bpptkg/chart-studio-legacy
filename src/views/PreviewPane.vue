@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="preview-pane">
     <v-toolbar height="40px" flat>
       <div>Preview</div>
       <v-spacer></v-spacer>
@@ -14,9 +14,15 @@
       </v-btn>
     </v-toolbar>
 
-    <v-progress-linear v-show="isFetching" indeterminate></v-progress-linear>
+    <v-progress-linear
+      class="loader"
+      v-show="isFetching"
+      indeterminate
+    ></v-progress-linear>
 
-    <render-area></render-area>
+    <div class="canvas">
+      <render-area></render-area>
+    </div>
   </div>
 </template>
 
@@ -28,3 +34,27 @@ import RenderArea from './RenderArea.vue';
 const dataStore = useDataStore();
 const { isFetching } = storeToRefs(dataStore);
 </script>
+
+<style lang="scss" scoped>
+.preview-pane {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.loader {
+  z-index: 999;
+}
+
+.canvas {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

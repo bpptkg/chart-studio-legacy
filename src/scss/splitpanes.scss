@@ -1,0 +1,113 @@
+.splitpanes {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  &--vertical {
+    flex-direction: row;
+  }
+  &--horizontal {
+    flex-direction: column;
+  }
+  &--dragging * {
+    user-select: none;
+  }
+  &__pane {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    .splitpanes--vertical & {
+      transition: width 0.2s ease-out;
+    }
+    .splitpanes--horizontal & {
+      transition: height 0.2s ease-out;
+    }
+    .splitpanes--dragging & {
+      transition: none;
+    }
+  }
+  // Disable default zoom behavior on touch device when double tapping splitter.
+  &__splitter {
+    touch-action: none;
+  }
+  &--vertical > .splitpanes__splitter {
+    min-width: 1px;
+    cursor: col-resize;
+  }
+  &--horizontal > .splitpanes__splitter {
+    min-height: 1px;
+    cursor: row-resize;
+  }
+}
+
+.splitpanes.cs-theme {
+  .splitpanes__pane {
+    background-color: #fff;
+  }
+  .splitpanes__splitter {
+    background-color: #eee;
+    box-sizing: border-box;
+    position: relative;
+    flex-shrink: 0;
+  }
+}
+.cs-theme {
+  &.splitpanes .splitpanes .splitpanes__splitter {
+    z-index: 1;
+  }
+  &.splitpanes--vertical > .splitpanes__splitter,
+  .splitpanes--vertical > .splitpanes__splitter {
+    width: 5px;
+    border-left: 1px solid #eee;
+    margin-left: -1px;
+    &:before,
+    &:after {
+      transform: translateY(-50%);
+      width: 1px;
+      height: 30px;
+    }
+    &:before {
+      margin-left: -2px;
+    }
+    &:after {
+      margin-left: 1px;
+    }
+  }
+  &.splitpanes--horizontal > .splitpanes__splitter,
+  .splitpanes--horizontal > .splitpanes__splitter {
+    height: 5px;
+    border-top: 1px solid #eee;
+    margin-top: -1px;
+    &:before,
+    &:after {
+      transform: translateX(-50%);
+      width: 30px;
+      height: 1px;
+    }
+    &:before {
+      margin-top: -2px;
+    }
+    &:after {
+      margin-top: 1px;
+    }
+  }
+}
+
+.splitpanes.cs-theme--dark {
+  .splitpanes__pane {
+    background-color: #121212;
+  }
+}
+
+.cs-theme--dark {
+  &.splitpanes--vertical > .splitpanes__splitter,
+  .splitpanes--vertical > .splitpanes__splitter {
+    border-left: 1px solid #303030;
+  }
+
+  &.splitpanes--horizontal > .splitpanes__splitter,
+  .splitpanes--horizontal > .splitpanes__splitter {
+    border-top: 1px solid #303030;
+  }
+}

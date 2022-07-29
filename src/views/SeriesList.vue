@@ -1,9 +1,9 @@
 <template>
   <div v-if="subplots.length > 0">
-    <div class="d-flex align-center justify-space-between">
+    <div class="d-flex align-center justify-space-between pr-2">
       <v-subheader>Series</v-subheader>
 
-      <div class="d-flex align-center pr-2">
+      <div class="d-flex align-center">
         <series-selector></series-selector>
 
         <v-tooltip
