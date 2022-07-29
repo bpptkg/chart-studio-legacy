@@ -1,18 +1,18 @@
 <template>
   <v-app>
     <app-header></app-header>
-    <v-main style="background-color: #eee">
+    <v-main>
       <splitpanes
-        class="cs-theme editor"
+        class="cs-theme panels"
         :class="{ 'cs-theme--dark': $vuetify.theme.dark }"
       >
-        <pane size="20" class="rounded-tr">
+        <pane size="20" class="rounded-tr-lg">
           <builder-pane></builder-pane>
         </pane>
-        <pane class="rounded-t">
+        <pane class="rounded-t-lg">
           <preview-pane></preview-pane>
         </pane>
-        <pane size="20" class="rounded-tl">
+        <pane size="20" class="rounded-tl-lg">
           <property-pane></property-pane>
         </pane>
       </splitpanes>
@@ -33,15 +33,7 @@ import PropertyPane from './PropertyPane.vue';
 </style>
 
 <style lang="scss" scoped>
-.main-theme {
-  background-color: #eee;
-
-  &--dark {
-    background-color: #121212;
-  }
-}
-
-.editor {
+.panels {
   padding-top: 5px;
 }
 </style>
