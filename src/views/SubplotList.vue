@@ -82,9 +82,11 @@ const subplotStore = useSubplotStore();
 const { subplotIndex } = storeToRefs(subplotStore);
 
 function deleteSubplot(): void {
-  chartStore.removeSubplot(subplotIndex.value);
-  // Reset index to 0.
-  subplotStore.resetSubplotIndex();
+  if (subplots.value.length > 0) {
+    chartStore.removeSubplot(subplotIndex.value);
+    // Reset index to 0.
+    subplotStore.resetSubplotIndex();
+  }
 }
 
 function moveSubplotUp(): void {
