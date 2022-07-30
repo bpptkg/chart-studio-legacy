@@ -14,6 +14,8 @@
       </v-btn>
     </v-toolbar>
 
+    <v-divider></v-divider>
+
     <v-progress-linear
       class="loader"
       v-show="isFetching"

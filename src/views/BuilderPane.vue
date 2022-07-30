@@ -48,9 +48,10 @@
       </v-tooltip>
     </v-toolbar>
 
+    <v-divider></v-divider>
+
     <div class="builder-pane-content">
       <scroll-wrapper>
-        <v-subheader>Period</v-subheader>
         <range-selector></range-selector>
         <subplot-list></subplot-list>
       </scroll-wrapper>

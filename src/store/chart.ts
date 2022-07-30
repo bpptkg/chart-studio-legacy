@@ -1,3 +1,4 @@
+import { DATE_FORMAT } from '@/constants/datetime';
 import type {
   SeriesConfig,
   SubplotConfig,
@@ -6,17 +7,24 @@ import type {
   ParameterConfigMap,
 } from '@/model/types';
 import { assert } from '@/shared/assertions';
+import moment from 'moment';
 import { defineStore } from 'pinia';
 
+interface State {
+  subplots: SubplotConfig[];
+  interval: DateInterval;
+  intervals: DateInterval[];
+}
+
 export const useChartStore = defineStore('chart', {
-  state: () => {
+  state: (): State => {
     return {
-      subplots: [] as SubplotConfig[],
-      interval: { start: '2022-07-01', end: '2022-07-28' } as DateInterval,
-      intervals: [] as DateInterval[],
-      width: 100,
-      height: 100,
-      title: '',
+      subplots: [],
+      interval: {
+        end: moment().format(DATE_FORMAT),
+        start: moment().subtract(7, 'days').format(DATE_FORMAT),
+      },
+      intervals: [],
     };
   },
   actions: {
@@ -84,6 +92,12 @@ export const useChartStore = defineStore('chart', {
       assert(index >= 0 && index < length, 'Series index out of range');
 
       this.subplots[subplotIndex].series[index].config = config;
+    },
+
+    setInterval(interval: DateInterval): void {
+      this.$patch((state) => {
+        state.interval = interval;
+      });
     },
   },
 });

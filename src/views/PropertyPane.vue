@@ -4,6 +4,8 @@
       <div>Properties</div>
     </v-toolbar>
 
+    <v-divider></v-divider>
+
     <div class="property-pane-content">
       <scroll-wrapper>
         <series-list></series-list>
