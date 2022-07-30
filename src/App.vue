@@ -1,13 +1,12 @@
 <template>
-  <chart-editor />
+  <router-view></router-view>
 </template>
-
-<script setup lang="ts">
-import ChartEditor from './views/ChartEditor.vue';
-</script>
 
 <style lang="css">
 html {
   overflow-y: auto;
+}
+.v-tab {
+  text-transform: none !important;
 }
 </style>

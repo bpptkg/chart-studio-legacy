@@ -10,6 +10,9 @@
         <v-icon>mdi-tray-arrow-down</v-icon>
       </v-btn>
       <v-btn icon small>
+        <v-icon>mdi-magnify-plus-outline</v-icon>
+      </v-btn>
+      <v-btn icon small>
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-toolbar>

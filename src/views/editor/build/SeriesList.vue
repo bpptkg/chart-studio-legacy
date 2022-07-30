@@ -42,7 +42,7 @@
 import { ComponentOptionsMap } from '@/components/options';
 import SeriesSelector from './SeriesSelector.vue';
 import { useChartStore } from '@/store/chart';
-import { useSubplotStore } from '@/store/subplot';
+import { useWorkspaceStore } from '@/store/workspace';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { DataType, ParameterConfigMap } from '@/model/types';
@@ -50,8 +50,8 @@ import { DataType, ParameterConfigMap } from '@/model/types';
 const chartStore = useChartStore();
 const { subplots } = storeToRefs(chartStore);
 
-const subplotStore = useSubplotStore();
-const { subplotIndex, seriesIndex } = storeToRefs(subplotStore);
+const workspaceStore = useWorkspaceStore();
+const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore);
 
 const seriesConfig = computed(() => {
   if (subplots.value.length > 0) {
@@ -64,7 +64,7 @@ const seriesConfig = computed(() => {
 function removeSeries(): void {
   if (seriesConfig.value.length > 0 && seriesIndex.value !== undefined) {
     chartStore.removeSeries(subplotIndex.value, seriesIndex.value);
-    subplotStore.resetSeriesIndex();
+    workspaceStore.resetSeriesIndex();
   }
 }
 

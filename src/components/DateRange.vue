@@ -1,15 +1,17 @@
 <template>
   <v-dialog v-model="show" persistent scrollable width="450px">
     <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        v-model="intervalText"
-        prepend-icon="mdi-calendar"
-        readonly
-        filled
-        class="px-2 mt-2"
-        v-bind="attrs"
-        v-on="on"
-      ></v-text-field>
+      <slot :on="on" :attrs="attrs">
+        <v-text-field
+          v-model="intervalText"
+          prepend-icon="mdi-calendar"
+          readonly
+          filled
+          class="px-2 mt-2"
+          v-bind="attrs"
+          v-on="on"
+        ></v-text-field>
+      </slot>
     </template>
 
     <v-card>

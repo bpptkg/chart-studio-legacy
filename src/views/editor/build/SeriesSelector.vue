@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" scrollable width="400px">
+  <v-dialog v-model="dialog" scrollable width="400px" v-if="subplot">
     <template #activator="{ on: dialog, attrs }">
       <v-tooltip
         bottom
@@ -12,17 +12,16 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
-        <span>Add Subplot</span>
+        <span>Add Series</span>
       </v-tooltip>
     </template>
 
     <v-card>
-      <v-card-title>Add Subplot</v-card-title>
+      <v-card-title>Add Series</v-card-title>
       <v-divider></v-divider>
       <v-card-text class="mt-2">
-        <v-select v-model="selected" :items="dataTypes" solo></v-select>
         <component
-          :is="ComponentOptionsMap[selected]"
+          :is="ComponentOptionsMap[subplot.dataType]"
           :config="config"
           @update="handleUpdate"
         ></component>
@@ -42,52 +41,49 @@
 
 <script setup lang="ts">
 import { ComponentOptionsMap } from '@/components/options';
-import { createSeriesConfig } from '@/model/config';
 import { DataType, ParameterConfigMap } from '@/model/types';
+import { createSeriesConfig } from '@/model/config';
 import { useChartStore } from '@/store/chart';
-import { useSubplotStore } from '@/store/subplot';
-import { Ref, ref, watch } from 'vue';
+import { useWorkspaceStore } from '@/store/workspace';
+import { storeToRefs } from 'pinia';
+import { computed, ref, Ref } from 'vue';
 
 const chartStore = useChartStore();
-const subplotStore = useSubplotStore();
+const { subplots } = storeToRefs(chartStore);
+
+const workspaceStore = useWorkspaceStore();
+const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore);
+
+const subplot = computed(() => {
+  return subplots.value.length > 0
+    ? subplots.value[subplotIndex.value]
+    : undefined;
+});
 
 const dialog = ref(false);
-const dataTypes = ref([
-  { value: 'Seismicity', text: 'Seismicity' },
-  { value: 'Edm', text: 'EDM' },
-  { value: 'SeismicEnergy', text: 'Seismic Energy' },
-  { value: 'RfapEnergy', text: 'RF & AP Energy' },
-]);
-
-const selected: Ref<DataType> = ref('Seismicity');
 const config: Ref<ParameterConfigMap[DataType]> = ref(
-  createSeriesConfig('Seismicity')
+  createSeriesConfig(subplot.value?.dataType)
 );
-
-watch(selected, (value) => {
-  config.value = createSeriesConfig(value);
-});
 
 function handleUpdate<T extends DataType = DataType>(
   payload: ParameterConfigMap[T]
 ): void {
-  config.value = { ...config.value, ...payload };
+  config.value = payload;
 }
 
 function handleAdd(): void {
-  chartStore.addSubplot({
-    dataType: selected.value,
-    series: [
+  if (subplot.value) {
+    chartStore.addSeries(
       {
-        dataType: selected.value,
-        config: { ...config.value },
+        dataType: subplot.value.dataType,
+        config: config.value,
       },
-    ],
-  });
+      subplotIndex.value
+    );
+
+    seriesIndex.value = subplot.value.series.length - 1;
+  }
 
   dialog.value = false;
-
-  // Set index to newly created subplot.
-  subplotStore.setSubplotIndex(chartStore.subplots.length - 1);
 }
 </script>

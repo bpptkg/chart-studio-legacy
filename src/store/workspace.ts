@@ -11,7 +11,7 @@ interface State {
   seriesIndex: number | undefined;
 }
 
-export const useSubplotStore = defineStore('subplot', {
+export const useWorkspaceStore = defineStore('workspace', {
   state: (): State => {
     return {
       subplotIndex: 0,
