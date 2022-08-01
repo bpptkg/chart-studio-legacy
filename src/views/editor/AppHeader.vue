@@ -1,9 +1,9 @@
 <template>
-  <v-app-bar app flat dense :color="$vuetify.theme.dark ? undefined : 'white'">
+  <v-app-bar app flat dense>
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
     <div>
-      <v-tabs fixed-tabs>
+      <v-tabs fixed-tabs background-color="transparent">
         <v-tab to="/file/build">Build</v-tab>
         <v-tab to="/file/compare">Compare</v-tab>
       </v-tabs>

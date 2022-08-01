@@ -23,6 +23,10 @@ export const useDataStore = defineStore('data', {
         subplots: chartStore.subplots,
         interval: chartStore.interval,
         dataRepository: state.data,
+        title: chartStore.title,
+        subtitle: chartStore.subtitle,
+        backgroundColor: chartStore.backgroundColor,
+        margin: chartStore.margin,
       };
     },
   },

@@ -59,7 +59,8 @@
   }
   &.splitpanes--vertical > .splitpanes__splitter,
   .splitpanes--vertical > .splitpanes__splitter {
-    width: 5px;
+    width: 1px;
+    border-left: 1px solid #eee;
     margin-left: -1px;
     &:before,
     &:after {
@@ -76,7 +77,8 @@
   }
   &.splitpanes--horizontal > .splitpanes__splitter,
   .splitpanes--horizontal > .splitpanes__splitter {
-    height: 5px;
+    height: 1px;
+    border-top: 1px solid #eee;
     margin-top: -1px;
     &:before,
     &:after {
@@ -98,5 +100,17 @@
 
   .splitpanes__pane {
     background-color: #303030;
+  }
+}
+
+.cs-theme--dark {
+  &.splitpanes--vertical > .splitpanes__splitter,
+  .splitpanes--vertical > .splitpanes__splitter {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  &.splitpanes--horizontal > .splitpanes__splitter,
+  .splitpanes--horizontal > .splitpanes__splitter {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
   }
 }

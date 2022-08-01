@@ -1,26 +1,15 @@
 <template>
-  <splitpanes
-    class="cs-theme panels"
-    :class="{ 'cs-theme--dark': isDarkTheme }"
-  >
-    <pane min-size="5" size="20" class="rounded-tr-lg">
+  <splitpanes class="cs-theme" :class="{ 'cs-theme--dark': isDarkTheme }">
+    <pane min-size="10" size="20">
       <settings-pane></settings-pane>
     </pane>
-    <pane class="rounded-tl-lg">
+    <pane>
       <splitpanes
         v-if="intervals.length"
         class="cs-theme"
         :class="{ 'cs-theme--dark': isDarkTheme }"
       >
-        <pane
-          min-size="5"
-          v-for="(__, index) in intervals"
-          :key="index"
-          :class="{
-            'rounded-tl-lg': index === intervals.length - 1,
-            'rounded-t-lg': index < intervals.length - 1,
-          }"
-        >
+        <pane min-size="10" v-for="(__, index) in intervals" :key="index">
           {{ index }}
         </pane>
       </splitpanes>
@@ -47,10 +36,4 @@ const { intervals } = storeToRefs(compareStore);
 
 <style lang="scss">
 @import '@/scss/splitpanes.scss';
-</style>
-
-<style lang="scss" scoped>
-.panels {
-  padding-top: 5px;
-}
 </style>

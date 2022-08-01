@@ -30,35 +30,7 @@
 
     <div class="settings-pane-content">
       <scroll-wrapper>
-        <v-list>
-          <v-list-item v-for="(interval, index) in intervals" :key="index">
-            <date-range
-              :interval="interval"
-              @update="(value) => handleUpdate(value, index)"
-            ></date-range>
-            <v-list-item-icon>
-              <v-tooltip
-                bottom
-                :open-delay="500"
-                :open-on-click="false"
-                :open-on-focus="false"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    small
-                    v-on="on"
-                    v-bind="attrs"
-                    @click="compareStore.removeInterval(index)"
-                  >
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </template>
-                <span>Remove Interval</span>
-              </v-tooltip>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list>
+        <interval-list></interval-list>
       </scroll-wrapper>
     </div>
   </div>
@@ -67,12 +39,12 @@
 <script setup lang="ts">
 import { DateInterval } from '@/model/types';
 import { useCompareStore } from '@/store/compare';
-import { storeToRefs } from 'pinia';
 import DateRange from '@/components/DateRange.vue';
 import ScrollWrapper from '@/components/ScrollWrapper.vue';
 import { ref, Ref } from 'vue';
 import moment from 'moment';
 import { DATE_FORMAT } from '@/constants/datetime';
+import IntervalList from './IntervalList.vue';
 
 const newInterval: Ref<DateInterval> = ref({
   start: moment().subtract(7, 'days').format(DATE_FORMAT),
@@ -81,14 +53,8 @@ const newInterval: Ref<DateInterval> = ref({
 
 const compareStore = useCompareStore();
 
-const { intervals } = storeToRefs(compareStore);
-
 function handleAdd(interval: DateInterval): void {
   compareStore.addInterval(interval);
-}
-
-function handleUpdate(interval: DateInterval, index: number): void {
-  compareStore.replaceInterval(interval, index);
 }
 </script>
 
@@ -103,7 +69,7 @@ function handleUpdate(interval: DateInterval, index: number): void {
     left: 0;
     right: 0;
     position: absolute;
-    top: 40px;
+    top: 41px;
   }
 }
 </style>

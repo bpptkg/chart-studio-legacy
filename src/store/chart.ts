@@ -5,6 +5,7 @@ import type {
   DateInterval,
   DataType,
   ParameterConfigMap,
+  Margin,
 } from '@/model/types';
 import { assert } from '@/shared/assertions';
 import moment from 'moment';
@@ -13,6 +14,13 @@ import { defineStore } from 'pinia';
 interface State {
   subplots: SubplotConfig[];
   interval: DateInterval;
+  title: string;
+  subtitle: string;
+  width: number;
+  height: number;
+  devicePixelRatio: number;
+  backgroundColor: string;
+  margin: Margin;
 }
 
 export const useChartStore = defineStore('chart', {
@@ -23,6 +31,13 @@ export const useChartStore = defineStore('chart', {
         end: moment().format(DATE_FORMAT),
         start: moment().subtract(7, 'days').format(DATE_FORMAT),
       },
+      title: '',
+      subtitle: '',
+      width: 500,
+      height: 500,
+      devicePixelRatio: 3,
+      backgroundColor: '#fff',
+      margin: { top: 5, right: 10, bottom: 5, left: 10 },
     };
   },
   actions: {

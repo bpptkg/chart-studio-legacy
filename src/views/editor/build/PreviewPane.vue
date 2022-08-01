@@ -61,5 +61,6 @@ const { isFetching } = storeToRefs(dataStore);
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #eee;
 }
 </style>

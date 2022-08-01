@@ -103,8 +103,19 @@ export interface SeriesDataKey<T extends DataType = DataType> {
   series: SeriesConfig<T>;
 }
 
+export interface Margin {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
 export interface RenderModel {
   subplots: SubplotConfig[];
   interval: DateInterval;
   dataRepository: DataRepository;
+  title?: string;
+  subtitle?: string;
+  backgroundColor?: string;
+  margin?: Margin;
 }

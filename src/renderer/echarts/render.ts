@@ -1,5 +1,6 @@
 import {
   EdmData,
+  Margin,
   RenderModel,
   RfapEnergyData,
   SeismicEnergyData,
@@ -13,7 +14,17 @@ import objectHash from 'object-hash';
 import { createRowGrid } from './grid';
 
 export function renderToECharts(model: RenderModel): EChartsOption {
-  const { subplots, interval, dataRepository } = model;
+  const {
+    subplots,
+    interval,
+    dataRepository,
+    title = '',
+    subtitle = '',
+    backgroundColor = '#fff',
+    margin = {},
+  } = model;
+
+  const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin);
 
   const yAxis: YAXisOption[] = subplots.map((subplot, index) => {
     return {
@@ -118,8 +129,14 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     .flat(1);
 
   return {
-    backgroundColor: '#fff',
-    grid: createRowGrid(subplots.length),
+    backgroundColor,
+    title: {
+      text: title,
+      subtext: subtitle,
+      left: 'center',
+      textStyle: { fontSize: 14 },
+    },
+    grid,
     xAxis,
     yAxis,
     series,
