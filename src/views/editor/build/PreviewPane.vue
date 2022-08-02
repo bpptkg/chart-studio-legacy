@@ -1,6 +1,7 @@
 <template>
-  <preview-pane :loading="isRendering">
+  <preview-pane :loading="isRendering" @click:download="handleDownload">
     <v-chart
+      ref="chart"
       :style="style"
       :option="option"
       :update-options="updateOptions"
@@ -12,12 +13,14 @@
 <script setup lang="ts">
 import 'echarts';
 import VChart from 'vue-echarts';
+import FileSaver from 'file-saver';
 import PreviewPane from '@/components/PreviewPane.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, Ref, ref } from 'vue';
 import { useChartStore } from '@/store/chart';
 import { useDataStore } from '@/store/data';
 import { storeToRefs } from 'pinia';
 import { renderToECharts } from '@/renderer/echarts/render';
+import { getDataURLOptions, defaultFileName } from '@/shared/echarts';
 
 const chartStore = useChartStore();
 const dataStore = useDataStore();
@@ -29,6 +32,7 @@ const updateOptions = ref({
   lazyUpdate: true,
 });
 const isRendering = ref(false);
+const chart: Ref<typeof VChart> = ref(null);
 
 const style = computed(() => {
   return {
@@ -52,6 +56,13 @@ dataStore.$onAction(({ name, after }) => {
 chartStore.$subscribe(() => {
   dataStore.update(chartStore.interval);
 });
+
+function handleDownload() {
+  if (chart.value) {
+    const url = chart.value?.getDataURL(getDataURLOptions);
+    FileSaver.saveAs(url, `${chartStore.title || defaultFileName}.png`);
+  }
+}
 
 onMounted(() => {
   dataStore.update(chartStore.interval);

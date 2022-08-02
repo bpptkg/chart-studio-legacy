@@ -11,8 +11,9 @@
         :class="{ 'cs-theme--dark': isDarkTheme }"
       >
         <pane min-size="10" v-for="(__, index) in intervals" :key="index">
-          <preview-pane>
+          <preview-pane @click:download="handleDownload(index)">
             <v-chart
+              ref="charts"
               :style="style"
               :option="options[index] || {}"
               :update-options="updateOptions"
@@ -28,6 +29,7 @@
 <script setup lang="ts">
 import 'echarts';
 import VChart from 'vue-echarts';
+import FileSaver from 'file-saver';
 import { useCompareStore } from '@/store/compare';
 import { useCompareDataStore } from '@/store/compareData';
 import { Splitpanes, Pane } from 'splitpanes';
@@ -39,6 +41,9 @@ import { useChartStore } from '@/store/chart';
 import { renderToECharts } from '@/renderer/echarts/render';
 import { storeToRefs } from 'pinia';
 import { EChartsOption } from 'echarts';
+import { getDataURLOptions, defaultFileName } from '@/shared/echarts';
+
+const charts: Ref<Array<typeof VChart> | null> = ref(null);
 
 const { isDarkTheme } = useTheme();
 
@@ -83,6 +88,13 @@ compareDataStore.$onAction(({ name, after }) => {
     });
   }
 });
+
+function handleDownload(index: number) {
+  if (charts.value) {
+    const url = charts.value[index].getDataURL(getDataURLOptions);
+    FileSaver.saveAs(url, `${chartStore.title || defaultFileName}.png`);
+  }
+}
 
 onMounted(() => {
   // Update compare data on mounted.
