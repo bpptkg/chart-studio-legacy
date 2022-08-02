@@ -1,25 +1,30 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 
+import FileManager from '@/views/files/FileManager.vue';
+import ChartEditor from '@/views/editor/ChartEditor.vue';
+import BuildView from '@/views/editor/build/BuildView.vue';
+import CompareView from '@/views/editor/compare/CompareView.vue';
+
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    component: () => import('../views/files/FileManager.vue'),
+    component: FileManager,
   },
   {
     path: '/file',
-    component: () => import('../views/editor/ChartEditor.vue'),
+    component: ChartEditor,
     redirect: '/file/build',
     children: [
       {
         path: 'build',
-        component: () => import('../views/editor/build/BuildView.vue'),
+        component: BuildView,
       },
       {
         path: 'compare',
-        component: () => import('../views/editor/compare/CompareView.vue'),
+        component: CompareView,
       },
     ],
   },
