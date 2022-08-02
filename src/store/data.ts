@@ -1,5 +1,10 @@
 import { createRequest, SeriesDataRequest } from '@/model/data';
-import { DataRepository, RenderModel, SeriesDataKey } from '@/model/types';
+import {
+  DataRepository,
+  DateInterval,
+  RenderModel,
+  SeriesDataKey,
+} from '@/model/types';
 import objectHash from 'object-hash';
 import { defineStore } from 'pinia';
 import { useChartStore } from './chart';
@@ -31,10 +36,8 @@ export const useDataStore = defineStore('data', {
     },
   },
   actions: {
-    async update() {
-      this.isFetching = true;
+    async update(interval: DateInterval): Promise<void> {
       const chartStore = useChartStore();
-      const interval = chartStore.interval;
       const requestData = [] as SeriesDataRequest[];
 
       chartStore.subplots.forEach((subplotConfig) => {
@@ -69,9 +72,6 @@ export const useDataStore = defineStore('data', {
         })
         .catch((error) => {
           this.error = error;
-        })
-        .finally(() => {
-          this.isFetching = false;
         });
     },
   },

@@ -4,13 +4,21 @@
       <settings-pane></settings-pane>
     </pane>
     <pane>
+      <v-progress-linear v-show="isRendering" indeterminate></v-progress-linear>
       <splitpanes
         v-if="intervals.length"
         class="cs-theme"
         :class="{ 'cs-theme--dark': isDarkTheme }"
       >
         <pane min-size="10" v-for="(__, index) in intervals" :key="index">
-          {{ index }}
+          <preview-pane>
+            <v-chart
+              :style="style"
+              :option="options[index] || {}"
+              :update-options="updateOptions"
+              :autoresize="true"
+            ></v-chart>
+          </preview-pane>
         </pane>
       </splitpanes>
     </pane>
@@ -18,20 +26,68 @@
 </template>
 
 <script setup lang="ts">
+import 'echarts';
+import VChart from 'vue-echarts';
 import { useCompareStore } from '@/store/compare';
-import { storeToRefs } from 'pinia';
+import { useCompareDataStore } from '@/store/compareData';
 import { Splitpanes, Pane } from 'splitpanes';
-import { computed, getCurrentInstance } from 'vue';
 import SettingsPane from './SettingsPane.vue';
+import PreviewPane from '@/components/PreviewPane.vue';
+import { useTheme } from '@/composables/theme';
+import { computed, onMounted, Ref, ref } from 'vue';
+import { useChartStore } from '@/store/chart';
+import { renderToECharts } from '@/renderer/echarts/render';
+import { storeToRefs } from 'pinia';
+import { EChartsOption } from 'echarts';
 
-const app = getCurrentInstance();
+const { isDarkTheme } = useTheme();
 
-const isDarkTheme = computed(() => {
-  return app?.proxy.$vuetify.theme.dark;
+const chartStore = useChartStore();
+const compareStore = useCompareStore();
+const compareDataStore = useCompareDataStore();
+
+const { intervals } = storeToRefs(compareStore);
+const { renderModels } = storeToRefs(compareDataStore);
+
+compareStore.$subscribe(() => {
+  compareDataStore.update();
 });
 
-const compareStore = useCompareStore();
-const { intervals } = storeToRefs(compareStore);
+chartStore.$subscribe(() => {
+  compareDataStore.update();
+});
+
+const updateOptions = ref({
+  notMerge: true,
+});
+
+const options: Ref<EChartsOption[]> = ref([]);
+const isRendering = ref(false);
+
+const style = computed(() => {
+  return {
+    width: `${chartStore.width}px`,
+    height: `${chartStore.height}px`,
+    backgroundColor: `${chartStore.backgroundColor}`,
+  };
+});
+
+compareDataStore.$onAction(({ name, after }) => {
+  if (name === 'update') {
+    isRendering.value = true;
+    after(async () => {
+      options.value = renderModels.value.map((renderModel) => {
+        return renderToECharts(renderModel);
+      });
+      isRendering.value = false;
+    });
+  }
+});
+
+onMounted(() => {
+  // Update compare data on mounted.
+  compareDataStore.update();
+});
 </script>
 
 <style lang="scss">

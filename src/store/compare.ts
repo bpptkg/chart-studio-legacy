@@ -26,7 +26,11 @@ export const useCompareStore = defineStore('compare', {
     replaceInterval(interval: DateInterval, index: number): void {
       const length = this.intervals.length;
       assert(index >= 0 && index < length, 'Interval index out of range');
-      this.intervals[index] = interval;
+
+      this.$patch((state) => {
+        state.intervals[index].start = interval.start;
+        state.intervals[index].end = interval.end;
+      });
     },
   },
 });

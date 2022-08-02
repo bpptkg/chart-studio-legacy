@@ -44,7 +44,7 @@ dataStore.$onAction(({ name, after }) => {
 });
 
 chartStore.$subscribe(() => {
-  dataStore.update();
+  dataStore.update(chartStore.interval);
 });
 
 onMounted(() => {

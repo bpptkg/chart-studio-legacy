@@ -37,6 +37,7 @@ import DateRange from '@/components/DateRange.vue';
 import { DateInterval } from '@/model/types';
 import { useCompareStore } from '@/store/compare';
 import { storeToRefs } from 'pinia';
+
 const compareStore = useCompareStore();
 
 const { intervals } = storeToRefs(compareStore);
