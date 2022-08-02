@@ -16,9 +16,7 @@ export interface UpdateOptions {
 export const useDataStore = defineStore('data', {
   state: () => {
     return {
-      isFetching: false,
       data: {} as DataRepository,
-      error: null as Error | null,
     };
   },
   getters: {
@@ -60,19 +58,15 @@ export const useDataStore = defineStore('data', {
 
       const requests = requestData.map((v) => v.request);
 
-      await Promise.all(requests)
-        .then((responses) => {
-          const data = responses.map((response) => response.data);
-          this.$patch((state) => {
-            data.forEach((seriesData, index) => {
-              const { key } = requestData[index];
-              state.data[key] = seriesData;
-            });
-          });
-        })
-        .catch((error) => {
-          this.error = error;
+      const responses = await Promise.all(requests);
+      const data = responses.map((response) => response.data);
+
+      this.$patch((state) => {
+        data.forEach((seriesData, index) => {
+          const { key } = requestData[index];
+          state.data[key] = seriesData;
         });
+      });
     },
   },
 });
