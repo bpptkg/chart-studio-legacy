@@ -5,25 +5,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-tooltip
-        bottom
-        :open-delay="500"
-        :open-on-click="false"
-        :open-on-focus="false"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            icon
-            small
-            v-on="on"
-            v-bind="attrs"
-            @click="$emit('click:download')"
-          >
-            <v-icon>mdi-tray-arrow-down</v-icon>
-          </v-btn>
-        </template>
-        <span>Download</span>
-      </v-tooltip>
+      <slot name="toolbar"></slot>
     </v-toolbar>
 
     <v-divider></v-divider>

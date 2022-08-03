@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" scrollable width="400px">
+  <v-dialog v-model="dialog" scrollable max-width="400px">
     <template #activator="{ on: dialog, attrs }">
       <v-tooltip
         bottom
@@ -18,9 +18,17 @@
 
     <v-card>
       <v-card-title>Add Subplot</v-card-title>
+
       <v-divider></v-divider>
-      <v-card-text class="mt-2">
-        <v-select v-model="selected" :items="dataTypes" solo></v-select>
+
+      <v-card-text style="max-height: 300px; padding-top: 15px">
+        <v-select
+          v-model="selected"
+          :items="dataTypes"
+          label="Data Type"
+          outlined
+        ></v-select>
+
         <component
           :is="ComponentOptionsMap[selected]"
           :config="config"
@@ -31,6 +39,7 @@
       <v-divider></v-divider>
 
       <v-card-actions>
+        <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="dialog = false">
           Cancel
         </v-btn>
