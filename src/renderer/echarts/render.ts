@@ -1,6 +1,5 @@
 import {
   EdmData,
-  Margin,
   RenderModel,
   RfapEnergyData,
   SeismicEnergyData,
