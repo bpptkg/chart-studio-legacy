@@ -9,6 +9,10 @@ interface State {
    * Selected series index.
    */
   seriesIndex: number | undefined;
+  /**
+   * Tabs Build | Compare.
+   */
+  viewIndex: string;
 }
 
 export const useWorkspaceStore = defineStore('workspace', {
@@ -16,7 +20,16 @@ export const useWorkspaceStore = defineStore('workspace', {
     return {
       subplotIndex: 0,
       seriesIndex: undefined,
+      viewIndex: '/file/build',
     };
+  },
+  getters: {
+    isBuildView: (state) => {
+      return state.viewIndex === '/file/build';
+    },
+    isCompareView: (state) => {
+      return state.viewIndex === '/file/compare';
+    },
   },
   actions: {
     resetSubplotIndex(): void {

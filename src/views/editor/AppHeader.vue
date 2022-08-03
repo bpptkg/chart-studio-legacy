@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
     <div>
-      <v-tabs fixed-tabs background-color="transparent">
+      <v-tabs v-model="viewIndex" fixed-tabs background-color="transparent">
         <v-tab to="/file/build">Build</v-tab>
         <v-tab to="/file/compare">Compare</v-tab>
       </v-tabs>
@@ -101,3 +101,11 @@
     </div>
   </v-app-bar>
 </template>
+
+<script setup lang="ts">
+import { useWorkspaceStore } from '@/store/workspace';
+import { storeToRefs } from 'pinia';
+
+const workspaceStore = useWorkspaceStore();
+const { viewIndex } = storeToRefs(workspaceStore);
+</script>
