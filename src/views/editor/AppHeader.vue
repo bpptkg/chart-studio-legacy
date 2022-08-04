@@ -31,7 +31,7 @@
         :open-on-focus="false"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="print">
             <v-icon>mdi-printer-outline</v-icon>
           </v-btn>
         </template>
@@ -105,7 +105,17 @@
 <script setup lang="ts">
 import { useWorkspaceStore } from '@/store/workspace';
 import { storeToRefs } from 'pinia';
+import printJS from 'print-js';
 
 const workspaceStore = useWorkspaceStore();
 const { viewIndex } = storeToRefs(workspaceStore);
+
+function print() {
+  if (workspaceStore.isBuildView) {
+    printJS({
+      printable: 'printable-build',
+      type: 'html',
+    });
+  }
+}
 </script>

@@ -30,13 +30,15 @@
       </v-tooltip>
     </template>
 
-    <v-chart
-      ref="chart"
-      :style="style"
-      :option="option"
-      :update-options="updateOptions"
-      :autoresize="true"
-    ></v-chart>
+    <div id="printable-build">
+      <v-chart
+        ref="chart"
+        :style="style"
+        :option="option"
+        :update-options="updateOptions"
+        :autoresize="true"
+      ></v-chart>
+    </div>
 
     <v-snackbar v-model="snackbar" timeout="8000" left>
       <template v-slot:action="{ attrs }">
