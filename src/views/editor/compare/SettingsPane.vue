@@ -21,7 +21,7 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>Add Interval</span>
+          <span>Add interval</span>
         </v-tooltip>
       </date-range>
     </v-toolbar>

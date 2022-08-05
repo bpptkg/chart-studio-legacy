@@ -17,11 +17,11 @@
         :open-on-focus="false"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="createNewChart">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
-        <span>New Chart</span>
+        <span>New chart</span>
       </v-tooltip>
 
       <v-tooltip
@@ -45,7 +45,7 @@
         :open-on-focus="false"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="undo">
             <v-icon>mdi-undo</v-icon>
           </v-btn>
         </template>
@@ -59,7 +59,7 @@
         :open-on-focus="false"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="redo">
             <v-icon>mdi-redo</v-icon>
           </v-btn>
         </template>
@@ -103,12 +103,26 @@
 </template>
 
 <script setup lang="ts">
+import { useChartStore } from '@/store/chart';
+import { useCompareStore } from '@/store/compare';
 import { useWorkspaceStore } from '@/store/workspace';
 import { storeToRefs } from 'pinia';
 import printJS from 'print-js';
+import router from '@/router';
 
 const workspaceStore = useWorkspaceStore();
 const { viewIndex } = storeToRefs(workspaceStore);
+
+const chartStore = useChartStore();
+const compareStore = useCompareStore();
+
+function createNewChart() {
+  // For now, just open a new tab.
+  const route = router.resolve({ path: '/file/build' });
+  if (route) {
+    window.open(route.href, '_blank');
+  }
+}
 
 function print() {
   if (workspaceStore.isBuildView) {
@@ -116,6 +130,27 @@ function print() {
       printable: 'printable-build',
       type: 'html',
     });
+  } else if (workspaceStore.isCompareView) {
+    printJS({
+      printable: 'printable-compare',
+      type: 'html',
+    });
+  }
+}
+
+function undo() {
+  if (workspaceStore.isBuildView) {
+    chartStore.undo();
+  } else if (workspaceStore.isCompareView) {
+    compareStore.undo();
+  }
+}
+
+function redo() {
+  if (workspaceStore.isBuildView) {
+    chartStore.redo();
+  } else if (workspaceStore.isCompareView) {
+    compareStore.redo();
   }
 }
 </script>

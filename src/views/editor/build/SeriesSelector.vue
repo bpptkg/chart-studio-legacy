@@ -12,7 +12,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
-        <span>Add Series</span>
+        <span>Add series</span>
       </v-tooltip>
     </template>
 

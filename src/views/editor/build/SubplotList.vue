@@ -17,7 +17,7 @@
               <v-icon>mdi-minus</v-icon>
             </v-btn>
           </template>
-          <span>Remove Subplot</span>
+          <span>Remove subplot</span>
         </v-tooltip>
 
         <v-tooltip
@@ -31,7 +31,7 @@
               <v-icon>mdi-arrow-up</v-icon>
             </v-btn>
           </template>
-          <span>Move Subplot Up</span>
+          <span>Move subplot up</span>
         </v-tooltip>
 
         <v-tooltip
@@ -45,7 +45,7 @@
               <v-icon>mdi-arrow-down</v-icon>
             </v-btn>
           </template>
-          <span>Move Subplot Down</span>
+          <span>Move subplot down</span>
         </v-tooltip>
       </div>
     </div>
@@ -59,6 +59,7 @@
           <v-list-item-icon>
             <v-icon>mdi-chart-box-outline</v-icon>
           </v-list-item-icon>
+
           <v-list-item-content>
             <v-list-item-title>{{ subplot.dataType }}</v-list-item-title>
           </v-list-item-content>

@@ -5,8 +5,11 @@ import './registerServiceWorker';
 import router from './router';
 import pinia from './store';
 import vuetify from './plugins/vuetify';
+import { PiniaUndo } from 'pinia-undo';
 
 Vue.config.productionTip = false;
+
+pinia.use(PiniaUndo);
 
 function initApp() {
   new Vue({

@@ -17,7 +17,7 @@
               <v-icon>mdi-minus</v-icon>
             </v-btn>
           </template>
-          <span>Remove Series</span>
+          <span>Remove series</span>
         </v-tooltip>
       </div>
     </div>

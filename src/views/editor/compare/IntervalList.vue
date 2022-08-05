@@ -24,7 +24,7 @@
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </template>
-            <span>Remove Interval</span>
+            <span>Remove interval</span>
           </v-tooltip>
         </v-list-item-icon>
       </v-list-item>

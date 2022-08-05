@@ -12,7 +12,7 @@
             <v-icon>mdi-magnify-plus-outline</v-icon>
           </v-btn>
         </template>
-        <span>Zoom In</span>
+        <span>Zoom in</span>
       </v-tooltip>
 
       <v-tooltip
@@ -26,7 +26,7 @@
             <v-icon>mdi-magnify-minus-outline</v-icon>
           </v-btn>
         </template>
-        <span>Zoom Out</span>
+        <span>Zoom out</span>
       </v-tooltip>
 
       <v-tooltip

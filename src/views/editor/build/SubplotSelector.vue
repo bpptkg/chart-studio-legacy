@@ -12,7 +12,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
-        <span>Add Subplot</span>
+        <span>Add subplot</span>
       </v-tooltip>
     </template>
 

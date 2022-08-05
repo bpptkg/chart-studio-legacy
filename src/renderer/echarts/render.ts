@@ -5,12 +5,17 @@ import {
   SeismicEnergyData,
   SeismicityData,
   SeriesDataKey,
+  SubplotConfig,
 } from '@/model/types';
 import { EChartsOption, SeriesOption } from 'echarts';
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared';
 import moment from 'moment';
 import objectHash from 'object-hash';
 import { createRowGrid } from './grid';
+
+export function shouldAxisScale(subplot: SubplotConfig): boolean {
+  return subplot.series.some((series) => series.dataType === 'Edm');
+}
 
 export function renderToECharts(model: RenderModel): EChartsOption {
   const {
@@ -28,9 +33,9 @@ export function renderToECharts(model: RenderModel): EChartsOption {
   const yAxis: YAXisOption[] = subplots.map((subplot, index) => {
     return {
       gridIndex: index,
-      scale: false,
       splitLine: { show: false },
       type: 'value',
+      scale: shouldAxisScale(subplot),
     };
   });
 

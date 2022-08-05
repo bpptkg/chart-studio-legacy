@@ -16,6 +16,7 @@
     "moment": "^2.29.4",
     "object-hash": "^3.0.0",
     "pinia": "^2.0.15",
+    "pinia-undo": "^0.1.4",
     "print-js": "^1.6.0",
     "register-service-worker": "^1.7.2",
     "splitpanes": "^2.4.1",
