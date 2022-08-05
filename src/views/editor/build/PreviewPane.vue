@@ -8,6 +8,34 @@
         :open-on-focus="false"
       >
         <template v-slot:activator="{ on, attrs }">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="zoomIn">
+            <v-icon>mdi-magnify-plus-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Zoom In</span>
+      </v-tooltip>
+
+      <v-tooltip
+        bottom
+        :open-delay="500"
+        :open-on-click="false"
+        :open-on-focus="false"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon small v-on="on" v-bind="attrs" @click="zoomOut">
+            <v-icon>mdi-magnify-minus-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Zoom Out</span>
+      </v-tooltip>
+
+      <v-tooltip
+        bottom
+        :open-delay="500"
+        :open-on-click="false"
+        :open-on-focus="false"
+      >
+        <template v-slot:activator="{ on, attrs }">
           <v-btn icon small v-on="on" v-bind="attrs" @click="handleTryAgain">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
@@ -60,7 +88,7 @@ import 'echarts';
 import VChart from 'vue-echarts';
 import FileSaver from 'file-saver';
 import PreviewPane from '@/components/PreviewPane.vue';
-import { computed, onMounted, Ref, ref } from 'vue';
+import { computed, nextTick, onMounted, Ref, ref } from 'vue';
 import { useChartStore } from '@/store/chart';
 import { useDataStore } from '@/store/data';
 import { storeToRefs } from 'pinia';
@@ -68,6 +96,7 @@ import { renderToECharts } from '@/renderer/echarts/render';
 import { getDataURLOptions, defaultFileName } from '@/shared/echarts';
 import { AxiosError } from 'axios';
 import { EChartsOption } from 'echarts';
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 
 const chartStore = useChartStore();
 const dataStore = useDataStore();
@@ -76,7 +105,6 @@ const { renderModel } = storeToRefs(dataStore);
 const option: Ref<EChartsOption> = ref({});
 const updateOptions = ref({
   notMerge: true,
-  lazyUpdate: true,
 });
 const isRendering = ref(false);
 const chart: Ref<typeof VChart> = ref(null);
@@ -144,5 +172,29 @@ const errorMessage = ref('');
 function handleTryAgain() {
   snackbar.value = false;
   update();
+}
+
+let zoomScale = 1;
+const zoomDelta = 0.2;
+let elem: HTMLElement | null = null;
+let panzoom: PanzoomObject | null = null;
+
+nextTick(() => {
+  elem = document.getElementById('printable-build') as HTMLElement;
+  panzoom = Panzoom(elem, { maxScale: 5 });
+});
+
+function zoomIn() {
+  zoomScale += zoomDelta;
+  if (panzoom) {
+    panzoom.zoom(zoomScale, { animate: true });
+  }
+}
+
+function zoomOut() {
+  zoomScale -= zoomDelta;
+  if (panzoom) {
+    panzoom.zoom(zoomScale, { animate: true });
+  }
 }
 </script>

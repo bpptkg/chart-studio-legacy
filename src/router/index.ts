@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 
-import FileManager from '@/views/files/FileManager.vue';
+// import FileManager from '@/views/files/FileManager.vue';
 import ChartEditor from '@/views/editor/ChartEditor.vue';
 import BuildView from '@/views/editor/build/BuildView.vue';
 import CompareView from '@/views/editor/compare/CompareView.vue';
@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    component: FileManager,
+    redirect: '/file',
   },
   {
     path: '/file',
