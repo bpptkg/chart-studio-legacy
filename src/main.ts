@@ -1,28 +1,32 @@
 import Vue from 'vue'
-import axios from 'axios'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import pinia from './store'
 import vuetify from './plugins/vuetify'
 import { PiniaUndo } from 'pinia-undo'
+import { useUserStore } from './store/user'
 
 Vue.config.productionTip = false
 
 pinia.use(PiniaUndo)
 
+const app = new Vue({
+  router,
+  pinia,
+  vuetify,
+  render: (h) => h(App),
+})
+
 function initApp() {
-  new Vue({
-    router,
-    pinia,
-    vuetify,
-    render: (h) => h(App),
-  }).$mount('#app')
+  app.$mount('#app')
 }
 
 async function initialize() {
-  axios
-    .get('/user')
+  const userStore = useUserStore()
+
+  userStore
+    .getUser()
     .then(() => {
       initApp()
     })
