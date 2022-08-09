@@ -15,9 +15,9 @@
             <span class="white--text text-h5">{{ userStore.initials }}</span>
           </v-avatar>
 
-          <h3 class="mt-3">{{ user?.name }}</h3>
+          <h3 class="mt-3">{{ user?.name || 'Name' }}</h3>
 
-          <p class="text-caption mt-1">@{{ user?.username }}</p>
+          <p class="text-caption mt-1">@{{ user?.username || 'user' }}</p>
 
           <v-divider class="my-3"></v-divider>
 
