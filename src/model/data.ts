@@ -23,7 +23,7 @@ export function createRequest<T extends DataType>(
     case 'Edm': {
       const config = seriesConfig.config as EdmConfig
 
-      return api.get('/edm/', {
+      return api.get('/edm/csdr/', {
         params: {
           start_at: start,
           end_at: end,

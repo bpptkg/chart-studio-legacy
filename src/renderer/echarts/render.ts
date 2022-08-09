@@ -1,5 +1,7 @@
 import {
+  EdmConfig,
   EdmData,
+  EdmParameterConfig,
   RenderModel,
   RfapEnergyData,
   SeismicEnergyData,
@@ -52,7 +54,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       const series = subplot.series
 
       return series.map((seriesConfig) => {
-        const { dataType } = seriesConfig
+        const { dataType, config } = seriesConfig
         const dataKey: SeriesDataKey = {
           interval,
           series: seriesConfig,
@@ -64,11 +66,20 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const data = (
               key in dataRepository ? dataRepository[key] : []
             ) as EdmData[]
+
+            const cfg = config as EdmConfig
+            const fieldName =
+              cfg.type === 'csd'
+                ? 'csd'
+                : cfg.type === 'rate'
+                ? 'rate'
+                : 'slope_distance'
+
             return {
               data: data.map((item) => {
                 return [
                   moment(item['timestamp']).unix() * 1000,
-                  item['slope_distance'],
+                  item[fieldName],
                 ]
               }),
               type: 'line',

@@ -16,6 +16,15 @@
         ></v-select>
       </v-col>
     </v-row>
+    <v-row align="center">
+      <v-col>
+        <v-select
+          v-model="fieldType"
+          :items="fieldTypes"
+          label="Type"
+        ></v-select>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -70,6 +79,12 @@ const reflectorsMap: ReflectorMap = reactive({
   TRI0: ['RK2', 'RK3'],
 })
 
+const fieldTypes = ref([
+  { value: 'slope', text: 'Slope Distance' },
+  { value: 'csd', text: 'Change of Slope Distance (CSD)' },
+  { value: 'rate', text: 'Rate' },
+])
+
 const isBenchmarkUpdating = ref(false)
 
 const benchmark = computed({
@@ -103,6 +118,20 @@ const reflector = computed({
         })
       )
     }
+  },
+})
+
+const fieldType = computed({
+  get() {
+    return props.config?.type || 'slope'
+  },
+  set(value) {
+    emit(
+      'update',
+      Object.assign({}, props.config, {
+        type: value,
+      })
+    )
   },
 })
 
