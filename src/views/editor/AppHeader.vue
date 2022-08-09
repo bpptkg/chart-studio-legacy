@@ -69,6 +69,10 @@
 
     <div class="d-flex align-center">
       <settings-menu></settings-menu>
+
+      <div class="ml-4">
+        <user-avatar></user-avatar>
+      </div>
     </div>
   </v-app-bar>
 </template>
@@ -81,6 +85,7 @@ import { storeToRefs } from 'pinia'
 import printJS from 'print-js'
 import router from '@/router'
 import SettingsMenu from './SettingsMenu.vue'
+import UserAvatar from '../UserAvatar.vue'
 
 const workspaceStore = useWorkspaceStore()
 const { viewIndex } = storeToRefs(workspaceStore)

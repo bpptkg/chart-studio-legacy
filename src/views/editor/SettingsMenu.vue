@@ -1,5 +1,5 @@
 <template>
-  <v-menu :offset-y="true">
+  <v-menu bottom rounded offset-y>
     <template #activator="{ on: menu, attrs }">
       <v-tooltip
         bottom
