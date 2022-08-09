@@ -9,19 +9,19 @@
 </template>
 
 <script setup lang="ts">
-import { SeismicityConfig } from '@/model/types';
-import { computed, ref } from 'vue';
+import { SeismicityConfig } from '@/model/types'
+import { computed, ref } from 'vue'
 
 interface Props {
-  config?: SeismicityConfig;
+  config?: SeismicityConfig
 }
 
 interface Emits {
-  (event: 'update', config: SeismicityConfig): void;
+  (event: 'update', config: SeismicityConfig): void
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const eventTypes = ref([
   { value: 'ANTRHOP', text: 'ANTRHOP' },
@@ -42,11 +42,11 @@ const eventTypes = ref([
   { value: 'VTB', text: 'VTB' },
   { value: 'AWANPANAS', text: 'AWANPANAS' },
   { value: 'LAHAR', text: 'LAHAR' },
-]);
+])
 
 const eventType = computed({
   get() {
-    return props.config?.eventType || 'VTA';
+    return props.config?.eventType || 'VTA'
   },
   set(value) {
     emit(
@@ -54,7 +54,7 @@ const eventType = computed({
       Object.assign({}, props.config, {
         eventType: value,
       })
-    );
+    )
   },
-});
+})
 </script>

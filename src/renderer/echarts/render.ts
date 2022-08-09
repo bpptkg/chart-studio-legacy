@@ -6,15 +6,15 @@ import {
   SeismicityData,
   SeriesDataKey,
   SubplotConfig,
-} from '@/model/types';
-import { EChartsOption, SeriesOption } from 'echarts';
-import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared';
-import moment from 'moment';
-import objectHash from 'object-hash';
-import { createRowGrid } from './grid';
+} from '@/model/types'
+import { EChartsOption, SeriesOption } from 'echarts'
+import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
+import moment from 'moment'
+import objectHash from 'object-hash'
+import { createRowGrid } from './grid'
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
-  return subplot.series.some((series) => series.dataType === 'Edm');
+  return subplot.series.some((series) => series.dataType === 'Edm')
 }
 
 export function renderToECharts(model: RenderModel): EChartsOption {
@@ -26,9 +26,9 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     subtitle = '',
     backgroundColor = '#fff',
     margin = {},
-  } = model;
+  } = model
 
-  const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin);
+  const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin)
 
   const yAxis: YAXisOption[] = subplots.map((subplot, index) => {
     return {
@@ -36,85 +36,82 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       splitLine: { show: false },
       type: 'value',
       scale: shouldAxisScale(subplot),
-    };
-  });
+    }
+  })
 
   const xAxis: XAXisOption[] = subplots.map((subplot, index) => {
     return {
       gridIndex: index,
       splitLine: { show: false },
       type: 'time',
-    };
-  });
+    }
+  })
 
   const series: SeriesOption[] = subplots
     .map((subplot, index) => {
-      const series = subplot.series;
+      const series = subplot.series
 
       return series.map((seriesConfig) => {
-        const { dataType } = seriesConfig;
+        const { dataType } = seriesConfig
         const dataKey: SeriesDataKey = {
           interval,
           series: seriesConfig,
-        };
-        const key = objectHash.sha1(dataKey);
+        }
+        const key = objectHash.sha1(dataKey)
 
         switch (dataType) {
           case 'Edm': {
             const data = (
               key in dataRepository ? dataRepository[key] : []
-            ) as EdmData[];
+            ) as EdmData[]
             return {
               data: data.map((item) => {
                 return [
                   moment(item['timestamp']).unix() * 1000,
                   item['slope_distance'],
-                ];
+                ]
               }),
               type: 'line',
               xAxisIndex: index,
               yAxisIndex: index,
-            } as SeriesOption;
+            } as SeriesOption
           }
 
           case 'RfapEnergy': {
             const data = (
               key in dataRepository ? dataRepository[key] : []
-            ) as RfapEnergyData[];
+            ) as RfapEnergyData[]
             return {
               data: data.map((item) => {
-                return [moment(item['timestamp']).unix() * 1000, item['count']];
+                return [moment(item['timestamp']).unix() * 1000, item['count']]
               }),
               type: 'line',
               xAxisIndex: index,
               yAxisIndex: index,
-            } as SeriesOption;
+            } as SeriesOption
           }
 
           case 'SeismicEnergy': {
             const data = (
               key in dataRepository ? dataRepository[key] : []
-            ) as SeismicEnergyData[];
+            ) as SeismicEnergyData[]
             return {
               data: data.map((item) => {
-                return [
-                  moment(item['timestamp']).unix() * 1000,
-                  item['energy'],
-                ];
+                return [moment(item['timestamp']).unix() * 1000, item['energy']]
               }),
               type: 'line',
               xAxisIndex: index,
               yAxisIndex: index,
-            } as SeriesOption;
+            } as SeriesOption
           }
 
           case 'Seismicity': {
             const data = (
               key in dataRepository ? dataRepository[key] : []
-            ) as SeismicityData[];
+            ) as SeismicityData[]
             return {
               data: data.map((item) => {
-                return [moment(item['timestamp']).unix() * 1000, item['count']];
+                return [moment(item['timestamp']).unix() * 1000, item['count']]
               }),
               type: 'bar',
               barGap: '5%',
@@ -122,15 +119,15 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               barCategoryGap: '0%',
               xAxisIndex: index,
               yAxisIndex: index,
-            } as SeriesOption;
+            } as SeriesOption
           }
 
           default:
-            return {} as SeriesOption;
+            return {} as SeriesOption
         }
-      });
+      })
     })
-    .flat(1);
+    .flat(1)
 
   return {
     backgroundColor,
@@ -144,5 +141,5 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     xAxis,
     yAxis,
     series,
-  };
+  }
 }

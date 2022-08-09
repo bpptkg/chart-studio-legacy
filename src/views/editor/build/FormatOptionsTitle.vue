@@ -9,9 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { useChartStore } from '@/store/chart';
-import { storeToRefs } from 'pinia';
+import { useChartStore } from '@/store/chart'
+import { storeToRefs } from 'pinia'
 
-const chartStore = useChartStore();
-const { title, subtitle } = storeToRefs(chartStore);
+const chartStore = useChartStore()
+const { title, subtitle } = storeToRefs(chartStore)
 </script>

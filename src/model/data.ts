@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import { api } from './api';
+import { AxiosResponse } from 'axios'
+import { api } from './api'
 import {
   DataItemTypeMap,
   DataType,
@@ -8,20 +8,20 @@ import {
   SeismicityConfig,
   SeriesConfig,
   DateInterval,
-} from './types';
+} from './types'
 
-export const controller = new AbortController();
+export const controller = new AbortController()
 
 export function createRequest<T extends DataType>(
   interval: DateInterval,
   seriesConfig: SeriesConfig<T>
 ): Promise<AxiosResponse<DataItemTypeMap[T][]>> {
-  const { dataType } = seriesConfig;
-  const { start, end } = interval;
+  const { dataType } = seriesConfig
+  const { start, end } = interval
 
   switch (dataType) {
     case 'Edm': {
-      const config = seriesConfig.config as EdmConfig;
+      const config = seriesConfig.config as EdmConfig
 
       return api.get('/edm/', {
         params: {
@@ -33,7 +33,7 @@ export function createRequest<T extends DataType>(
           compact: true,
         },
         signal: controller.signal,
-      });
+      })
     }
 
     case 'RfapEnergy':
@@ -46,24 +46,24 @@ export function createRequest<T extends DataType>(
           sep: true,
         },
         signal: controller.signal,
-      });
+      })
 
     case 'SeismicEnergy': {
-      const config = seriesConfig.config as SeismicEnergyConfig;
+      const config = seriesConfig.config as SeismicEnergyConfig
 
-      let eventType = '';
+      let eventType = ''
       switch (config.type) {
         case 'total':
-          eventType = 'VTA,VTB,MP';
-          break;
+          eventType = 'VTA,VTB,MP'
+          break
         case 'vta':
-          eventType = 'VTA';
-          break;
+          eventType = 'VTA'
+          break
         case 'vtbmp':
-          eventType = 'VTB,MP';
-          break;
+          eventType = 'VTB,MP'
+          break
         default:
-          eventType = 'VTA,VTB,MP';
+          eventType = 'VTA,VTB,MP'
       }
 
       return api.get('/energy/', {
@@ -75,11 +75,11 @@ export function createRequest<T extends DataType>(
           nolimit: true,
         },
         signal: controller.signal,
-      });
+      })
     }
 
     case 'Seismicity': {
-      const config = seriesConfig.config as SeismicityConfig;
+      const config = seriesConfig.config as SeismicityConfig
 
       return api.get('/seismicity/', {
         params: {
@@ -92,17 +92,17 @@ export function createRequest<T extends DataType>(
           end: end,
         },
         signal: controller.signal,
-      });
+      })
     }
 
     default:
-      throw new Error(`Unsupported data type: ${dataType}`);
+      throw new Error(`Unsupported data type: ${dataType}`)
   }
 }
 
 export interface SeriesDataRequest<T extends DataType = DataType> {
-  key: string;
-  interval: DateInterval;
-  series: SeriesConfig<T>;
-  request: ReturnType<typeof createRequest>;
+  key: string
+  interval: DateInterval
+  series: SeriesConfig<T>
+  request: ReturnType<typeof createRequest>
 }

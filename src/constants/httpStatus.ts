@@ -36,6 +36,6 @@ export const successCodes = [
   HTTPStatus.MULTI_STATUS,
   HTTPStatus.ALREADY_REPORTED,
   HTTPStatus.IM_USED,
-];
+]
 
-export default HTTPStatus;
+export default HTTPStatus

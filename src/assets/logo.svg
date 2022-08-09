@@ -1,1 +1,16 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.5 100"><defs><style>.cls-1{fill:#1697f6;}.cls-2{fill:#7bc6ff;}.cls-3{fill:#1867c0;}.cls-4{fill:#aeddff;}</style></defs><title>Artboard 46</title><polyline class="cls-1" points="43.75 0 23.31 0 43.75 48.32"/><polygon class="cls-2" points="43.75 62.5 43.75 100 0 14.58 22.92 14.58 43.75 62.5"/><polyline class="cls-3" points="43.75 0 64.19 0 43.75 48.32"/><polygon class="cls-4" points="64.58 14.58 87.5 14.58 43.75 100 43.75 62.5 64.58 14.58"/></svg>
+<svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="140" height="140" rx="32" fill="url(#paint0_linear_0_1)" />
+    <path d="M33 111V53.6H49.4444V111H33ZM61.7778 111V29H78.2222V111H61.7778ZM90.5556 111V78.2H107V111H90.5556Z" fill="url(#paint1_linear_0_1)" />
+    <defs>
+        <linearGradient id="paint0_linear_0_1" x1="140" y1="0" x2="0" y2="140" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#1BC5FF" />
+            <stop offset="0.520833" stop-color="#1E9EF7" />
+            <stop offset="1" stop-color="#1B73F1" />
+        </linearGradient>
+        <linearGradient id="paint1_linear_0_1" x1="70" y1="29" x2="70" y2="111" gradientUnits="userSpaceOnUse">
+            <stop stop-color="white" />
+            <stop offset="1" stop-color="white" stop-opacity="0.78" />
+        </linearGradient>
+    </defs>
+</svg>
+    

@@ -84,117 +84,117 @@
 </template>
 
 <script setup lang="ts">
-import 'echarts';
-import VChart from 'vue-echarts';
-import FileSaver from 'file-saver';
-import PreviewPane from '@/components/PreviewPane.vue';
-import { computed, nextTick, onMounted, Ref, ref } from 'vue';
-import { useChartStore } from '@/store/chart';
-import { useDataStore } from '@/store/data';
-import { storeToRefs } from 'pinia';
-import { renderToECharts } from '@/renderer/echarts/render';
-import { getDataURLOptions, defaultFileName } from '@/shared/echarts';
-import { AxiosError } from 'axios';
-import { EChartsOption } from 'echarts';
-import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
+import 'echarts'
+import VChart from 'vue-echarts'
+import FileSaver from 'file-saver'
+import PreviewPane from '@/components/PreviewPane.vue'
+import { computed, nextTick, onMounted, Ref, ref } from 'vue'
+import { useChartStore } from '@/store/chart'
+import { useDataStore } from '@/store/data'
+import { storeToRefs } from 'pinia'
+import { renderToECharts } from '@/renderer/echarts/render'
+import { getDataURLOptions, defaultFileName } from '@/shared/echarts'
+import { AxiosError } from 'axios'
+import { EChartsOption } from 'echarts'
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 
-const chartStore = useChartStore();
-const dataStore = useDataStore();
-const { renderModel } = storeToRefs(dataStore);
+const chartStore = useChartStore()
+const dataStore = useDataStore()
+const { renderModel } = storeToRefs(dataStore)
 
-const option: Ref<EChartsOption> = ref({});
+const option: Ref<EChartsOption> = ref({})
 const updateOptions = ref({
   notMerge: true,
-});
-const isRendering = ref(false);
-const chart: Ref<typeof VChart> = ref(null);
+})
+const isRendering = ref(false)
+const chart: Ref<typeof VChart> = ref(null)
 
 const style = computed(() => {
   return {
     width: `${chartStore.width}px`,
     height: `${chartStore.height}px`,
     backgroundColor: `${chartStore.backgroundColor}`,
-  };
-});
+  }
+})
 
 function update() {
-  dataStore.update(chartStore.interval);
+  dataStore.update(chartStore.interval)
 }
 
 chartStore.$subscribe(() => {
-  update();
-});
+  update()
+})
 
 dataStore.$onAction(({ name, after, onError }) => {
   if (name === 'update') {
     // Rerender chart configuration after data update.
-    isRendering.value = true;
+    isRendering.value = true
 
     after(async () => {
-      option.value = renderToECharts(renderModel.value);
-      isRendering.value = false;
-    });
+      option.value = renderToECharts(renderModel.value)
+      isRendering.value = false
+    })
 
     onError((e) => {
-      const error = e as AxiosError;
-      let msg = `Error occurred while updating the chart`;
+      const error = e as AxiosError
+      let msg = `Error occurred while updating the chart`
 
       if (error.response) {
-        msg += ` (${error.response.status})`;
+        msg += ` (${error.response.status})`
       } else if (error.request) {
-        msg += ` (ERR_CLIENT)`;
+        msg += ` (ERR_CLIENT)`
       } else {
-        msg += ` (ERR_REQUEST)`;
+        msg += ` (ERR_REQUEST)`
       }
 
-      errorMessage.value = msg;
+      errorMessage.value = msg
 
-      snackbar.value = true;
-      isRendering.value = false;
-    });
+      snackbar.value = true
+      isRendering.value = false
+    })
   }
-});
+})
 
 function handleDownload() {
   if (chart.value) {
-    const dataURL = chart.value.getDataURL(getDataURLOptions);
-    FileSaver.saveAs(dataURL, `${chartStore.title || defaultFileName}.png`);
+    const dataURL = chart.value.getDataURL(getDataURLOptions)
+    FileSaver.saveAs(dataURL, `${chartStore.title || defaultFileName}.png`)
   }
 }
 
 onMounted(() => {
-  update();
-});
+  update()
+})
 
-const snackbar = ref(false);
-const errorMessage = ref('');
+const snackbar = ref(false)
+const errorMessage = ref('')
 
 function handleTryAgain() {
-  snackbar.value = false;
-  update();
+  snackbar.value = false
+  update()
 }
 
-let zoomScale = 1;
-const zoomDelta = 0.2;
-let elem: HTMLElement | null = null;
-let panzoom: PanzoomObject | null = null;
+let zoomScale = 1
+const zoomDelta = 0.2
+let elem: HTMLElement | null = null
+let panzoom: PanzoomObject | null = null
 
 nextTick(() => {
-  elem = document.getElementById('printable-build') as HTMLElement;
-  panzoom = Panzoom(elem, { maxScale: 5 });
-});
+  elem = document.getElementById('printable-build') as HTMLElement
+  panzoom = Panzoom(elem, { maxScale: 5 })
+})
 
 function zoomIn() {
-  zoomScale += zoomDelta;
+  zoomScale += zoomDelta
   if (panzoom) {
-    panzoom.zoom(zoomScale, { animate: true });
+    panzoom.zoom(zoomScale, { animate: true })
   }
 }
 
 function zoomOut() {
-  zoomScale -= zoomDelta;
+  zoomScale -= zoomDelta
   if (panzoom) {
-    panzoom.zoom(zoomScale, { animate: true });
+    panzoom.zoom(zoomScale, { animate: true })
   }
 }
 </script>

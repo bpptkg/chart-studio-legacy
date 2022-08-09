@@ -50,37 +50,37 @@
 </template>
 
 <script setup lang="ts">
-import { ComponentOptionsMap } from '@/components/options';
-import { createSeriesConfig } from '@/model/config';
-import { DataType, ParameterConfigMap } from '@/model/types';
-import { useChartStore } from '@/store/chart';
-import { useWorkspaceStore } from '@/store/workspace';
-import { Ref, ref, watch } from 'vue';
+import { ComponentOptionsMap } from '@/components/options'
+import { createSeriesConfig } from '@/model/config'
+import { DataType, ParameterConfigMap } from '@/model/types'
+import { useChartStore } from '@/store/chart'
+import { useWorkspaceStore } from '@/store/workspace'
+import { Ref, ref, watch } from 'vue'
 
-const chartStore = useChartStore();
-const workspaceStore = useWorkspaceStore();
+const chartStore = useChartStore()
+const workspaceStore = useWorkspaceStore()
 
-const dialog = ref(false);
+const dialog = ref(false)
 const dataTypes = ref([
   { value: 'Seismicity', text: 'Seismicity' },
   { value: 'Edm', text: 'EDM' },
   { value: 'SeismicEnergy', text: 'Seismic Energy' },
   { value: 'RfapEnergy', text: 'RF & AP Energy' },
-]);
+])
 
-const selected: Ref<DataType> = ref('Seismicity');
+const selected: Ref<DataType> = ref('Seismicity')
 const config: Ref<ParameterConfigMap[DataType]> = ref(
   createSeriesConfig('Seismicity')
-);
+)
 
 watch(selected, (value) => {
-  config.value = createSeriesConfig(value);
-});
+  config.value = createSeriesConfig(value)
+})
 
 function handleUpdate<T extends DataType = DataType>(
   payload: ParameterConfigMap[T]
 ): void {
-  config.value = { ...config.value, ...payload };
+  config.value = { ...config.value, ...payload }
 }
 
 function handleAdd(): void {
@@ -92,11 +92,11 @@ function handleAdd(): void {
         config: { ...config.value },
       },
     ],
-  });
+  })
 
-  dialog.value = false;
+  dialog.value = false
 
   // Set index to newly created subplot.
-  workspaceStore.setSubplotIndex(chartStore.subplots.length - 1);
+  workspaceStore.setSubplotIndex(chartStore.subplots.length - 1)
 }
 </script>

@@ -23,17 +23,17 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme';
+import { useTheme } from '@/composables/theme'
 
 interface Props {
-  loading?: boolean;
+  loading?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   loading: false,
-});
+})
 
-const { isDarkTheme } = useTheme();
+const { isDarkTheme } = useTheme()
 </script>
 
 <style lang="scss" scoped>

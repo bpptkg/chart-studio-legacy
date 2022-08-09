@@ -1,13 +1,13 @@
-import { computed, getCurrentInstance } from 'vue';
+import { computed, getCurrentInstance } from 'vue'
 
 export function useTheme() {
-  const app = getCurrentInstance();
+  const app = getCurrentInstance()
   const isDarkTheme = computed(() => {
-    return app?.proxy.$vuetify.theme.dark;
-  });
+    return app?.proxy.$vuetify.theme.dark
+  })
 
   const isLightTheme = computed(() => {
-    return !isDarkTheme.value;
-  });
-  return { isDarkTheme, isLightTheme };
+    return !isDarkTheme.value
+  })
+  return { isDarkTheme, isLightTheme }
 }

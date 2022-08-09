@@ -1,16 +1,16 @@
-import EdmOptions from './EdmOptions.vue';
-import RfapEnergyOptions from './RfapEnergyOptions.vue';
-import SeismicEnergyOptions from './SeismicEnergyOptions.vue';
-import SeismicityOptions from './SeismicityOptions.vue';
+import EdmOptions from './EdmOptions.vue'
+import RfapEnergyOptions from './RfapEnergyOptions.vue'
+import SeismicEnergyOptions from './SeismicEnergyOptions.vue'
+import SeismicityOptions from './SeismicityOptions.vue'
 
 export type ComponentOptions =
   | typeof SeismicityOptions
   | typeof EdmOptions
   | typeof SeismicEnergyOptions
-  | typeof RfapEnergyOptions;
+  | typeof RfapEnergyOptions
 
 export interface ComponentOptionsMapInternal {
-  [k: string]: ComponentOptions;
+  [k: string]: ComponentOptions
 }
 
 export const ComponentOptionsMap: ComponentOptionsMapInternal = {
@@ -18,4 +18,4 @@ export const ComponentOptionsMap: ComponentOptionsMapInternal = {
   Edm: EdmOptions,
   SeismicEnergy: SeismicEnergyOptions,
   RfapEnergy: RfapEnergyOptions,
-};
+}

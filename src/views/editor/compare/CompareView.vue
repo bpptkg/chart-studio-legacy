@@ -17,7 +17,7 @@
                 <v-icon>mdi-magnify-plus-outline</v-icon>
               </v-btn>
             </template>
-            <span>Zoom In</span>
+            <span>Zoom in</span>
           </v-tooltip>
 
           <v-tooltip
@@ -31,7 +31,7 @@
                 <v-icon>mdi-magnify-minus-outline</v-icon>
               </v-btn>
             </template>
-            <span>Zoom Out</span>
+            <span>Zoom out</span>
           </v-tooltip>
 
           <v-tooltip
@@ -91,126 +91,126 @@
 </template>
 
 <script setup lang="ts">
-import 'echarts';
-import VChart from 'vue-echarts';
-import { useCompareStore } from '@/store/compare';
-import { useCompareDataStore } from '@/store/compareData';
-import { Splitpanes, Pane } from 'splitpanes';
-import SettingsPane from './SettingsPane.vue';
-import PreviewPane from '@/components/PreviewPane.vue';
-import { useTheme } from '@/composables/theme';
-import { computed, nextTick, onMounted, Ref, ref } from 'vue';
-import { useChartStore } from '@/store/chart';
-import { renderToECharts } from '@/renderer/echarts/render';
-import { storeToRefs } from 'pinia';
-import { EChartsOption } from 'echarts';
-import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
-import { AxiosError } from 'axios';
+import 'echarts'
+import VChart from 'vue-echarts'
+import { useCompareStore } from '@/store/compare'
+import { useCompareDataStore } from '@/store/compareData'
+import { Splitpanes, Pane } from 'splitpanes'
+import SettingsPane from './SettingsPane.vue'
+import PreviewPane from '@/components/PreviewPane.vue'
+import { useTheme } from '@/composables/theme'
+import { computed, nextTick, onMounted, Ref, ref } from 'vue'
+import { useChartStore } from '@/store/chart'
+import { renderToECharts } from '@/renderer/echarts/render'
+import { storeToRefs } from 'pinia'
+import { EChartsOption } from 'echarts'
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
+import { AxiosError } from 'axios'
 
-const charts: Ref<Array<typeof VChart> | null> = ref(null);
+const charts: Ref<Array<typeof VChart> | null> = ref(null)
 
-const { isDarkTheme } = useTheme();
+const { isDarkTheme } = useTheme()
 
-const chartStore = useChartStore();
-const compareStore = useCompareStore();
-const compareDataStore = useCompareDataStore();
+const chartStore = useChartStore()
+const compareStore = useCompareStore()
+const compareDataStore = useCompareDataStore()
 
-const { intervals } = storeToRefs(compareStore);
-const { renderModels } = storeToRefs(compareDataStore);
+const { intervals } = storeToRefs(compareStore)
+const { renderModels } = storeToRefs(compareDataStore)
 
 compareStore.$subscribe(() => {
-  compareDataStore.update();
-});
+  compareDataStore.update()
+})
 
 chartStore.$subscribe(() => {
-  compareDataStore.update();
-});
+  compareDataStore.update()
+})
 
 const updateOptions = ref({
   notMerge: true,
-});
+})
 
-const options: Ref<EChartsOption[]> = ref([]);
-const isRendering = ref(false);
-const snackbar = ref(false);
-const errorMessage = ref('');
+const options: Ref<EChartsOption[]> = ref([])
+const isRendering = ref(false)
+const snackbar = ref(false)
+const errorMessage = ref('')
 
 const style = computed(() => {
   return {
     width: `${chartStore.width}px`,
     height: `${chartStore.height}px`,
     backgroundColor: `${chartStore.backgroundColor}`,
-  };
-});
+  }
+})
 
 function update() {
   // Update compare data on mounted.
-  compareDataStore.update();
+  compareDataStore.update()
 }
 
 compareDataStore.$onAction(({ name, after, onError }) => {
   if (name === 'update') {
-    isRendering.value = true;
+    isRendering.value = true
 
     after(async () => {
       options.value = renderModels.value.map((renderModel) => {
-        return renderToECharts(renderModel);
-      });
-      isRendering.value = false;
-    });
+        return renderToECharts(renderModel)
+      })
+      isRendering.value = false
+    })
 
     onError((e) => {
-      const error = e as AxiosError;
-      let msg = `Error occurred while updating the chart`;
+      const error = e as AxiosError
+      let msg = `Error occurred while updating the chart`
 
       if (error.response) {
-        msg += ` (${error.response.status})`;
+        msg += ` (${error.response.status})`
       } else if (error.request) {
-        msg += ` (ERR_CLIENT)`;
+        msg += ` (ERR_CLIENT)`
       } else {
-        msg += ` (ERR_REQUEST)`;
+        msg += ` (ERR_REQUEST)`
       }
 
-      errorMessage.value = msg;
+      errorMessage.value = msg
 
-      snackbar.value = true;
-      isRendering.value = false;
-    });
+      snackbar.value = true
+      isRendering.value = false
+    })
   }
-});
+})
 
 onMounted(() => {
-  update();
-});
+  update()
+})
 
 function handleTryAgain() {
-  snackbar.value = false;
-  update();
+  snackbar.value = false
+  update()
 }
 
-let zoomScale = 1;
-const zoomDelta = 0.2;
-let elem: HTMLElement | null = null;
-let panzoom: PanzoomObject | null = null;
+let zoomScale = 1
+const zoomDelta = 0.2
+let elem: HTMLElement | null = null
+let panzoom: PanzoomObject | null = null
 
 nextTick(() => {
-  elem = document.getElementById('printable-compare');
+  elem = document.getElementById('printable-compare')
   if (elem) {
-    panzoom = Panzoom(elem, { maxScale: 5 });
+    panzoom = Panzoom(elem, { maxScale: 5 })
   }
-});
+})
 
 function zoomIn() {
-  zoomScale += zoomDelta;
+  zoomScale += zoomDelta
   if (panzoom) {
-    panzoom.zoom(zoomScale, { animate: true });
+    panzoom.zoom(zoomScale, { animate: true })
   }
 }
 
 function zoomOut() {
-  zoomScale -= zoomDelta;
+  zoomScale -= zoomDelta
   if (panzoom) {
-    panzoom.zoom(zoomScale, { animate: true });
+    panzoom.zoom(zoomScale, { animate: true })
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import { DataType, ParameterConfigType } from './types';
+import { DataType, ParameterConfigType } from './types'
 
 /**
  * Create default series configuration entry for certain data type.
@@ -15,29 +15,29 @@ export function createSeriesConfig<T extends DataType = DataType>(
         benchmark: 'BAB0',
         reflector: 'RB1',
         type: 'slope',
-      };
+      }
 
     case 'RfapEnergy':
       return {
         visible: true,
-      };
+      }
 
     case 'SeismicEnergy':
       return {
         visible: true,
         type: 'total',
-      };
+      }
 
     case 'Seismicity':
       return {
         visible: true,
         eventType: 'VTA',
-      };
+      }
 
     default:
       return {
         visible: true,
         eventType: 'VTA',
-      };
+      }
   }
 }

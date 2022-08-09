@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const show = ref(false);
+const show = ref(false)
 </script>

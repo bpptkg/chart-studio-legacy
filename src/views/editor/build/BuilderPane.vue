@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import ScrollWrapper from '@/components/ScrollWrapper.vue';
-import RangeSelector from './RangeSelector.vue';
-import SubplotList from './SubplotList.vue';
+import ScrollWrapper from '@/components/ScrollWrapper.vue'
+import RangeSelector from './RangeSelector.vue'
+import SubplotList from './SubplotList.vue'
 </script>
 
 <style lang="scss" scoped>

@@ -37,24 +37,24 @@
 </template>
 
 <script setup lang="ts">
-import { DateInterval } from '@/model/types';
-import { useCompareStore } from '@/store/compare';
-import DateRange from '@/components/DateRange.vue';
-import ScrollWrapper from '@/components/ScrollWrapper.vue';
-import { ref, Ref } from 'vue';
-import moment from 'moment';
-import { DATE_FORMAT } from '@/constants/datetime';
-import IntervalList from './IntervalList.vue';
+import { DateInterval } from '@/model/types'
+import { useCompareStore } from '@/store/compare'
+import DateRange from '@/components/DateRange.vue'
+import ScrollWrapper from '@/components/ScrollWrapper.vue'
+import { ref, Ref } from 'vue'
+import moment from 'moment'
+import { DATE_FORMAT } from '@/constants/datetime'
+import IntervalList from './IntervalList.vue'
 
 const newInterval: Ref<DateInterval> = ref({
   start: moment().subtract(7, 'days').format(DATE_FORMAT),
   end: moment().format(DATE_FORMAT),
-});
+})
 
-const compareStore = useCompareStore();
+const compareStore = useCompareStore()
 
 function handleAdd(interval: DateInterval): void {
-  compareStore.addInterval(interval);
+  compareStore.addInterval(interval)
 }
 </script>
 

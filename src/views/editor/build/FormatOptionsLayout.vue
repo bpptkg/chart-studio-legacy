@@ -49,66 +49,65 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme';
-import { isNumeric } from '@/shared/number';
-import { useChartStore } from '@/store/chart';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { useTheme } from '@/composables/theme'
+import { isNumeric } from '@/shared/number'
+import { useChartStore } from '@/store/chart'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
-const { isDarkTheme } = useTheme();
+const { isDarkTheme } = useTheme()
 
-const chartStore = useChartStore();
-const { margin } = storeToRefs(chartStore);
+const chartStore = useChartStore()
+const { margin } = storeToRefs(chartStore)
 
 function validate(value: number): boolean | string {
-  return isNumeric(value) || 'Invalid value';
+  return isNumeric(value) || 'Invalid value'
 }
 
 const marginTop = computed({
   get() {
-    return margin.value.top;
+    return margin.value.top
   },
   set(value) {
     if (isNumeric(value)) {
-      margin.value.top = typeof value === 'string' ? parseFloat(value) : value;
+      margin.value.top = typeof value === 'string' ? parseFloat(value) : value
     }
   },
-});
+})
 
 const marginRight = computed({
   get() {
-    return margin.value.right;
+    return margin.value.right
   },
   set(value) {
     if (isNumeric(value)) {
-      margin.value.right =
-        typeof value === 'string' ? parseFloat(value) : value;
+      margin.value.right = typeof value === 'string' ? parseFloat(value) : value
     }
   },
-});
+})
 
 const marginBottom = computed({
   get() {
-    return margin.value.bottom;
+    return margin.value.bottom
   },
   set(value) {
     if (isNumeric(value)) {
       margin.value.bottom =
-        typeof value === 'string' ? parseFloat(value) : value;
+        typeof value === 'string' ? parseFloat(value) : value
     }
   },
-});
+})
 
 const marginLeft = computed({
   get() {
-    return margin.value.left;
+    return margin.value.left
   },
   set(value) {
     if (isNumeric(value)) {
-      margin.value.left = typeof value === 'string' ? parseFloat(value) : value;
+      margin.value.left = typeof value === 'string' ? parseFloat(value) : value
     }
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

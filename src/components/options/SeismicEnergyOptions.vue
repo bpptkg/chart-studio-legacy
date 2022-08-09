@@ -5,29 +5,29 @@
 </template>
 
 <script setup lang="ts">
-import { SeismicEnergyConfig } from '@/model/types';
-import { ref, computed } from 'vue';
+import { SeismicEnergyConfig } from '@/model/types'
+import { ref, computed } from 'vue'
 
 interface Props {
-  config?: SeismicEnergyConfig;
+  config?: SeismicEnergyConfig
 }
 
 interface Emits {
-  (event: 'update', config: SeismicEnergyConfig): void;
+  (event: 'update', config: SeismicEnergyConfig): void
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const types = ref([
   { value: 'total', text: 'Total' },
   { value: 'vta', text: 'VTA' },
   { value: 'vtbmp', text: 'VTB+MP' },
-]);
+])
 
 const type = computed({
   get() {
-    return props.config?.type || 'total';
+    return props.config?.type || 'total'
   },
   set(value) {
     emit(
@@ -35,7 +35,7 @@ const type = computed({
       Object.assign({}, props.config, {
         type: value,
       })
-    );
+    )
   },
-});
+})
 </script>

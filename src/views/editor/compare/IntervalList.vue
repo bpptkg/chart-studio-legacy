@@ -33,16 +33,16 @@
 </template>
 
 <script setup lang="ts">
-import DateRange from '@/components/DateRange.vue';
-import { DateInterval } from '@/model/types';
-import { useCompareStore } from '@/store/compare';
-import { storeToRefs } from 'pinia';
+import DateRange from '@/components/DateRange.vue'
+import { DateInterval } from '@/model/types'
+import { useCompareStore } from '@/store/compare'
+import { storeToRefs } from 'pinia'
 
-const compareStore = useCompareStore();
+const compareStore = useCompareStore()
 
-const { intervals } = storeToRefs(compareStore);
+const { intervals } = storeToRefs(compareStore)
 
 function handleUpdate(interval: DateInterval, index: number): void {
-  compareStore.replaceInterval(interval, index);
+  compareStore.replaceInterval(interval, index)
 }
 </script>

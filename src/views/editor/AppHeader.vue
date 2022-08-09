@@ -1,7 +1,5 @@
 <template>
   <v-app-bar app flat dense>
-    <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
     <div>
       <v-tabs v-model="viewIndex" fixed-tabs background-color="transparent">
         <v-tab to="/file/build">Build</v-tab>
@@ -70,57 +68,31 @@
     <v-spacer></v-spacer>
 
     <div class="d-flex align-center">
-      <v-tooltip
-        bottom
-        :open-delay="500"
-        :open-on-click="false"
-        :open-on-focus="false"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
-            <v-icon>mdi-help-circle-outline</v-icon>
-          </v-btn>
-        </template>
-        <span>Help</span>
-      </v-tooltip>
-
-      <v-tooltip
-        bottom
-        :open-delay="500"
-        :open-on-click="false"
-        :open-on-focus="false"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small v-on="on" v-bind="attrs">
-            <v-icon>mdi-cog-outline</v-icon>
-          </v-btn>
-        </template>
-        <span>Settings</span>
-      </v-tooltip>
-      <v-switch v-model="$vuetify.theme.dark"></v-switch>
+      <settings-menu></settings-menu>
     </div>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { useChartStore } from '@/store/chart';
-import { useCompareStore } from '@/store/compare';
-import { useWorkspaceStore } from '@/store/workspace';
-import { storeToRefs } from 'pinia';
-import printJS from 'print-js';
-import router from '@/router';
+import { useChartStore } from '@/store/chart'
+import { useCompareStore } from '@/store/compare'
+import { useWorkspaceStore } from '@/store/workspace'
+import { storeToRefs } from 'pinia'
+import printJS from 'print-js'
+import router from '@/router'
+import SettingsMenu from './SettingsMenu.vue'
 
-const workspaceStore = useWorkspaceStore();
-const { viewIndex } = storeToRefs(workspaceStore);
+const workspaceStore = useWorkspaceStore()
+const { viewIndex } = storeToRefs(workspaceStore)
 
-const chartStore = useChartStore();
-const compareStore = useCompareStore();
+const chartStore = useChartStore()
+const compareStore = useCompareStore()
 
 function createNewChart() {
   // For now, just open a new tab.
-  const route = router.resolve({ path: '/file/build' });
+  const route = router.resolve({ path: '/file/build' })
   if (route) {
-    window.open(route.href, '_blank');
+    window.open(route.href, '_blank')
   }
 }
 
@@ -129,28 +101,28 @@ function print() {
     printJS({
       printable: 'printable-build',
       type: 'html',
-    });
+    })
   } else if (workspaceStore.isCompareView) {
     printJS({
       printable: 'printable-compare',
       type: 'html',
-    });
+    })
   }
 }
 
 function undo() {
   if (workspaceStore.isBuildView) {
-    chartStore.undo();
+    chartStore.undo()
   } else if (workspaceStore.isCompareView) {
-    compareStore.undo();
+    compareStore.undo()
   }
 }
 
 function redo() {
   if (workspaceStore.isBuildView) {
-    chartStore.redo();
+    chartStore.redo()
   } else if (workspaceStore.isCompareView) {
-    compareStore.redo();
+    compareStore.redo()
   }
 }
 </script>

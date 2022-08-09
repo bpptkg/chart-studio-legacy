@@ -20,19 +20,19 @@
 </template>
 
 <script setup lang="ts">
-import { EdmConfig } from '@/model/types';
-import { computed, reactive, ref } from 'vue';
+import { EdmConfig } from '@/model/types'
+import { computed, reactive, ref } from 'vue'
 
 interface Props {
-  config?: EdmConfig;
+  config?: EdmConfig
 }
 
 interface Emits {
-  (event: 'update', config: EdmConfig): void;
+  (event: 'update', config: EdmConfig): void
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const benchmarks = ref([
   { value: 'BAB0', text: 'Babadan 0' },
@@ -49,9 +49,9 @@ const benchmarks = ref([
   { value: 'SEL0', text: 'Selo' },
   { value: 'STA0', text: 'Stabelan' },
   { value: 'TRI0', text: 'Tritis' },
-]);
+])
 
-type ReflectorMap = Record<string, string[]>;
+type ReflectorMap = Record<string, string[]>
 
 const reflectorsMap: ReflectorMap = reactive({
   BAB0: ['RB1', 'RB2'],
@@ -68,31 +68,31 @@ const reflectorsMap: ReflectorMap = reactive({
   SEL0: ['RS1', 'RS2', 'RS3', 'RS4'],
   STA0: ['RB1', 'RB2', 'RB3', 'RJ2'],
   TRI0: ['RK2', 'RK3'],
-});
+})
 
-const isBenchmarkUpdating = ref(false);
+const isBenchmarkUpdating = ref(false)
 
 const benchmark = computed({
   get() {
-    return props.config?.benchmark || 'BAB0';
+    return props.config?.benchmark || 'BAB0'
   },
   set(value) {
-    isBenchmarkUpdating.value = true;
-    reflector.value = reflectorsMap[value][0];
+    isBenchmarkUpdating.value = true
+    reflector.value = reflectorsMap[value][0]
     emit(
       'update',
       Object.assign({}, props.config, {
         benchmark: value,
         reflector: reflectorsMap[value][0],
       })
-    );
-    isBenchmarkUpdating.value = false;
+    )
+    isBenchmarkUpdating.value = false
   },
-});
+})
 
 const reflector = computed({
   get() {
-    return props.config?.reflector || 'RB1';
+    return props.config?.reflector || 'RB1'
   },
   set(value) {
     if (!isBenchmarkUpdating.value) {
@@ -101,12 +101,12 @@ const reflector = computed({
         Object.assign({}, props.config, {
           reflector: value,
         })
-      );
+      )
     }
   },
-});
+})
 
 const reflectors = computed(() => {
-  return reflectorsMap[benchmark.value];
-});
+  return reflectorsMap[benchmark.value]
+})
 </script>

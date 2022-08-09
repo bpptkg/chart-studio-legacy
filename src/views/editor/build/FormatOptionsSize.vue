@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { useChartStore } from '@/store/chart';
-import { storeToRefs } from 'pinia';
+import { useChartStore } from '@/store/chart'
+import { storeToRefs } from 'pinia'
 
-const chartStore = useChartStore();
-const { width, height } = storeToRefs(chartStore);
+const chartStore = useChartStore()
+const { width, height } = storeToRefs(chartStore)
 </script>

@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import SeriesList from './SeriesList.vue';
-import ScrollWrapper from '@/components/ScrollWrapper.vue';
-import FormatOptions from './FormatOptions.vue';
+import SeriesList from './SeriesList.vue'
+import ScrollWrapper from '@/components/ScrollWrapper.vue'
+import FormatOptions from './FormatOptions.vue'
 </script>
 
 <style lang="scss" scoped>

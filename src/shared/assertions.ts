@@ -3,6 +3,6 @@ export function assert(
   message?: string
 ): asserts condition {
   if (!condition) {
-    throw new Error('Assertion failed' + (message ? ': ' + message : ''));
+    throw new Error('Assertion failed' + (message ? ': ' + message : ''))
   }
 }

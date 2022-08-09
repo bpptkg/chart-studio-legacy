@@ -39,32 +39,32 @@
 </template>
 
 <script setup lang="ts">
-import { ComponentOptionsMap } from '@/components/options';
-import SeriesSelector from './SeriesSelector.vue';
-import { useChartStore } from '@/store/chart';
-import { useWorkspaceStore } from '@/store/workspace';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
-import { DataType, ParameterConfigMap } from '@/model/types';
+import { ComponentOptionsMap } from '@/components/options'
+import SeriesSelector from './SeriesSelector.vue'
+import { useChartStore } from '@/store/chart'
+import { useWorkspaceStore } from '@/store/workspace'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+import { DataType, ParameterConfigMap } from '@/model/types'
 
-const chartStore = useChartStore();
-const { subplots } = storeToRefs(chartStore);
+const chartStore = useChartStore()
+const { subplots } = storeToRefs(chartStore)
 
-const workspaceStore = useWorkspaceStore();
-const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore);
+const workspaceStore = useWorkspaceStore()
+const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore)
 
 const seriesConfig = computed(() => {
   if (subplots.value.length > 0) {
-    return subplots.value[subplotIndex.value].series;
+    return subplots.value[subplotIndex.value].series
   } else {
-    return [];
+    return []
   }
-});
+})
 
 function removeSeries(): void {
   if (seriesConfig.value.length > 0 && seriesIndex.value !== undefined) {
-    chartStore.removeSeries(subplotIndex.value, seriesIndex.value);
-    workspaceStore.resetSeriesIndex();
+    chartStore.removeSeries(subplotIndex.value, seriesIndex.value)
+    workspaceStore.resetSeriesIndex()
   }
 }
 
@@ -76,7 +76,7 @@ function handleUpdate<T extends DataType = DataType>(
       payload,
       subplotIndex.value,
       seriesIndex.value
-    );
+    )
   }
 }
 </script>

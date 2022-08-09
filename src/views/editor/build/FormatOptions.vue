@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import FormatOptionsTitle from './FormatOptionsTitle.vue';
-import FormatOptionsSize from './FormatOptionsSize.vue';
-import FormatOptionsLayout from './FormatOptionsLayout.vue';
+import FormatOptionsTitle from './FormatOptionsTitle.vue'
+import FormatOptionsSize from './FormatOptionsSize.vue'
+import FormatOptionsLayout from './FormatOptionsLayout.vue'
 </script>

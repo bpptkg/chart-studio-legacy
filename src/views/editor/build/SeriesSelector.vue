@@ -40,35 +40,35 @@
 </template>
 
 <script setup lang="ts">
-import { ComponentOptionsMap } from '@/components/options';
-import { DataType, ParameterConfigMap } from '@/model/types';
-import { createSeriesConfig } from '@/model/config';
-import { useChartStore } from '@/store/chart';
-import { useWorkspaceStore } from '@/store/workspace';
-import { storeToRefs } from 'pinia';
-import { computed, ref, Ref } from 'vue';
+import { ComponentOptionsMap } from '@/components/options'
+import { DataType, ParameterConfigMap } from '@/model/types'
+import { createSeriesConfig } from '@/model/config'
+import { useChartStore } from '@/store/chart'
+import { useWorkspaceStore } from '@/store/workspace'
+import { storeToRefs } from 'pinia'
+import { computed, ref, Ref } from 'vue'
 
-const chartStore = useChartStore();
-const { subplots } = storeToRefs(chartStore);
+const chartStore = useChartStore()
+const { subplots } = storeToRefs(chartStore)
 
-const workspaceStore = useWorkspaceStore();
-const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore);
+const workspaceStore = useWorkspaceStore()
+const { subplotIndex, seriesIndex } = storeToRefs(workspaceStore)
 
 const subplot = computed(() => {
   return subplots.value.length > 0
     ? subplots.value[subplotIndex.value]
-    : undefined;
-});
+    : undefined
+})
 
-const dialog = ref(false);
+const dialog = ref(false)
 const config: Ref<ParameterConfigMap[DataType]> = ref(
   createSeriesConfig(subplot.value?.dataType)
-);
+)
 
 function handleUpdate<T extends DataType = DataType>(
   payload: ParameterConfigMap[T]
 ): void {
-  config.value = payload;
+  config.value = payload
 }
 
 function handleAdd(): void {
@@ -79,11 +79,11 @@ function handleAdd(): void {
         config: config.value,
       },
       subplotIndex.value
-    );
+    )
 
-    seriesIndex.value = subplot.value.series.length - 1;
+    seriesIndex.value = subplot.value.series.length - 1
   }
 
-  dialog.value = false;
+  dialog.value = false
 }
 </script>

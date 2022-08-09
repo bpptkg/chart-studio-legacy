@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { Splitpanes, Pane } from 'splitpanes';
-import BuilderPane from './BuilderPane.vue';
-import PreviewPane from './PreviewPane.vue';
-import PropertyPane from './PropertyPane.vue';
+import { Splitpanes, Pane } from 'splitpanes'
+import BuilderPane from './BuilderPane.vue'
+import PreviewPane from './PreviewPane.vue'
+import PropertyPane from './PropertyPane.vue'
 </script>
 
 <style lang="scss">

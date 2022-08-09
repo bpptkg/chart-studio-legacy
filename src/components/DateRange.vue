@@ -175,17 +175,17 @@
 </template>
 
 <script setup lang="ts">
-import { DateInterval } from '@/model/types';
-import { DATE_FORMAT } from '@/constants/datetime';
-import moment from 'moment';
-import { computed, Ref, ref, watch } from 'vue';
+import { DateInterval } from '@/model/types'
+import { DATE_FORMAT } from '@/constants/datetime'
+import moment from 'moment'
+import { computed, Ref, ref, watch } from 'vue'
 
 interface Props {
-  interval: DateInterval;
+  interval: DateInterval
 }
 
 interface Emits {
-  (event: 'update', interval: DateInterval): void;
+  (event: 'update', interval: DateInterval): void
 }
 
 enum IntervalType {
@@ -194,37 +194,37 @@ enum IntervalType {
   Custom = 2,
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 // Dialog state.
-const show = ref(false);
+const show = ref(false)
 
 // Interval tab options.
-const tabIndex: Ref<IntervalType> = ref(IntervalType.Range);
+const tabIndex: Ref<IntervalType> = ref(IntervalType.Range)
 
 // Interval radio button.
-const dateIntervalIndex = ref(0);
+const dateIntervalIndex = ref(0)
 
 // Interval offset radio button.
 enum BeforeAfterType {
   Before = 0,
   After = 1,
 }
-const dateIntervalOffsetIndex: Ref<number> = ref(0);
-const offset: Ref<string> = ref(moment().format(DATE_FORMAT));
-const menuOffset: Ref<boolean> = ref(false);
-const beforeAfter: Ref<BeforeAfterType> = ref(BeforeAfterType.Before);
+const dateIntervalOffsetIndex: Ref<number> = ref(0)
+const offset: Ref<string> = ref(moment().format(DATE_FORMAT))
+const menuOffset: Ref<boolean> = ref(false)
+const beforeAfter: Ref<BeforeAfterType> = ref(BeforeAfterType.Before)
 const beforeAfterOptions = ref([
   { value: BeforeAfterType.Before, text: 'Before' },
   { value: BeforeAfterType.After, text: 'After' },
-]);
+])
 
 // Custom range.
-const menu1 = ref(false);
-const menu2 = ref(false);
-const start = ref(props.interval.start);
-const end = ref(props.interval.end);
+const menu1 = ref(false)
+const menu2 = ref(false)
+const start = ref(props.interval.start)
+const end = ref(props.interval.end)
 
 // Interval radio button options
 const dateIntervalOptions = ref([
@@ -235,87 +235,87 @@ const dateIntervalOptions = ref([
   { count: 3, unit: 'months', text: '3 month' },
   { count: 6, unit: 'months', text: '6 month' },
   { count: 1, unit: 'years', text: '1 year' },
-]);
+])
 
 const intervalText = computed(() => {
-  return `${props.interval.start} ~ ${props.interval.end}`;
-});
+  return `${props.interval.start} ~ ${props.interval.end}`
+})
 
 const isCustomIntervalValid = computed(() => {
   // Only check on custom range.
   return (
     tabIndex.value === IntervalType.Custom &&
     moment(start.value) >= moment(end.value)
-  );
-});
+  )
+})
 
 function resetDateIntervalState(): void {
   // Range mode.
-  dateIntervalIndex.value = 0;
+  dateIntervalIndex.value = 0
 
   // Offset mode.
-  dateIntervalOffsetIndex.value = 0;
-  offset.value = moment().format(DATE_FORMAT);
-  beforeAfter.value = BeforeAfterType.Before;
+  dateIntervalOffsetIndex.value = 0
+  offset.value = moment().format(DATE_FORMAT)
+  beforeAfter.value = BeforeAfterType.Before
 
   // Custom mode.
-  start.value = props.interval.start;
-  end.value = props.interval.end;
+  start.value = props.interval.start
+  end.value = props.interval.end
 }
 
 function handleSave(): void {
   if (tabIndex.value === IntervalType.Range) {
     // Interval option mode.
-    const endTime = moment();
-    const selectedInterval = dateIntervalOptions.value[dateIntervalIndex.value];
+    const endTime = moment()
+    const selectedInterval = dateIntervalOptions.value[dateIntervalIndex.value]
     const startTime = endTime
       .clone()
       .subtract(
         selectedInterval.count,
         selectedInterval.unit as moment.unitOfTime.DurationConstructor
-      );
+      )
 
     emit('update', {
       start: startTime.format(DATE_FORMAT),
       end: endTime.format(DATE_FORMAT),
-    });
+    })
   } else if (tabIndex.value === IntervalType.Offset) {
     // Interval offset mode.
-    const offsetDate = moment(offset.value);
+    const offsetDate = moment(offset.value)
     const selectedInterval =
-      dateIntervalOptions.value[dateIntervalOffsetIndex.value];
+      dateIntervalOptions.value[dateIntervalOffsetIndex.value]
 
-    const count = selectedInterval.count;
-    const unit = selectedInterval.unit as moment.unitOfTime.DurationConstructor;
+    const count = selectedInterval.count
+    const unit = selectedInterval.unit as moment.unitOfTime.DurationConstructor
 
-    const terminalDate = offsetDate.clone();
+    const terminalDate = offsetDate.clone()
 
     if (beforeAfter.value === BeforeAfterType.Before) {
       emit('update', {
         start: terminalDate.subtract(count, unit).format(DATE_FORMAT),
         end: offsetDate.format(DATE_FORMAT),
-      });
+      })
     } else {
       emit('update', {
         start: offsetDate.format(DATE_FORMAT),
         end: terminalDate.add(count, unit).format(DATE_FORMAT),
-      });
+      })
     }
   } else if (tabIndex.value === IntervalType.Custom) {
     // Interval custom mode.
     emit('update', {
       start: start.value,
       end: end.value,
-    });
+    })
   }
 
-  show.value = false;
+  show.value = false
 }
 
 // Reset the date interval every time dialog is shown.
 watch(show, (value) => {
   if (value) {
-    resetDateIntervalState();
+    resetDateIntervalState()
   }
-});
+})
 </script>
