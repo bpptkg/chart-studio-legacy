@@ -51,9 +51,13 @@ const eventType = computed({
   set(value) {
     emit(
       'update',
-      Object.assign({}, props.config, {
-        eventType: value,
-      })
+      Object.assign(
+        {},
+        {
+          eventType: value,
+          visible: true,
+        }
+      )
     )
   },
 })

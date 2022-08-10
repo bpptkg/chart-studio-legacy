@@ -32,9 +32,13 @@ const type = computed({
   set(value) {
     emit(
       'update',
-      Object.assign({}, props.config, {
-        type: value,
-      })
+      Object.assign(
+        {},
+        {
+          type: value,
+          visible: true,
+        }
+      )
     )
   },
 })

@@ -61,7 +61,9 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ subplot.dataType }}</v-list-item-title>
+            <v-list-item-title>{{
+              DataTypeNameMap[subplot.dataType]
+            }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -75,6 +77,7 @@ import { useChartStore } from '@/store/chart'
 import { storeToRefs } from 'pinia'
 import { useWorkspaceStore } from '@/store/workspace'
 import { watch } from 'vue'
+import { DataTypeNameMap } from '@/model/types'
 
 const chartStore = useChartStore()
 const { subplots } = storeToRefs(chartStore)

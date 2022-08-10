@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { ComponentOptionsMap } from '@/components/options'
 import { createSeriesConfig } from '@/model/config'
-import { DataType, ParameterConfigMap } from '@/model/types'
+import { DataType, DataTypeNameMap, ParameterConfigMap } from '@/model/types'
 import { useChartStore } from '@/store/chart'
 import { useWorkspaceStore } from '@/store/workspace'
 import { Ref, ref, watch } from 'vue'
@@ -60,13 +60,15 @@ import { Ref, ref, watch } from 'vue'
 const chartStore = useChartStore()
 const workspaceStore = useWorkspaceStore()
 
+function getDataTypes() {
+  const names = Object.keys(DataTypeNameMap) as Array<DataType>
+  return names.map((name) => {
+    return { value: name, text: DataTypeNameMap[name] }
+  })
+}
+
 const dialog = ref(false)
-const dataTypes = ref([
-  { value: 'Seismicity', text: 'Seismicity' },
-  { value: 'Edm', text: 'EDM' },
-  { value: 'SeismicEnergy', text: 'Seismic Energy' },
-  { value: 'RfapEnergy', text: 'RF & AP Energy' },
-])
+const dataTypes = ref(getDataTypes())
 
 const selected: Ref<DataType> = ref('Seismicity')
 const config: Ref<ParameterConfigMap[DataType]> = ref(

@@ -41,6 +41,15 @@ export interface ParameterConfigMap {
 
 export type DataType = keyof ParameterConfigMap
 
+export const DataTypeNameMap: {
+  [key in DataType]: string
+} = {
+  Seismicity: 'Seismicity',
+  Edm: 'EDM',
+  SeismicEnergy: 'Seismic Energy',
+  RfapEnergy: 'RF & AP Energy',
+}
+
 export interface SeismicityData {
   timestamp: string
   count: number | null

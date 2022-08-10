@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header>Layout</v-expansion-panel-header>
+    <v-expansion-panel-header>Grid</v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-subheader>Margin (%)</v-subheader>
       <div class="d-flex flex-column justify-center w-100">

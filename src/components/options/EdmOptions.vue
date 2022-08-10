@@ -96,10 +96,15 @@ const benchmark = computed({
     reflector.value = reflectorsMap[value][0]
     emit(
       'update',
-      Object.assign({}, props.config, {
-        benchmark: value,
-        reflector: reflectorsMap[value][0],
-      })
+      Object.assign(
+        {},
+        {
+          benchmark: value,
+          reflector: reflectorsMap[value][0],
+          type: fieldType.value,
+          visible: true,
+        }
+      )
     )
     isBenchmarkUpdating.value = false
   },
@@ -113,9 +118,15 @@ const reflector = computed({
     if (!isBenchmarkUpdating.value) {
       emit(
         'update',
-        Object.assign({}, props.config, {
-          reflector: value,
-        })
+        Object.assign(
+          {},
+          {
+            benchmark: benchmark.value,
+            reflector: value,
+            type: fieldType.value,
+            visible: true,
+          }
+        )
       )
     }
   },
@@ -128,9 +139,15 @@ const fieldType = computed({
   set(value) {
     emit(
       'update',
-      Object.assign({}, props.config, {
-        type: value,
-      })
+      Object.assign(
+        {},
+        {
+          benchmark: benchmark.value,
+          reflector: reflector.value,
+          type: value,
+          visible: true,
+        }
+      )
     )
   },
 })
