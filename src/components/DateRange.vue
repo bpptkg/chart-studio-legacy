@@ -21,28 +21,13 @@
 
       <v-tabs v-model="tabIndex" grow>
         <v-tab>Range</v-tab>
-        <v-tab>Offset</v-tab>
         <v-tab>Custom</v-tab>
       </v-tabs>
 
       <v-divider></v-divider>
 
       <v-tabs-items v-model="tabIndex">
-        <!-- Interval range mode. -->
-        <v-tab-item>
-          <v-card-text>
-            <v-radio-group v-model="dateIntervalIndex">
-              <v-radio
-                v-for="(option, index) in dateIntervalOptions"
-                :key="index"
-                :label="option.text"
-                :value="index"
-              ></v-radio>
-            </v-radio-group>
-          </v-card-text>
-        </v-tab-item>
-
-        <!-- Interval offset mode. -->
+        <!-- Interval range offset mode. -->
         <v-tab-item>
           <v-card-text>
             <v-row>
@@ -190,8 +175,7 @@ interface Emits {
 
 enum IntervalType {
   Range = 0,
-  Offset = 1,
-  Custom = 2,
+  Custom = 1,
 }
 
 const props = defineProps<Props>()
@@ -202,9 +186,6 @@ const show = ref(false)
 
 // Interval tab options.
 const tabIndex: Ref<IntervalType> = ref(IntervalType.Range)
-
-// Interval radio button.
-const dateIntervalIndex = ref(0)
 
 // Interval offset radio button.
 enum BeforeAfterType {
@@ -230,10 +211,10 @@ const end = ref(props.interval.end)
 const dateIntervalOptions = ref([
   { count: 3, unit: 'days', text: '3 days' },
   { count: 7, unit: 'days', text: '7 days' },
-  { count: 1, unit: 'months', text: '1 months' },
-  { count: 2, unit: 'months', text: '2 month' },
-  { count: 3, unit: 'months', text: '3 month' },
-  { count: 6, unit: 'months', text: '6 month' },
+  { count: 1, unit: 'months', text: '1 month' },
+  { count: 2, unit: 'months', text: '2 months' },
+  { count: 3, unit: 'months', text: '3 months' },
+  { count: 6, unit: 'months', text: '6 months' },
   { count: 1, unit: 'years', text: '1 year' },
 ])
 
@@ -250,9 +231,6 @@ const isCustomIntervalValid = computed(() => {
 })
 
 function resetDateIntervalState(): void {
-  // Range mode.
-  dateIntervalIndex.value = 0
-
   // Offset mode.
   dateIntervalOffsetIndex.value = 0
   offset.value = moment().format(DATE_FORMAT)
@@ -265,22 +243,7 @@ function resetDateIntervalState(): void {
 
 function handleSave(): void {
   if (tabIndex.value === IntervalType.Range) {
-    // Interval option mode.
-    const endTime = moment()
-    const selectedInterval = dateIntervalOptions.value[dateIntervalIndex.value]
-    const startTime = endTime
-      .clone()
-      .subtract(
-        selectedInterval.count,
-        selectedInterval.unit as moment.unitOfTime.DurationConstructor
-      )
-
-    emit('update', {
-      start: startTime.format(DATE_FORMAT),
-      end: endTime.format(DATE_FORMAT),
-    })
-  } else if (tabIndex.value === IntervalType.Offset) {
-    // Interval offset mode.
+    // Interval range offset mode.
     const offsetDate = moment(offset.value)
     const selectedInterval =
       dateIntervalOptions.value[dateIntervalOffsetIndex.value]
