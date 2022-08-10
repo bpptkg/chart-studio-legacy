@@ -1,7 +1,6 @@
 import {
   EdmConfig,
   EdmData,
-  EdmParameterConfig,
   RenderModel,
   RfapEnergyData,
   SeismicEnergyData,

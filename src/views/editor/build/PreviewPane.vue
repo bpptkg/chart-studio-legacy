@@ -97,6 +97,7 @@ import { getDataURLOptions, defaultFileName } from '@/shared/echarts'
 import { AxiosError } from 'axios'
 import { EChartsOption } from 'echarts'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
+import { MIN_ZOOM_SCALE, MAX_ZOOM_SCALE, ZOOM_DELTA } from '@/constants/zoom'
 
 const chartStore = useChartStore()
 const dataStore = useDataStore()
@@ -175,24 +176,27 @@ function handleTryAgain() {
 }
 
 let zoomScale = 1
-const zoomDelta = 0.2
 let elem: HTMLElement | null = null
 let panzoom: PanzoomObject | null = null
 
 nextTick(() => {
   elem = document.getElementById('printable-build') as HTMLElement
-  panzoom = Panzoom(elem, { maxScale: 5 })
+  panzoom = Panzoom(elem, { maxScale: MAX_ZOOM_SCALE })
 })
 
 function zoomIn() {
-  zoomScale += zoomDelta
+  if (zoomScale + ZOOM_DELTA < MAX_ZOOM_SCALE) {
+    zoomScale += ZOOM_DELTA
+  }
   if (panzoom) {
     panzoom.zoom(zoomScale, { animate: true })
   }
 }
 
 function zoomOut() {
-  zoomScale -= zoomDelta
+  if (zoomScale - ZOOM_DELTA > MIN_ZOOM_SCALE) {
+    zoomScale -= ZOOM_DELTA
+  }
   if (panzoom) {
     panzoom.zoom(zoomScale, { animate: true })
   }

@@ -13,8 +13,9 @@ interface State {
    * Tabs Build | Compare.
    */
   viewIndex: string
-  aboutDialogOpen: boolean
-  settingsMenuOpen: boolean
+  showBuildLeftSidebar: boolean
+  showBuildRightSidebar: boolean
+  showCompareLeftSidebar: boolean
 }
 
 export const useWorkspaceStore = defineStore('workspace', {
@@ -23,8 +24,9 @@ export const useWorkspaceStore = defineStore('workspace', {
       subplotIndex: 0,
       seriesIndex: undefined,
       viewIndex: '/file/build',
-      aboutDialogOpen: false,
-      settingsMenuOpen: false,
+      showBuildLeftSidebar: true,
+      showBuildRightSidebar: true,
+      showCompareLeftSidebar: true,
     }
   },
   getters: {
@@ -48,9 +50,14 @@ export const useWorkspaceStore = defineStore('workspace', {
     setSeriesIndex(index: number): void {
       this.seriesIndex = index
     },
-    toggleAbout() {
-      this.aboutDialogOpen = !this.aboutDialogOpen
-      console.log('hello', this.aboutDialogOpen)
+    toggleBuildLeftSidebar() {
+      this.showBuildLeftSidebar = !this.showBuildLeftSidebar
+    },
+    toggleBuildRightSidebar() {
+      this.showBuildRightSidebar = !this.showBuildRightSidebar
+    },
+    toggleCompareLeftSidebar() {
+      this.showCompareLeftSidebar = !this.showCompareLeftSidebar
     },
   },
 })

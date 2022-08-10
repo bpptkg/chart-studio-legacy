@@ -1,6 +1,6 @@
 <template>
   <splitpanes class="cs-theme" :class="{ 'cs-theme--dark': isDarkTheme }">
-    <pane min-size="10" size="20">
+    <pane v-if="workspaceStore.showCompareLeftSidebar" min-size="10" size="20">
       <settings-pane></settings-pane>
     </pane>
     <pane>
@@ -106,6 +106,8 @@ import { storeToRefs } from 'pinia'
 import { EChartsOption } from 'echarts'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { AxiosError } from 'axios'
+import { useWorkspaceStore } from '@/store/workspace'
+import { MAX_ZOOM_SCALE, MIN_ZOOM_SCALE, ZOOM_DELTA } from '@/constants/zoom'
 
 const charts: Ref<Array<typeof VChart> | null> = ref(null)
 
@@ -114,6 +116,7 @@ const { isDarkTheme } = useTheme()
 const chartStore = useChartStore()
 const compareStore = useCompareStore()
 const compareDataStore = useCompareDataStore()
+const workspaceStore = useWorkspaceStore()
 
 const { intervals } = storeToRefs(compareStore)
 const { renderModels } = storeToRefs(compareDataStore)
@@ -189,7 +192,6 @@ function handleTryAgain() {
 }
 
 let zoomScale = 1
-const zoomDelta = 0.2
 let elem: HTMLElement | null = null
 let panzoom: PanzoomObject | null = null
 
@@ -201,14 +203,18 @@ nextTick(() => {
 })
 
 function zoomIn() {
-  zoomScale += zoomDelta
+  if (zoomScale + ZOOM_DELTA < MAX_ZOOM_SCALE) {
+    zoomScale += ZOOM_DELTA
+  }
   if (panzoom) {
     panzoom.zoom(zoomScale, { animate: true })
   }
 }
 
 function zoomOut() {
-  zoomScale -= zoomDelta
+  if (zoomScale - ZOOM_DELTA > MIN_ZOOM_SCALE) {
+    zoomScale -= ZOOM_DELTA
+  }
   if (panzoom) {
     panzoom.zoom(zoomScale, { animate: true })
   }

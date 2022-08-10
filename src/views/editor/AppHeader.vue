@@ -68,6 +68,49 @@
     <v-spacer></v-spacer>
 
     <div class="d-flex align-center">
+      <div class="mx-2">
+        <v-tooltip
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              small
+              v-on="on"
+              v-bind="attrs"
+              @click="handleToggleLeftSidebar"
+            >
+              <sidebar-left-icon></sidebar-left-icon>
+            </v-btn>
+          </template>
+          <span>Toggle left sidebar</span>
+        </v-tooltip>
+
+        <v-tooltip
+          v-if="workspaceStore.isBuildView"
+          bottom
+          :open-delay="500"
+          :open-on-click="false"
+          :open-on-focus="false"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              small
+              v-on="on"
+              v-bind="attrs"
+              @click="handleToggleRightSidebar"
+            >
+              <sidebar-right-icon></sidebar-right-icon>
+            </v-btn>
+          </template>
+          <span>Toggle right sidebar</span>
+        </v-tooltip>
+      </div>
+
       <settings-menu></settings-menu>
 
       <div class="ml-4">
@@ -86,6 +129,7 @@ import printJS from 'print-js'
 import router from '@/router'
 import SettingsMenu from './SettingsMenu.vue'
 import UserAvatar from '../UserAvatar.vue'
+import { SidebarLeftIcon, SidebarRightIcon } from '@/components/icons'
 
 const workspaceStore = useWorkspaceStore()
 const { viewIndex } = storeToRefs(workspaceStore)
@@ -128,6 +172,21 @@ function redo() {
     chartStore.redo()
   } else if (workspaceStore.isCompareView) {
     compareStore.redo()
+  }
+}
+
+function handleToggleLeftSidebar() {
+  if (workspaceStore.isBuildView) {
+    workspaceStore.toggleBuildLeftSidebar()
+  } else if (workspaceStore.isCompareView) {
+    workspaceStore.toggleCompareLeftSidebar()
+  }
+}
+
+function handleToggleRightSidebar() {
+  // Only works on build view.
+  if (workspaceStore.isBuildView) {
+    workspaceStore.toggleBuildRightSidebar()
   }
 }
 </script>
