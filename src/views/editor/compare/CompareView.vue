@@ -1,9 +1,20 @@
 <template>
-  <splitpanes class="cs-theme" :class="{ 'cs-theme--dark': isDarkTheme }">
-    <pane v-if="workspaceStore.showCompareLeftSidebar" min-size="10" size="20">
+  <splitpanes
+    class="cs-theme"
+    :class="{ 'cs-theme--dark': isDarkTheme }"
+    @resize="handlePaneResize"
+  >
+    <!-- Left sidebar pane. -->
+    <pane
+      v-if="workspaceStore.showCompareLeftSidebar"
+      min-size="5"
+      :size="leftPaneSize"
+    >
       <settings-pane></settings-pane>
     </pane>
-    <pane>
+
+    <!-- Preview pane. -->
+    <pane :size="mainPaneSize">
       <preview-pane :loading="isRendering">
         <template #toolbar>
           <v-tooltip
@@ -99,7 +110,7 @@ import { Splitpanes, Pane } from 'splitpanes'
 import SettingsPane from './SettingsPane.vue'
 import PreviewPane from '@/components/PreviewPane.vue'
 import { useTheme } from '@/composables/theme'
-import { computed, nextTick, onMounted, Ref, ref } from 'vue'
+import { computed, nextTick, onMounted, Ref, ref, watch } from 'vue'
 import { useChartStore } from '@/store/chart'
 import { renderToECharts } from '@/renderer/echarts/render'
 import { storeToRefs } from 'pinia'
@@ -108,6 +119,8 @@ import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { AxiosError } from 'axios'
 import { useWorkspaceStore } from '@/store/workspace'
 import { MAX_ZOOM_SCALE, MIN_ZOOM_SCALE, ZOOM_DELTA } from '@/constants/zoom'
+import { useCompareViewStore } from '@/store/compareview'
+import { PaneDimension } from '@/shared/pane'
 
 const charts: Ref<Array<typeof VChart> | null> = ref(null)
 
@@ -186,6 +199,17 @@ onMounted(() => {
   update()
 })
 
+// Pane handling implementation.
+const compareViewStore = useCompareViewStore()
+const { leftPaneSize, mainPaneSize } = storeToRefs(compareViewStore)
+
+function handlePaneResize(event: PaneDimension[]) {
+  if (workspaceStore.showCompareLeftSidebar) {
+    compareViewStore.setLeftPaneSize(event[0].size)
+  }
+}
+
+// Preview toolbar implementation.
 function handleTryAgain() {
   snackbar.value = false
   update()

@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { useTheme } from '@/composables/theme'
+import { PaneDimension } from '@/shared/pane'
 import { useBuildViewStore } from '@/store/buildview'
 import { useWorkspaceStore } from '@/store/workspace'
 import { storeToRefs } from 'pinia'
@@ -36,12 +37,6 @@ const { showBuildLeftSidebar, showBuildRightSidebar } =
 const buildViewStore = useBuildViewStore()
 const { leftPaneSize, rightPaneSize, mainPaneSize } =
   storeToRefs(buildViewStore)
-
-interface PaneDimension {
-  min: number
-  max: number
-  size: number
-}
 
 function handlePaneResize(event: PaneDimension[]) {
   if (workspaceStore.showBuildLeftSidebar) {
