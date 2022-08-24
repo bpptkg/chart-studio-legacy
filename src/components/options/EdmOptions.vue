@@ -16,15 +16,8 @@
         ></v-select>
       </v-col>
     </v-row>
-    <v-row align="center">
-      <v-col>
-        <v-select
-          v-model="fieldType"
-          :items="fieldTypes"
-          label="Type"
-        ></v-select>
-      </v-col>
-    </v-row>
+    <v-select v-model="fieldType" :items="fieldTypes" label="Type"></v-select>
+    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -102,7 +95,7 @@ const benchmark = computed({
           benchmark: value,
           reflector: reflectorsMap[value][0],
           type: fieldType.value,
-          visible: true,
+          visible: visible.value,
         }
       )
     )
@@ -124,7 +117,7 @@ const reflector = computed({
             benchmark: benchmark.value,
             reflector: value,
             type: fieldType.value,
-            visible: true,
+            visible: visible.value,
           }
         )
       )
@@ -145,7 +138,7 @@ const fieldType = computed({
           benchmark: benchmark.value,
           reflector: reflector.value,
           type: value,
-          visible: true,
+          visible: visible.value,
         }
       )
     )
@@ -154,5 +147,25 @@ const fieldType = computed({
 
 const reflectors = computed(() => {
   return reflectorsMap[benchmark.value]
+})
+
+const visible = computed({
+  get() {
+    return props.config?.visible || true
+  },
+  set(value) {
+    emit(
+      'update',
+      Object.assign(
+        {},
+        {
+          benchmark: benchmark.value,
+          reflector: reflector.value,
+          type: fieldType.value,
+          visible: value,
+        }
+      )
+    )
+  },
 })
 </script>

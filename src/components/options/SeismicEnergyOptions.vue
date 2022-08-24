@@ -1,6 +1,13 @@
 <template>
   <div>
     <v-select v-model="type" :items="types" label="Type"></v-select>
+    <v-select
+      v-model="agg"
+      :items="aggregates"
+      label="Field"
+      type="text"
+    ></v-select>
+    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -25,6 +32,30 @@ const types = ref([
   { value: 'vtbmp', text: 'VTB+MP' },
 ])
 
+const aggregates = ref([
+  { value: 'daily', text: 'Daily Value' },
+  { value: 'daily-cumulative', text: 'Daily Cumulative Value' },
+])
+
+const visible = computed({
+  get() {
+    return props.config?.visible || true
+  },
+  set(value) {
+    emit(
+      'update',
+      Object.assign(
+        {},
+        {
+          visible: value,
+          type: type.value,
+          aggregate: agg.value,
+        }
+      )
+    )
+  },
+})
+
 const type = computed({
   get() {
     return props.config?.type || 'total'
@@ -36,7 +67,27 @@ const type = computed({
         {},
         {
           type: value,
-          visible: true,
+          visible: visible.value,
+          aggregate: agg.value,
+        }
+      )
+    )
+  },
+})
+
+const agg = computed({
+  get() {
+    return props.config?.aggregate || 'daily'
+  },
+  set(value: SeismicEnergyConfig['aggregate']) {
+    emit(
+      'update',
+      Object.assign(
+        {},
+        {
+          type: type.value,
+          visible: visible.value,
+          aggregate: value,
         }
       )
     )

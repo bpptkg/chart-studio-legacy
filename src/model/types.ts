@@ -16,17 +16,23 @@ export interface EdmParameterConfig {
 
 export interface SeismicEnergyParameterConfig {
   type: 'total' | 'vta' | 'vtbmp'
-  cumulative?: boolean
+  aggregate: 'daily' | 'daily-cumulative'
 }
 
 export interface RfapEnergyParameterConfig {
-  cumulative?: boolean
+  field:
+    | 'count'
+    | 'energy'
+    | 'count-rf'
+    | 'count-ap'
+    | 'rfap-stack'
+    | 'count-cumulative'
 }
 
 export interface RsamSeismicParameterConfig {
   station: string
   band: string
-  cumulative?: boolean
+  field: 'value' | 'value-cumulative'
 }
 
 export interface GpsBaselineParameterConfig {
@@ -36,13 +42,13 @@ export interface GpsBaselineParameterConfig {
 
 export interface GpsCoordinateParameterConfig {
   station: string
-  field: string
+  field: 'east' | 'north' | 'up'
 }
 
 export interface TiltmeterParameterConfig {
-  type: string
+  type: 'platform' | 'borehole' | 'tlr'
   station: string
-  field: string
+  field: 'x' | 'y' | 'temperature'
 }
 
 export interface VogamosEmissionParameterConfig {

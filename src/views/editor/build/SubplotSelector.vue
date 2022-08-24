@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" scrollable max-width="400px">
+  <v-dialog v-model="dialog" width="600px">
     <template #activator="{ on: dialog, attrs }">
       <v-tooltip
         bottom
@@ -21,19 +21,35 @@
 
       <v-divider></v-divider>
 
-      <v-card-text style="max-height: 300px; padding-top: 15px">
-        <v-select
-          v-model="selected"
-          :items="dataTypes"
-          label="Data Type"
-          outlined
-        ></v-select>
-
-        <component
-          :is="ComponentOptionsMap[selected]"
-          :config="config"
-          @update="handleUpdate"
-        ></component>
+      <v-card-text class="pa-0">
+        <splitpanes>
+          <pane size="40">
+            <div class="dtype-selector">
+              <v-list>
+                <v-list-item-group v-model="selected" mandatory>
+                  <v-list-item
+                    v-for="dataType in dataTypes"
+                    :key="dataType.value"
+                    :value="dataType.value"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>{{ dataType.text }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </div>
+          </pane>
+          <pane>
+            <div class="dtype-config">
+              <component
+                :is="ComponentOptionsMap[selected]"
+                :config="config"
+                @update="handleUpdate"
+              ></component>
+            </div>
+          </pane>
+        </splitpanes>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -56,6 +72,7 @@ import { DataType, DataTypeNameMap, ParameterConfigMap } from '@/model/types'
 import { useChartStore } from '@/store/chart'
 import { useWorkspaceStore } from '@/store/workspace'
 import { Ref, ref, watch } from 'vue'
+import { Splitpanes, Pane } from 'splitpanes'
 
 const chartStore = useChartStore()
 const workspaceStore = useWorkspaceStore()
@@ -102,3 +119,18 @@ function handleAdd(): void {
   workspaceStore.setSubplotIndex(chartStore.subplots.length - 1)
 }
 </script>
+
+<style lang="scss" scoped>
+.dtype-selector {
+  height: 300px;
+  overflow-y: auto;
+  min-width: 30%;
+}
+
+.dtype-config {
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 15px;
+}
+</style>
