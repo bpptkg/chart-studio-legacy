@@ -93,7 +93,7 @@ export interface DoasParameterConfig {
 
 export interface LavaDomesParameterConfig {
   location: string
-  field: string
+  field: 'volume' | 'rate'
 }
 
 export interface WeatherPasarbubarParameterConfig {

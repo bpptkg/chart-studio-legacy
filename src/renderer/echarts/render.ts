@@ -6,6 +6,8 @@ import {
   GpsBaselineData,
   GpsCoordinateConfig,
   GpsCoordinateData,
+  LavaDomesConfig,
+  LavaDomesData,
   RenderModel,
   RfapEnergyConfig,
   RfapEnergyData,
@@ -14,6 +16,7 @@ import {
   SeismicEnergyConfig,
   SeismicEnergyData,
   SeismicityData,
+  SeriesConfig,
   SeriesDataKey,
   SubplotConfig,
   TiltmeterConfig,
@@ -41,10 +44,21 @@ export function toMs(v: number | string): number {
   return moment(v).unix() * SECOND_TO_MILLISECOND
 }
 
+export function toMJ(v: number): number {
+  return v * ERG_TO_MEGA_JOULE
+}
+
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
+  const isLavaDomesRate = (seriesConfig: SeriesConfig) => {
+    const series = seriesConfig as SeriesConfig<'LavaDomes'>
+    return series.config.field === 'rate'
+  }
+
   return subplot.series.some((series) => {
-    return ['Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
-      series.dataType
+    return (
+      ['Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
+        series.dataType
+      ) || isLavaDomesRate(series)
     )
   })
 }
@@ -315,7 +329,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as SeismicEnergyConfig
             const data = rawData.map((item) => [
               toMs(item.timestamp),
-              item.energy * ERG_TO_MEGA_JOULE,
+              toMJ(item.energy),
             ])
 
             if (cfg.aggregate === 'daily-cumulative') {
@@ -475,6 +489,33 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               type: 'scatter',
               xAxisIndex,
               yAxisIndex,
+            }
+          }
+
+          case 'LavaDomes': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as LavaDomesData[]
+
+            const cfg = config as LavaDomesConfig
+            const field = cfg.field
+
+            if (field === 'volume') {
+              return {
+                data: data.map((item) => [toMs(item.timestamp), item.volume]),
+                areaStyle: {},
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else {
+              return {
+                data: data.map((item) => [toMs(item.timestamp), item.rate]),
+                type: 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
             }
           }
 
