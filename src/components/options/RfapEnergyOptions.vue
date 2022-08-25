@@ -20,12 +20,12 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const fields = ref([
-  { value: 'count', text: 'RF & AP Count' },
-  { value: 'energy', text: 'RF & AP Energy' },
-  { value: 'count-rf', text: 'RF Count' },
-  { value: 'count-ap', text: 'AP Count' },
-  { value: 'rfap-stack', text: 'RF & AP Count Stack' },
-  { value: 'energy-cumulative', text: 'RF & AP Energy Cumulative' },
+  { value: 'count', text: 'RF & AP Daily Count' },
+  { value: 'energy', text: 'RF & AP Daily Energy' },
+  { value: 'count-rf', text: 'RF Daily Count' },
+  { value: 'count-ap', text: 'AP Daily Count' },
+  { value: 'rfap-stack', text: 'RF & AP Daily Count Stack' },
+  { value: 'energy-cumulative', text: 'RF & AP Daily Energy Cumulative' },
 ])
 
 const field = computed({

@@ -2,6 +2,7 @@ import {
   EdmConfig,
   EdmData,
   RenderModel,
+  RfapEnergyConfig,
   RfapEnergyData,
   SeismicEnergyConfig,
   SeismicEnergyData,
@@ -10,7 +11,7 @@ import {
   SubplotConfig,
 } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
-import { isDef } from '@/shared/util'
+import { isDef, toPlain } from '@/shared/util'
 import { EChartsOption, SeriesOption } from 'echarts'
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
@@ -22,6 +23,10 @@ export const SECOND_TO_MILLISECOND = 1000
 
 // 10^12 erg to MJ conversion factor.
 export const ERG_TO_MEGA_JOULE = 1 / 10
+
+export function toMs(v: number | string): number {
+  return moment(v).unix() * SECOND_TO_MILLISECOND
+}
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
   return subplot.series.some((series) => series.dataType === 'Edm')
@@ -84,7 +89,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     subtitle = '',
     backgroundColor = '#fff',
     margin = {},
-  } = model
+  } = toPlain(model) as RenderModel
 
   const originalSubplots = model.subplots
 
@@ -97,7 +102,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     return { ...subplot, series: filteredSeries }
   })
 
-  // Render grid.
+  // Render grid spec.
   const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin)
 
   // Render y axis.
@@ -149,17 +154,16 @@ export function renderToECharts(model: RenderModel): EChartsOption {
 
   // Render each series in the subplot.
   const series: SeriesOption[] = subplots
-    .map((subplot, index) => {
-      const series = subplot.series
-
-      return series.map((seriesConfig, seriesIndex) => {
+    .map((subplot, subplotIndex) => {
+      const renderedSeries = subplot.series.map((seriesConfig, seriesIndex) => {
         const { dataType, config } = seriesConfig
         const dataKey: SeriesDataKey = {
           interval,
           series: seriesConfig,
         }
         const key = objectHash.sha1(dataKey)
-        const yAxisIndex = findYAxisIndex(subplots, index, seriesIndex)
+        const xAxisIndex = subplotIndex
+        const yAxisIndex = findYAxisIndex(subplots, subplotIndex, seriesIndex)
 
         switch (dataType) {
           case 'Edm': {
@@ -176,63 +180,142 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 : 'slope_distance'
 
             return {
-              data: data.map((item) => {
-                return [
-                  moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
-                  item[fieldName],
-                ]
-              }),
+              data: data.map((item) => [toMs(item.timestamp), item[fieldName]]),
               type: 'line',
-              xAxisIndex: index,
-              yAxisIndex: yAxisIndex,
+              xAxisIndex,
+              yAxisIndex,
             } as SeriesOption
           }
 
           case 'RfapEnergy': {
-            const data = (
+            const rawData = (
               key in dataRepository ? dataRepository[key] : []
             ) as RfapEnergyData[]
-            return {
-              data: data.map((item) => {
-                return [
-                  moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
-                  item.count,
-                ]
-              }),
-              type: 'line',
-              xAxisIndex: index,
-              yAxisIndex: yAxisIndex,
-            } as SeriesOption
+
+            const cfg = config as RfapEnergyConfig
+            const field = cfg.field
+            let option: SeriesOption | SeriesOption[]
+
+            if (field === 'energy') {
+              option = {
+                data: rawData.map((item) => [
+                  toMs(item.timestamp),
+                  item.energy,
+                ]),
+                type: 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else if (field === 'count-rf') {
+              option = {
+                data: rawData.map((item) => [
+                  toMs(item.timestamp),
+                  item.count_ROCKFALL,
+                ]),
+                type: 'bar',
+                barGap: '5%',
+                barWidth: '80%',
+                barCategoryGap: '0%',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else if (field == 'count-ap') {
+              option = {
+                data: rawData.map((item) => [
+                  toMs(item.timestamp),
+                  item.count_AWANPANAS,
+                ]),
+                type: 'bar',
+                barGap: '5%',
+                barWidth: '80%',
+                barCategoryGap: '0%',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else if (field === 'rfap-stack') {
+              option = [
+                {
+                  data: rawData.map((item) => [
+                    toMs(item.timestamp),
+                    item.count_ROCKFALL,
+                  ]),
+                  type: 'bar',
+                  barGap: '5%',
+                  barWidth: '80%',
+                  barCategoryGap: '0%',
+                  stack: 'one',
+                  xAxisIndex,
+                  yAxisIndex,
+                },
+                {
+                  data: rawData.map((item) => [
+                    toMs(item.timestamp),
+                    item.count_AWANPANAS,
+                  ]),
+                  type: 'bar',
+                  barGap: '5%',
+                  barWidth: '80%',
+                  barCategoryGap: '0%',
+                  stack: 'one',
+                  xAxisIndex,
+                  yAxisIndex,
+                },
+              ] as SeriesOption[]
+            } else if (field === 'energy-cumulative') {
+              const data = rawData.map((item) => [
+                toMs(item.timestamp),
+                item.energy,
+              ])
+              option = {
+                data: cumulativeSum(data),
+                type: 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else {
+              // Default. field = 'count'.
+              option = {
+                data: rawData.map((item) => [toMs(item.timestamp), item.count]),
+                type: 'bar',
+                barGap: '5%',
+                barWidth: '80%',
+                barCategoryGap: '0%',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            return option
           }
 
           case 'SeismicEnergy': {
             const rawData = (
               key in dataRepository ? dataRepository[key] : []
             ) as SeismicEnergyData[]
+
             const cfg = config as SeismicEnergyConfig
-            const data = rawData.map((item) => {
-              return [
-                moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
-                isDef(item.energy) ? item.energy * ERG_TO_MEGA_JOULE : null,
-              ]
-            })
+            const data = rawData.map((item) => [
+              toMs(item.timestamp),
+              item.energy * ERG_TO_MEGA_JOULE,
+            ])
 
             if (cfg.aggregate === 'daily-cumulative') {
               return {
                 data: cumulativeSum(data),
                 type: 'line',
-                xAxisIndex: index,
-                yAxisIndex: yAxisIndex,
+                xAxisIndex,
+                yAxisIndex,
               } as SeriesOption
             } else {
+              // Default. aggregate = daily.
               return {
                 data: data,
                 type: 'bar',
                 barGap: '5%',
                 barWidth: '80%',
                 barCategoryGap: '0%',
-                xAxisIndex: index,
-                yAxisIndex: yAxisIndex,
+                xAxisIndex,
+                yAxisIndex,
               } as SeriesOption
             }
           }
@@ -243,27 +326,24 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             ) as SeismicityData[]
 
             return {
-              data: data.map((item) => {
-                return [
-                  moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
-                  item.count,
-                ]
-              }),
+              data: data.map((item) => [toMs(item.timestamp), item.count]),
               type: 'bar',
               barGap: '5%',
               barWidth: '80%',
               barCategoryGap: '0%',
-              xAxisIndex: index,
-              yAxisIndex: yAxisIndex,
+              xAxisIndex,
+              yAxisIndex,
             } as SeriesOption
           }
 
           default:
             return {} as SeriesOption
         }
-      })
+      }) as Array<Array<SeriesOption> | SeriesOption>
+
+      return renderedSeries
     })
-    .flat(1)
+    .flat(2)
 
   const option = {
     backgroundColor,

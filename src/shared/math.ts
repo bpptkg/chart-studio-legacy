@@ -1,13 +1,6 @@
-import { isDef } from './util'
-
-export const cumulativeSum = (data: (number | null)[][], col = 1) => {
+export const cumulativeSum = (data: number[][]) => {
   const series = [...data]
-
-  const arr = series.map((v) => v[col])
-  arr.reduce(
-    (prev, cur, index) =>
-      (series[index][col] = isDef(prev) ? prev + (isDef(cur) ? cur : 0) : cur),
-    0
-  )
+  const arr = series.map((v) => v[1])
+  arr.reduce((a, b, i) => (series[i][1] = a + b), 0)
   return series
 }

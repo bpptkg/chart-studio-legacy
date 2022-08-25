@@ -31,7 +31,7 @@ export interface RfapEnergyParameterConfig {
     | 'count-rf'
     | 'count-ap'
     | 'rfap-stack'
-    | 'count-cumulative'
+    | 'energy-cumulative'
 }
 
 export interface RsamSeismicParameterConfig {
@@ -209,7 +209,7 @@ export const DataTypeNameMap: {
 
 export interface SeismicityData {
   readonly timestamp: string
-  readonly count: number | null
+  readonly count: number
 }
 
 export interface EdmData {
@@ -222,15 +222,15 @@ export interface EdmData {
 
 export interface SeismicEnergyData {
   readonly timestamp: string
-  readonly energy: number | null
+  readonly energy: number
 }
 
 export interface RfapEnergyData {
   readonly timestamp: string
   readonly count: number
-  readonly energy: number | null
-  readonly count_ROCKFALL: number | null
-  readonly count_AWANPANAS: number | null
+  readonly energy: number
+  readonly count_ROCKFALL: number
+  readonly count_AWANPANAS: number
 }
 
 export interface RsamSeismicData {
