@@ -13,6 +13,8 @@ import {
   SeismicityData,
   SeriesDataKey,
   SubplotConfig,
+  TiltmeterConfig,
+  TiltmeterData,
 } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
 import { isDef, toPlain } from '@/shared/util'
@@ -34,7 +36,9 @@ export function toMs(v: number | string): number {
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
   return subplot.series.some((series) => {
-    return ['Edm', 'GpsBaseline', 'GpsCoordinate'].includes(series.dataType)
+    return ['Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
+      series.dataType
+    )
   })
 }
 
@@ -209,6 +213,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                   item.energy,
                 ]),
                 type: 'line',
+                symbol: 'none',
                 xAxisIndex,
                 yAxisIndex,
               }
@@ -275,6 +280,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               option = {
                 data: cumulativeSum(data),
                 type: 'line',
+                symbol: 'none',
                 xAxisIndex,
                 yAxisIndex,
               }
@@ -309,6 +315,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               return {
                 data: cumulativeSum(data),
                 type: 'line',
+                symbol: 'none',
                 xAxisIndex,
                 yAxisIndex,
               } as SeriesOption
@@ -350,7 +357,6 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             return {
               data: data.map((item) => [toMs(item.timestamp), item.baseline]),
               type: 'line',
-              symbol: 'circle',
               symbolSize: 6,
               xAxisIndex,
               yAxisIndex,
@@ -367,8 +373,23 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             return {
               data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
               type: 'scatter',
-              symbol: 'circle',
               symbolSize: 6,
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'Tiltmeter': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as TiltmeterData[]
+
+            const cfg = config as TiltmeterConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: 'line',
+              symbol: 'none',
               xAxisIndex,
               yAxisIndex,
             }

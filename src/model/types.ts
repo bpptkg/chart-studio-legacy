@@ -273,7 +273,7 @@ export interface TiltmeterData {
   readonly y: number
   // temperature may and id may not present in the borehole or if the data is
   // aggregated daily
-  readonly temperature?: number | null
+  readonly temperature: number
   readonly id?: number | null
 }
 
