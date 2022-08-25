@@ -396,7 +396,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
           }
 
           default:
-            return {} as SeriesOption
+            return {
+              data: [],
+              type: 'line',
+            } as SeriesOption
         }
       }) as Array<Array<SeriesOption> | SeriesOption>
 
