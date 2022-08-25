@@ -137,7 +137,11 @@ export function renderToECharts(model: RenderModel): EChartsOption {
   // Render x axis.
   const xAxis: XAXisOption[] = subplots.map((subplot, index) => {
     return {
+      axisLabel: {
+        show: index === subplots.length - 1 ? true : false,
+      },
       gridIndex: index,
+      position: 'bottom',
       splitLine: { show: false },
       type: 'time',
     }
