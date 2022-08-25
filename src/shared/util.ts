@@ -314,3 +314,7 @@ export function hasChanged(x: unknown, y: unknown): boolean {
     return x === x || y === y
   }
 }
+
+export function toPlain(obj: unknown): unknown {
+  return JSON.parse(JSON.stringify(obj))
+}

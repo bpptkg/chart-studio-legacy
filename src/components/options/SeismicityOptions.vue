@@ -5,7 +5,6 @@
       :items="eventTypes"
       label="Event Type"
     ></v-select>
-    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -56,25 +55,6 @@ const eventType = computed({
         {},
         {
           eventType: value,
-          visible: visible.value,
-        }
-      )
-    )
-  },
-})
-
-const visible = computed({
-  get() {
-    return props.config?.visible || true
-  },
-  set(value) {
-    emit(
-      'update',
-      Object.assign(
-        {},
-        {
-          eventType: eventType.value,
-          visible: value,
         }
       )
     )

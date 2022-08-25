@@ -2,7 +2,6 @@
   <div>
     <v-select v-model="station1" :items="stations" label="Station 1"></v-select>
     <v-select v-model="station2" :items="stations" label="Station 2"></v-select>
-    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -32,7 +31,6 @@ const station1 = computed({
       Object.assign(
         {},
         {
-          visible: visible.value,
           station1: value,
           station2: station2.value,
         }
@@ -51,28 +49,8 @@ const station2 = computed({
       Object.assign(
         {},
         {
-          visible: visible.value,
           station1: station1.value,
           station2: value,
-        }
-      )
-    )
-  },
-})
-
-const visible = computed({
-  get() {
-    return props.config?.visible || true
-  },
-  set(value) {
-    emit(
-      'update',
-      Object.assign(
-        {},
-        {
-          visible: value,
-          station1: station1.value,
-          station2: station2.value,
         }
       )
     )

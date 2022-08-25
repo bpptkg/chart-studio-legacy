@@ -7,7 +7,6 @@
       label="Field"
       type="text"
     ></v-select>
-    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -37,25 +36,6 @@ const aggregates = ref([
   { value: 'daily-cumulative', text: 'Daily Cumulative Value' },
 ])
 
-const visible = computed({
-  get() {
-    return props.config?.visible || true
-  },
-  set(value) {
-    emit(
-      'update',
-      Object.assign(
-        {},
-        {
-          visible: value,
-          type: type.value,
-          aggregate: agg.value,
-        }
-      )
-    )
-  },
-})
-
 const type = computed({
   get() {
     return props.config?.type || 'total'
@@ -67,7 +47,6 @@ const type = computed({
         {},
         {
           type: value,
-          visible: visible.value,
           aggregate: agg.value,
         }
       )
@@ -86,7 +65,6 @@ const agg = computed({
         {},
         {
           type: type.value,
-          visible: visible.value,
           aggregate: value,
         }
       )

@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-select v-model="field" :items="fields" label="Field"></v-select>
-    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -40,25 +39,6 @@ const field = computed({
         {},
         {
           field: value,
-          visible: visible.value,
-        }
-      )
-    )
-  },
-})
-
-const visible = computed({
-  get() {
-    return props.config?.visible || true
-  },
-  set(value) {
-    emit(
-      'update',
-      Object.assign(
-        {},
-        {
-          field: field.value,
-          visible: value,
         }
       )
     )

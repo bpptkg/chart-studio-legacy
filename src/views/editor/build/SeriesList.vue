@@ -32,6 +32,12 @@
             :config="series.config"
             @update="handleUpdate"
           ></component>
+          <v-select
+            v-model="yAxisPosition"
+            :items="yAxisPositionOptions"
+            label="Y Axis"
+          ></v-select>
+          <v-switch v-model="visible" label="Visible" inset></v-switch>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -44,8 +50,13 @@ import SeriesSelector from './SeriesSelector.vue'
 import { useChartStore } from '@/store/chart'
 import { useWorkspaceStore } from '@/store/workspace'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { DataType, ParameterConfigMap } from '@/model/types'
+import { computed, ref } from 'vue'
+import {
+  DataType,
+  ParameterConfigMap,
+  ParameterConfigType,
+} from '@/model/types'
+import { isDef, toPlain } from '@/shared/util'
 
 const chartStore = useChartStore()
 const { subplots } = storeToRefs(chartStore)
@@ -79,4 +90,69 @@ function handleUpdate<T extends DataType = DataType>(
     )
   }
 }
+
+// Handle series shared properties for all data types.
+const yAxisPositionOptions = ref([
+  { value: 'left', text: 'Primary' },
+  { value: 'right', text: 'Secondary' },
+])
+
+const defaultYAxisPosition = 'left'
+
+const yAxisPosition = computed({
+  get() {
+    if (isDef(seriesIndex.value)) {
+      const y = seriesConfig.value[seriesIndex.value].config.yAxis
+      return y?.position || defaultYAxisPosition
+    } else {
+      return defaultYAxisPosition
+    }
+  },
+  set(value) {
+    if (isDef(seriesIndex.value)) {
+      const oldConfig = toPlain(
+        seriesConfig.value[seriesIndex.value].config
+      ) as ParameterConfigType
+
+      const newConfig = toPlain({
+        ...oldConfig,
+        yAxis: { ...oldConfig.yAxis, position: value },
+      }) as ParameterConfigType
+
+      chartStore.updateSeriesConfig(
+        newConfig,
+        subplotIndex.value,
+        seriesIndex.value
+      )
+    }
+  },
+})
+
+const visible = computed({
+  get() {
+    if (isDef(seriesIndex.value)) {
+      return seriesConfig.value[seriesIndex.value].config.visible || true
+    } else {
+      return true
+    }
+  },
+  set(value) {
+    if (isDef(seriesIndex.value)) {
+      const oldConfig = toPlain(
+        seriesConfig.value[seriesIndex.value].config
+      ) as ParameterConfigType
+
+      const newConfig = toPlain({
+        ...oldConfig,
+        visible: value,
+      }) as ParameterConfigType
+
+      chartStore.updateSeriesConfig(
+        newConfig,
+        subplotIndex.value,
+        seriesIndex.value
+      )
+    }
+  },
+})
 </script>

@@ -27,9 +27,57 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
   return subplot.series.some((series) => series.dataType === 'Edm')
 }
 
+export function hasMultipleSeries(subplot: SubplotConfig): boolean {
+  return subplot.series.length > 1
+}
+
+export function hasSecondaryYAxis(subplot: SubplotConfig): boolean {
+  if (hasMultipleSeries(subplot)) {
+    let foundLeft = true
+    let foundRight = false
+
+    subplot.series.forEach((series) => {
+      const yAxis = series.config.yAxis
+      if (yAxis?.position === 'left') {
+        foundLeft = true
+      }
+      if (yAxis?.position === 'right') {
+        foundRight = true
+      }
+    })
+
+    return foundLeft && foundRight
+  } else {
+    return false
+  }
+}
+
+export function findYAxisIndex(
+  subplots: SubplotConfig[],
+  subplotIndex: number,
+  seriesIndex: number
+): number {
+  const cfg = subplots[subplotIndex].series[seriesIndex].config
+  const isAxisPositionRight = cfg.yAxis?.position === 'right'
+  let offset = -1
+  for (let i = 0; i < subplotIndex + 1; i++) {
+    const subplot = subplots[i]
+    if (hasSecondaryYAxis(subplot)) {
+      offset += 2
+    } else {
+      offset += 1
+    }
+  }
+  const subplot = subplots[subplotIndex]
+  if (hasSecondaryYAxis(subplot)) {
+    return isAxisPositionRight ? offset : offset - 1
+  } else {
+    return offset
+  }
+}
+
 export function renderToECharts(model: RenderModel): EChartsOption {
   const {
-    subplots,
     interval,
     dataRepository,
     title = '',
@@ -38,17 +86,55 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     margin = {},
   } = model
 
-  const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin)
+  const originalSubplots = model.subplots
 
-  const yAxis: YAXisOption[] = subplots.map((subplot, index) => {
-    return {
-      gridIndex: index,
-      splitLine: { show: false },
-      type: 'value',
-      scale: shouldAxisScale(subplot),
-    }
+  // Filter subplot series visibility.
+  const subplots: SubplotConfig[] = originalSubplots.map((subplot) => {
+    const { series } = subplot
+    const filteredSeries = series.filter(({ config }) =>
+      isDef(config.visible) ? config.visible : true
+    )
+    return { ...subplot, series: filteredSeries }
   })
 
+  // Render grid.
+  const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin)
+
+  // Render y axis.
+  const yAxis: YAXisOption[] = subplots
+    .map((subplot, index) => {
+      const createAxis = (option: YAXisOption = {}): YAXisOption => {
+        return {
+          ...option,
+          gridIndex: index,
+          splitLine: { show: false },
+          type: 'value',
+          scale: shouldAxisScale(subplot),
+        }
+      }
+      const axes: YAXisOption[] = []
+      if (hasMultipleSeries(subplot)) {
+        axes.push(createAxis())
+        if (hasSecondaryYAxis(subplot)) {
+          axes.push(createAxis({ position: 'right' }))
+        }
+      } else {
+        const cfg = subplot.series[0] ? subplot.series[0].config : undefined
+        const isAxisPositionRight = cfg
+          ? cfg?.yAxis?.position === 'right'
+          : false
+        axes.push(
+          createAxis({
+            position: isAxisPositionRight ? 'right' : 'left',
+          })
+        )
+      }
+
+      return axes.flat(1)
+    })
+    .flat(1)
+
+  // Render x axis.
   const xAxis: XAXisOption[] = subplots.map((subplot, index) => {
     return {
       gridIndex: index,
@@ -57,126 +143,125 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     }
   })
 
+  // Render each series in the subplot.
   const series: SeriesOption[] = subplots
     .map((subplot, index) => {
       const series = subplot.series
 
-      return series
-        .filter(({ config }) => {
-          return config.visible === true
-        })
-        .map((seriesConfig) => {
-          const { dataType, config } = seriesConfig
-          const dataKey: SeriesDataKey = {
-            interval,
-            series: seriesConfig,
-          }
-          const key = objectHash.sha1(dataKey)
+      return series.map((seriesConfig, seriesIndex) => {
+        const { dataType, config } = seriesConfig
+        const dataKey: SeriesDataKey = {
+          interval,
+          series: seriesConfig,
+        }
+        const key = objectHash.sha1(dataKey)
+        const yAxisIndex = findYAxisIndex(subplots, index, seriesIndex)
 
-          switch (dataType) {
-            case 'Edm': {
-              const data = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as EdmData[]
+        switch (dataType) {
+          case 'Edm': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as EdmData[]
 
-              const cfg = config as EdmConfig
-              const fieldName =
-                cfg.type === 'csd'
-                  ? 'csd'
-                  : cfg.type === 'rate'
-                  ? 'rate'
-                  : 'slope_distance'
+            const cfg = config as EdmConfig
+            const fieldName =
+              cfg.type === 'csd'
+                ? 'csd'
+                : cfg.type === 'rate'
+                ? 'rate'
+                : 'slope_distance'
 
-              return {
-                data: data.map((item) => {
-                  return [
-                    moment(item['timestamp']).unix() * 1000,
-                    item[fieldName],
-                  ]
-                }),
-                type: 'line',
-                xAxisIndex: index,
-                yAxisIndex: index,
-              } as SeriesOption
-            }
-
-            case 'RfapEnergy': {
-              const data = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as RfapEnergyData[]
-              return {
-                data: data.map((item) => {
-                  return [
-                    moment(item['timestamp']).unix() * 1000,
-                    item['count'],
-                  ]
-                }),
-                type: 'line',
-                xAxisIndex: index,
-                yAxisIndex: index,
-              } as SeriesOption
-            }
-
-            case 'SeismicEnergy': {
-              const rawData = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as SeismicEnergyData[]
-              const cfg = config as SeismicEnergyConfig
-              const data = rawData.map((item) => {
+            return {
+              data: data.map((item) => {
                 return [
                   moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
-                  isDef(item.energy) ? item.energy * ERG_TO_MEGA_JOULE : null,
+                  item[fieldName],
                 ]
-              })
+              }),
+              type: 'line',
+              xAxisIndex: index,
+              yAxisIndex: yAxisIndex,
+            } as SeriesOption
+          }
 
-              if (cfg.aggregate === 'daily-cumulative') {
-                return {
-                  data: cumulativeSum(data),
-                  type: 'line',
-                  xAxisIndex: index,
-                  yAxisIndex: index,
-                } as SeriesOption
-              } else {
-                return {
-                  data: data,
-                  type: 'bar',
-                  barGap: '5%',
-                  barWidth: '80%',
-                  barCategoryGap: '0%',
-                  xAxisIndex: index,
-                  yAxisIndex: index,
-                } as SeriesOption
-              }
-            }
+          case 'RfapEnergy': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as RfapEnergyData[]
+            return {
+              data: data.map((item) => {
+                return [
+                  moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
+                  item.count,
+                ]
+              }),
+              type: 'line',
+              xAxisIndex: index,
+              yAxisIndex: yAxisIndex,
+            } as SeriesOption
+          }
 
-            case 'Seismicity': {
-              const data = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as SeismicityData[]
+          case 'SeismicEnergy': {
+            const rawData = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as SeismicEnergyData[]
+            const cfg = config as SeismicEnergyConfig
+            const data = rawData.map((item) => {
+              return [
+                moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
+                isDef(item.energy) ? item.energy * ERG_TO_MEGA_JOULE : null,
+              ]
+            })
+
+            if (cfg.aggregate === 'daily-cumulative') {
               return {
-                data: data.map((item) => {
-                  return [
-                    moment(item['timestamp']).unix() * 1000,
-                    item['count'],
-                  ]
-                }),
+                data: cumulativeSum(data),
+                type: 'line',
+                xAxisIndex: index,
+                yAxisIndex: yAxisIndex,
+              } as SeriesOption
+            } else {
+              return {
+                data: data,
                 type: 'bar',
                 barGap: '5%',
                 barWidth: '80%',
                 barCategoryGap: '0%',
                 xAxisIndex: index,
-                yAxisIndex: index,
+                yAxisIndex: yAxisIndex,
               } as SeriesOption
             }
-
-            default:
-              return {} as SeriesOption
           }
-        })
+
+          case 'Seismicity': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as SeismicityData[]
+
+            return {
+              data: data.map((item) => {
+                return [
+                  moment(item.timestamp).unix() * SECOND_TO_MILLISECOND,
+                  item.count,
+                ]
+              }),
+              type: 'bar',
+              barGap: '5%',
+              barWidth: '80%',
+              barCategoryGap: '0%',
+              xAxisIndex: index,
+              yAxisIndex: yAxisIndex,
+            } as SeriesOption
+          }
+
+          default:
+            return {} as SeriesOption
+        }
+      })
     })
     .flat(1)
 
-  return {
+  const option = {
     backgroundColor,
     title: {
       text: title,
@@ -189,4 +274,6 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     yAxis,
     series,
   }
+
+  return option
 }

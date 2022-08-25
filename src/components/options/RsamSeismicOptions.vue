@@ -2,7 +2,6 @@
   <div>
     <v-select v-model="station" :items="stations" label="Station"></v-select>
     <v-select v-model="band" :items="bands" label="Band Frequency"></v-select>
-    <v-switch v-model="visible" label="Visible" inset></v-switch>
   </div>
 </template>
 
@@ -53,7 +52,6 @@ const station = computed({
       Object.assign(
         {},
         {
-          visible: visible.value,
           station: value,
           band: band.value,
           field: field.value,
@@ -73,7 +71,6 @@ const band = computed({
       Object.assign(
         {},
         {
-          visible: visible.value,
           station: station.value,
           band: value,
           field: field.value,
@@ -93,30 +90,9 @@ const field = computed({
       Object.assign(
         {},
         {
-          visible: visible.value,
           station: station.value,
           band: band.value,
           field: value,
-        }
-      )
-    )
-  },
-})
-
-const visible = computed({
-  get() {
-    return props.config?.visible || true
-  },
-  set(value) {
-    emit(
-      'update',
-      Object.assign(
-        {},
-        {
-          visible: value,
-          station: station.value,
-          band: band.value,
-          field: field.value,
         }
       )
     )

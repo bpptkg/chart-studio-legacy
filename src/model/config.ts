@@ -11,7 +11,6 @@ export function createSeriesConfig<T extends DataType = DataType>(
   switch (dataType) {
     case 'Seismicity':
       return {
-        visible: true,
         eventType: 'VTA',
       }
 

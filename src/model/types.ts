@@ -1,5 +1,10 @@
+export interface YAxisOption {
+  position?: 'left' | 'right'
+}
+
 export interface ParameterConfigCommon {
-  visible: boolean
+  visible?: boolean
+  yAxis?: YAxisOption
 }
 
 export type ParameterConfig<T> = T & ParameterConfigCommon

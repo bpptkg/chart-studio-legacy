@@ -8,6 +8,7 @@ import type {
   Margin,
 } from '@/model/types'
 import { assert } from '@/shared/assertions'
+import { toPlain } from '@/shared/util'
 import moment from 'moment'
 import { defineStore } from 'pinia'
 
@@ -104,7 +105,14 @@ export const useChartStore = defineStore('chart', {
       const length = series.length
       assert(index >= 0 && index < length, 'Series index out of range')
 
-      this.subplots[subplotIndex].series[index].config = config
+      const oldConfig = toPlain(
+        this.subplots[subplotIndex].series[index].config
+      ) as ParameterConfigMap[T]
+
+      this.subplots[subplotIndex].series[index].config = {
+        ...oldConfig,
+        ...config,
+      }
     },
 
     setInterval(interval: DateInterval): void {
