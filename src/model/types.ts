@@ -271,8 +271,6 @@ export interface TiltmeterData {
   readonly timestamp: string
   readonly x: number
   readonly y: number
-  // temperature may and id may not present in the borehole or if the data is
-  // aggregated daily
   readonly temperature: number
   readonly id?: number | null
 }
