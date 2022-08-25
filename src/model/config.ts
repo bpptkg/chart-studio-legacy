@@ -16,7 +16,6 @@ export function createSeriesConfig<T extends DataType = DataType>(
 
     case 'Edm':
       return {
-        visible: true,
         benchmark: 'BAB0',
         reflector: 'RB1',
         type: 'slope',
@@ -24,20 +23,17 @@ export function createSeriesConfig<T extends DataType = DataType>(
 
     case 'SeismicEnergy':
       return {
-        visible: true,
         type: 'total',
         aggregate: 'daily',
       }
 
     case 'RfapEnergy':
       return {
-        visible: true,
         field: 'count',
       }
 
     case 'RsamSeismic':
       return {
-        visible: true,
         station: 'pasarbubar',
         band: 'band0',
         field: 'value',
@@ -45,21 +41,18 @@ export function createSeriesConfig<T extends DataType = DataType>(
 
     case 'GpsBaseline':
       return {
-        visible: true,
         station1: 'pasarbubar',
         station2: 'plawangan',
       }
 
     case 'GpsCoordinate':
       return {
-        visible: true,
         station: 'pasarbubar',
         field: 'east',
       }
 
     case 'Tiltmeter':
       return {
-        visible: true,
         type: 'platform',
         station: 'babadan',
         field: 'x',

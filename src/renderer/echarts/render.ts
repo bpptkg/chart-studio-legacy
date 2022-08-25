@@ -1,6 +1,10 @@
 import {
   EdmConfig,
   EdmData,
+  GpsBaselineConfig,
+  GpsBaselineData,
+  GpsCoordinateConfig,
+  GpsCoordinateData,
   RenderModel,
   RfapEnergyConfig,
   RfapEnergyData,
@@ -29,7 +33,9 @@ export function toMs(v: number | string): number {
 }
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
-  return subplot.series.some((series) => series.dataType === 'Edm')
+  return subplot.series.some((series) => {
+    return ['Edm', 'GpsBaseline', 'GpsCoordinate'].includes(series.dataType)
+  })
 }
 
 export function hasMultipleSeries(subplot: SubplotConfig): boolean {
@@ -334,6 +340,38 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               xAxisIndex,
               yAxisIndex,
             } as SeriesOption
+          }
+
+          case 'GpsBaseline': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as GpsBaselineData[]
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item.baseline]),
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: 6,
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'GpsCoordinate': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as GpsCoordinateData[]
+
+            const cfg = config as GpsCoordinateConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: 'scatter',
+              symbol: 'circle',
+              symbolSize: 6,
+              xAxisIndex,
+              yAxisIndex,
+            }
           }
 
           default:

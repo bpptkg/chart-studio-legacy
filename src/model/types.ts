@@ -253,7 +253,7 @@ export interface RsamSeismicData {
 
 export interface GpsBaselineData {
   readonly timestamp: string
-  readonly baseline: number | null
+  readonly baseline: number
 }
 
 export interface GpsCoordinateData {
