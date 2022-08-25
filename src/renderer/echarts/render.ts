@@ -1,4 +1,5 @@
 import {
+  DoasData,
   EdmConfig,
   EdmData,
   GpsBaselineConfig,
@@ -8,6 +9,8 @@ import {
   RenderModel,
   RfapEnergyConfig,
   RfapEnergyData,
+  RsamSeismicConfig,
+  RsamSeismicData,
   SeismicEnergyConfig,
   SeismicEnergyData,
   SeismicityData,
@@ -15,6 +18,10 @@ import {
   SubplotConfig,
   TiltmeterConfig,
   TiltmeterData,
+  VogamosEmissionConfig,
+  VogamosEmissionData,
+  VogamosTemperatureConfig,
+  VogamosTemperatureData,
 } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
 import { isDef, toPlain } from '@/shared/util'
@@ -349,6 +356,37 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } as SeriesOption
           }
 
+          case 'RsamSeismic': {
+            const rawData = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as RsamSeismicData[]
+
+            const cfg = config as RsamSeismicConfig
+            const field = cfg.field
+            if (field === 'value-cumulative') {
+              return {
+                data: cumulativeSum(
+                  rawData.map((item) => [toMs(item.timestamp), item[cfg.band]])
+                ),
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else {
+              return {
+                data: rawData.map((item) => [
+                  toMs(item.timestamp),
+                  item[cfg.band],
+                ]),
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+          }
+
           case 'GpsBaseline': {
             const data = (
               key in dataRepository ? dataRepository[key] : []
@@ -390,6 +428,51 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
               type: 'line',
               symbol: 'none',
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'VogamosEmission': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as VogamosEmissionData[]
+
+            const cfg = config as VogamosEmissionConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: 'line',
+              symbol: 'none',
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'VogamosTemperature': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as VogamosTemperatureData[]
+
+            const cfg = config as VogamosTemperatureConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: 'line',
+              symbol: 'none',
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'Doas': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as DoasData[]
+
+            return {
+              data: data.map((item) => [toMs(item.starttime), item.flux]),
+              type: 'scatter',
               xAxisIndex,
               yAxisIndex,
             }

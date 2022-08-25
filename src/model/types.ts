@@ -36,7 +36,21 @@ export interface RfapEnergyParameterConfig {
 
 export interface RsamSeismicParameterConfig {
   station: string
-  band: string
+  band:
+    | 'band0'
+    | 'band1'
+    | 'band2'
+    | 'band3'
+    | 'band4'
+    | 'band5'
+    | 'band6'
+    | 'band7'
+    | 'band8'
+    | 'band9'
+    | 'band10'
+    | 'band11'
+    | 'band12'
+    | 'band13'
   field: 'value' | 'value-cumulative'
 }
 
@@ -57,11 +71,20 @@ export interface TiltmeterParameterConfig {
 }
 
 export interface VogamosEmissionParameterConfig {
-  field: string
+  field:
+    | 'co2_min'
+    | 'co2_max'
+    | 'co2_avg'
+    | 'temperature_min'
+    | 'temperature_max'
+    | 'temperature_avg'
+    | 'humidity_min'
+    | 'humidity_max'
+    | 'humidity_avg'
 }
 
 export interface VogamosTemperatureParameterConfig {
-  field: string
+  field: 'temperature1' | 'temperature2' | 'temperature3' | 'temperature4'
 }
 
 export interface DoasParameterConfig {
@@ -136,26 +159,26 @@ export type MagneticConfig = ParameterConfig<MagneticParameterConfig>
 export type ThermalConfig = ParameterConfig<ThermalParameterConfig>
 
 export type ParameterConfigType =
-  | SeismicityConfig
+  | DoasConfig
   | EdmConfig
-  | SeismicEnergyConfig
-  | RfapEnergyConfig
-  | RsamSeismicConfig
   | GpsBaselineConfig
   | GpsCoordinateConfig
+  | LavaDomesConfig
+  | MagneticConfig
+  | RainfallStationConfig
+  | RfapDirectionConfig
+  | RfapDistanceConfig
+  | RfapEnergyConfig
+  | RfapTypeConfig
+  | RsamSeismicConfig
+  | SeismicEnergyConfig
+  | SeismicityConfig
+  | ThermalConfig
   | TiltmeterConfig
   | VogamosEmissionConfig
   | VogamosTemperatureConfig
-  | DoasConfig
-  | LavaDomesConfig
   | WeatherBabadanConfig
   | WeatherPasarbubarConfig
-  | RainfallStationConfig
-  | RfapDistanceConfig
-  | RfapDirectionConfig
-  | RfapTypeConfig
-  | MagneticConfig
-  | ThermalConfig
 
 export interface ParameterConfigMap {
   Seismicity: SeismicityConfig
@@ -235,20 +258,20 @@ export interface RfapEnergyData {
 
 export interface RsamSeismicData {
   readonly timestamp: string
-  readonly band0?: number
-  readonly band1?: number
-  readonly band2?: number
-  readonly band3?: number
-  readonly band4?: number
-  readonly band5?: number
-  readonly band6?: number
-  readonly band7?: number
-  readonly band8?: number
-  readonly band9?: number
-  readonly band10?: number
-  readonly band11?: number
-  readonly band12?: number
-  readonly band13?: number
+  readonly band0: number
+  readonly band1: number
+  readonly band2: number
+  readonly band3: number
+  readonly band4: number
+  readonly band5: number
+  readonly band6: number
+  readonly band7: number
+  readonly band8: number
+  readonly band9: number
+  readonly band10: number
+  readonly band11: number
+  readonly band12: number
+  readonly band13: number
 }
 
 export interface GpsBaselineData {

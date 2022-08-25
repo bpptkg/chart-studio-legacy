@@ -21,7 +21,7 @@ export function getSsamAdaptiveSampling(start: string, end: string): string {
   const startTime = moment(start)
   const endTime = moment(end)
 
-  const maxDuration = 7 // Duration in days.
+  const maxDuration = 3 // Duration in days.
   const duration = moment.duration(endTime.diff(startTime)).asDays()
   return duration >= maxDuration ? 'ssam1' : 'ssam'
 }

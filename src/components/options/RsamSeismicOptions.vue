@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { RsamSeismicConfig } from '@/model/types'
-import { computed, ref } from 'vue'
+import { computed, Ref, ref } from 'vue'
 
 interface Props {
   config?: RsamSeismicConfig
@@ -40,7 +40,12 @@ const bands = ref([
   { value: 'band11', text: 'Band 11 (20.5 - 22.5 Hz)' },
   { value: 'band12', text: 'Band 12 (22.5 - 24.5 Hz)' },
   { value: 'band13', text: 'Band 13 (24.5 - 26.5 Hz)' },
-])
+]) as Ref<
+  {
+    value: RsamSeismicConfig['band']
+    text: string
+  }[]
+>
 
 const station = computed({
   get() {
