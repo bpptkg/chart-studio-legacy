@@ -9,6 +9,8 @@ import {
   LavaDomesConfig,
   LavaDomesData,
   RenderModel,
+  RfapDistanceConfig,
+  RfapDistanceData,
   RfapEnergyConfig,
   RfapEnergyData,
   RsamSeismicConfig,
@@ -25,6 +27,10 @@ import {
   VogamosEmissionData,
   VogamosTemperatureConfig,
   VogamosTemperatureData,
+  WeatherBabadanConfig,
+  WeatherBabadanData,
+  WeatherPasarbubarConfig,
+  WeatherPasarbubarData,
 } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
 import { isDef, toPlain } from '@/shared/util'
@@ -40,12 +46,25 @@ export const SECOND_TO_MILLISECOND = 1000
 // 10^12 erg to MJ conversion factor.
 export const ERG_TO_MEGA_JOULE = 1 / 10
 
+/**
+ * Convert timestamp number or string to Unix milliseconds.
+ */
 export function toMs(v: number | string): number {
   return moment(v).unix() * SECOND_TO_MILLISECOND
 }
 
+/**
+ * Convert 10^12 erg to Mega Joule.
+ */
 export function toMJ(v: number): number {
   return v * ERG_TO_MEGA_JOULE
+}
+
+/**
+ * Convert meter to kilometer.
+ */
+export function toKM(v: number): number {
+  return v / 1000
 }
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
@@ -251,7 +270,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 xAxisIndex,
                 yAxisIndex,
               }
-            } else if (field == 'count-ap') {
+            } else if (field === 'count-ap') {
               option = {
                 data: rawData.map((item) => [
                   toMs(item.timestamp),
@@ -513,6 +532,105 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               return {
                 data: data.map((item) => [toMs(item.timestamp), item.rate]),
                 type: 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+          }
+
+          case 'WeatherPasarbubar': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as WeatherPasarbubarData[]
+
+            const cfg = config as WeatherPasarbubarConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'WeatherBabadan': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as WeatherBabadanData[]
+
+            const cfg = config as WeatherBabadanConfig
+
+            return {
+              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
+              xAxisIndex,
+              yAxisIndex,
+            }
+          }
+
+          case 'RfapDistance': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as RfapDistanceData[]
+
+            const cfg = config as RfapDistanceConfig
+            const field = cfg.field
+
+            if (field === 'rfap-stack') {
+              return [
+                {
+                  data: data.map((item) => [
+                    toMs(item.timestamp),
+                    item.rf_count,
+                  ]),
+                  type: 'bar',
+                  stack: 'one',
+                  xAxisIndex,
+                  yAxisIndex,
+                },
+                {
+                  data: data.map((item) => [
+                    toMs(item.timestamp),
+                    item.ap_count,
+                  ]),
+                  type: 'bar',
+                  stack: 'one',
+                  xAxisIndex,
+                  yAxisIndex,
+                },
+              ]
+            } else if (field === 'ap-count') {
+              return {
+                data: data.map((item) => [toMs(item.timestamp), item.ap_count]),
+                type: 'bar',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else if (field === 'ap-dist') {
+              return {
+                data: data.map((item) => [
+                  toMs(item.timestamp),
+                  isDef(item.ap_dist) ? toKM(item.ap_dist) : item.ap_dist,
+                ]),
+                type: 'scatter',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else if (field === 'rf-dist') {
+              return {
+                data: data.map((item) => [
+                  toMs(item.timestamp),
+                  isDef(item.rf_dist) ? toKM(item.rf_dist) : item.rf_dist,
+                ]),
+                type: 'scatter',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else {
+              // Default. field = rf-count.
+              return {
+                data: data.map((item) => [toMs(item.timestamp), item.rf_count]),
+                type: 'bar',
                 xAxisIndex,
                 yAxisIndex,
               }

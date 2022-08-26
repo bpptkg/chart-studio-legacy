@@ -97,11 +97,21 @@ export interface LavaDomesParameterConfig {
 }
 
 export interface WeatherPasarbubarParameterConfig {
-  field: string
+  field:
+    | 'wind_direction'
+    | 'wind_speed'
+    | 'air_temperature'
+    | 'air_humidity'
+    | 'air_pressure'
 }
 
 export interface WeatherBabadanParameterConfig {
-  field: string
+  field:
+    | 'wind_direction_avg'
+    | 'wind_speed_avg'
+    | 'air_temperature'
+    | 'relative_humidity'
+    | 'air_pressure'
 }
 
 export interface RainfallStationParameterConfig {
@@ -109,7 +119,7 @@ export interface RainfallStationParameterConfig {
 }
 
 export interface RfapDistanceParameterConfig {
-  field: 'rf-count' | 'rf-dist' | 'ap-count' | 'ap-dist'
+  field: 'rf-count' | 'rf-dist' | 'ap-count' | 'ap-dist' | 'rfap-stack'
 }
 
 export interface RfapDirectionParameterConfig {
@@ -165,7 +175,6 @@ export type ParameterConfigType =
   | GpsCoordinateConfig
   | LavaDomesConfig
   | MagneticConfig
-  | RainfallStationConfig
   | RfapDirectionConfig
   | RfapDistanceConfig
   | RfapEnergyConfig
@@ -195,7 +204,6 @@ export interface ParameterConfigMap {
   LavaDomes: LavaDomesConfig
   WeatherBabadan: WeatherBabadanConfig
   WeatherPasarbubar: WeatherPasarbubarConfig
-  RainfallStation: RainfallStationConfig
   RfapDistance: RfapDistanceConfig
   RfapDirection: RfapDirectionConfig
   RfapType: RfapTypeConfig
@@ -222,7 +230,6 @@ export const DataTypeNameMap: {
   LavaDomes: 'Lava Domes',
   WeatherBabadan: 'Weather Babadan',
   WeatherPasarbubar: 'Weather Pasarbubar',
-  RainfallStation: 'Rainfall Station',
   RfapDistance: 'RF & AP Distance',
   RfapDirection: 'RF & AP Direction',
   RfapType: 'RF & AP Type',
