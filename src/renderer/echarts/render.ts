@@ -178,96 +178,66 @@ export function renderToECharts(model: RenderModel): EChartsOption {
 
   // Render each series in the subplot.
   const series: SeriesOption[] = subplots
-    .filter((subplot) =>
-      subplot.series.filter(({ config }) =>
-        isDef(config.visible) ? config.visible : true
-      )
-    )
     .map((subplot, subplotIndex) => {
-      return subplot.series.map((seriesConfig, seriesIndex) => {
-        const { dataType, config } = seriesConfig
-        const dataKey: SeriesDataKey = {
-          interval,
-          series: seriesConfig,
-        }
-        const key = objectHash.sha1(dataKey)
-        const xAxisIndex = subplotIndex
-        const yAxisIndex = findYAxisIndex(subplots, subplotIndex, seriesIndex)
-
-        switch (dataType) {
-          case 'Edm': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as EdmData[]
-
-            const cfg = config as EdmConfig
-            const fieldName =
-              cfg.type === 'csd'
-                ? 'csd'
-                : cfg.type === 'rate'
-                ? 'rate'
-                : 'slope_distance'
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[fieldName],
-              ]),
-              type: 'line',
-              xAxisIndex,
-              yAxisIndex,
-            } as SeriesOption
+      return subplot.series
+        .filter(({ config }) => (isDef(config.visible) ? config.visible : true))
+        .map((seriesConfig, seriesIndex) => {
+          const { dataType, config } = seriesConfig
+          const dataKey: SeriesDataKey = {
+            interval,
+            series: seriesConfig,
           }
+          const key = objectHash.sha1(dataKey)
+          const xAxisIndex = subplotIndex
+          const yAxisIndex = findYAxisIndex(subplots, subplotIndex, seriesIndex)
 
-          case 'RfapEnergy': {
-            const rawData = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as RfapEnergyData[]
+          switch (dataType) {
+            case 'Edm': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as EdmData[]
 
-            const cfg = config as RfapEnergyConfig
-            const field = cfg.field
-            let option: SeriesOption | SeriesOption[]
+              const cfg = config as EdmConfig
+              const fieldName =
+                cfg.type === 'csd'
+                  ? 'csd'
+                  : cfg.type === 'rate'
+                  ? 'rate'
+                  : 'slope_distance'
 
-            if (field === 'energy') {
-              option = {
-                data: rawData.map((item) => [
+              return {
+                data: data.map((item) => [
                   toMilliseconds(item.timestamp),
-                  item.energy,
+                  item[fieldName],
                 ]),
                 type: 'line',
-                symbol: 'none',
                 xAxisIndex,
                 yAxisIndex,
-              }
-            } else if (field === 'count-rf') {
-              option = {
-                data: rawData.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.count_ROCKFALL,
-                ]),
-                type: 'bar',
-                barGap: '5%',
-                barWidth: '80%',
-                barCategoryGap: '0%',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else if (field === 'count-ap') {
-              option = {
-                data: rawData.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.count_AWANPANAS,
-                ]),
-                type: 'bar',
-                barGap: '5%',
-                barWidth: '80%',
-                barCategoryGap: '0%',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else if (field === 'rfap-stack') {
-              option = [
-                {
+              } as SeriesOption
+            }
+
+            case 'RfapEnergy': {
+              const rawData = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as RfapEnergyData[]
+
+              const cfg = config as RfapEnergyConfig
+              const field = cfg.field
+              let option: SeriesOption | SeriesOption[]
+
+              if (field === 'energy') {
+                option = {
+                  data: rawData.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item.energy,
+                  ]),
+                  type: 'line',
+                  symbol: 'none',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else if (field === 'count-rf') {
+                option = {
                   data: rawData.map((item) => [
                     toMilliseconds(item.timestamp),
                     item.count_ROCKFALL,
@@ -276,11 +246,11 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                   barGap: '5%',
                   barWidth: '80%',
                   barCategoryGap: '0%',
-                  stack: 'one',
                   xAxisIndex,
                   yAxisIndex,
-                },
-                {
+                }
+              } else if (field === 'count-ap') {
+                option = {
                   data: rawData.map((item) => [
                     toMilliseconds(item.timestamp),
                     item.count_AWANPANAS,
@@ -289,27 +259,109 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                   barGap: '5%',
                   barWidth: '80%',
                   barCategoryGap: '0%',
-                  stack: 'one',
                   xAxisIndex,
                   yAxisIndex,
-                },
-              ] as SeriesOption[]
-            } else if (field === 'energy-cumulative') {
+                }
+              } else if (field === 'rfap-stack') {
+                option = [
+                  {
+                    data: rawData.map((item) => [
+                      toMilliseconds(item.timestamp),
+                      item.count_ROCKFALL,
+                    ]),
+                    type: 'bar',
+                    barGap: '5%',
+                    barWidth: '80%',
+                    barCategoryGap: '0%',
+                    stack: 'one',
+                    xAxisIndex,
+                    yAxisIndex,
+                  },
+                  {
+                    data: rawData.map((item) => [
+                      toMilliseconds(item.timestamp),
+                      item.count_AWANPANAS,
+                    ]),
+                    type: 'bar',
+                    barGap: '5%',
+                    barWidth: '80%',
+                    barCategoryGap: '0%',
+                    stack: 'one',
+                    xAxisIndex,
+                    yAxisIndex,
+                  },
+                ] as SeriesOption[]
+              } else if (field === 'energy-cumulative') {
+                const data = rawData.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.energy,
+                ])
+                option = {
+                  data: cumulativeSum(data),
+                  type: 'line',
+                  symbol: 'none',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else {
+                // Default. field = 'count'.
+                option = {
+                  data: rawData.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item.count,
+                  ]),
+                  type: 'bar',
+                  barGap: '5%',
+                  barWidth: '80%',
+                  barCategoryGap: '0%',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              }
+
+              return option
+            }
+
+            case 'SeismicEnergy': {
+              const rawData = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as SeismicEnergyData[]
+
+              const cfg = config as SeismicEnergyConfig
               const data = rawData.map((item) => [
                 toMilliseconds(item.timestamp),
-                item.energy,
+                toMegajoules(item.energy),
               ])
-              option = {
-                data: cumulativeSum(data),
-                type: 'line',
-                symbol: 'none',
-                xAxisIndex,
-                yAxisIndex,
+
+              if (cfg.aggregate === 'daily-cumulative') {
+                return {
+                  data: cumulativeSum(data),
+                  type: 'line',
+                  symbol: 'none',
+                  xAxisIndex,
+                  yAxisIndex,
+                } as SeriesOption
+              } else {
+                // Default. aggregate = daily.
+                return {
+                  data: data,
+                  type: 'bar',
+                  barGap: '5%',
+                  barWidth: '80%',
+                  barCategoryGap: '0%',
+                  xAxisIndex,
+                  yAxisIndex,
+                } as SeriesOption
               }
-            } else {
-              // Default. field = 'count'.
-              option = {
-                data: rawData.map((item) => [
+            }
+
+            case 'Seismicity': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as SeismicityData[]
+
+              return {
+                data: data.map((item) => [
                   toMilliseconds(item.timestamp),
                   item.count,
                 ]),
@@ -319,416 +371,361 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 barCategoryGap: '0%',
                 xAxisIndex,
                 yAxisIndex,
-              }
-            }
-
-            return option
-          }
-
-          case 'SeismicEnergy': {
-            const rawData = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as SeismicEnergyData[]
-
-            const cfg = config as SeismicEnergyConfig
-            const data = rawData.map((item) => [
-              toMilliseconds(item.timestamp),
-              toMegajoules(item.energy),
-            ])
-
-            if (cfg.aggregate === 'daily-cumulative') {
-              return {
-                data: cumulativeSum(data),
-                type: 'line',
-                symbol: 'none',
-                xAxisIndex,
-                yAxisIndex,
-              } as SeriesOption
-            } else {
-              // Default. aggregate = daily.
-              return {
-                data: data,
-                type: 'bar',
-                barGap: '5%',
-                barWidth: '80%',
-                barCategoryGap: '0%',
-                xAxisIndex,
-                yAxisIndex,
               } as SeriesOption
             }
-          }
 
-          case 'Seismicity': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as SeismicityData[]
+            case 'RsamSeismic': {
+              const rawData = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as RsamSeismicData[]
 
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item.count,
-              ]),
-              type: 'bar',
-              barGap: '5%',
-              barWidth: '80%',
-              barCategoryGap: '0%',
-              xAxisIndex,
-              yAxisIndex,
-            } as SeriesOption
-          }
-
-          case 'RsamSeismic': {
-            const rawData = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as RsamSeismicData[]
-
-            const cfg = config as RsamSeismicConfig
-            const field = cfg.field
-            if (field === 'value-cumulative') {
-              return {
-                data: cumulativeSum(
-                  rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item[cfg.band],
-                  ])
-                ),
-                type: 'line',
-                symbol: 'none',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else {
-              return {
-                data: rawData.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.band],
-                ]),
-                type: 'line',
-                symbol: 'none',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            }
-          }
-
-          case 'GpsBaseline': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as GpsBaselineData[]
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item.baseline,
-              ]),
-              type: 'line',
-              symbolSize: 6,
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'GpsCoordinate': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as GpsCoordinateData[]
-
-            const cfg = config as GpsCoordinateConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: 'scatter',
-              symbolSize: 6,
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'Tiltmeter': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as TiltmeterData[]
-
-            const cfg = config as TiltmeterConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: 'line',
-              symbol: 'none',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'VogamosEmission': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as VogamosEmissionData[]
-
-            const cfg = config as VogamosEmissionConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: 'line',
-              symbol: 'none',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'VogamosTemperature': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as VogamosTemperatureData[]
-
-            const cfg = config as VogamosTemperatureConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: 'line',
-              symbol: 'none',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'Doas': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as DoasData[]
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.starttime),
-                item.flux,
-              ]),
-              type: 'scatter',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'LavaDomes': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as LavaDomesData[]
-
-            const cfg = config as LavaDomesConfig
-            const field = cfg.field
-
-            if (field === 'volume') {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.volume,
-                ]),
-                areaStyle: {},
-                type: 'line',
-                symbol: 'none',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.rate,
-                ]),
-                type: 'line',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            }
-          }
-
-          case 'WeatherPasarbubar': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as WeatherPasarbubarData[]
-
-            const cfg = config as WeatherPasarbubarConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'WeatherBabadan': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as WeatherBabadanData[]
-
-            const cfg = config as WeatherBabadanConfig
-
-            return {
-              data: data.map((item) => [
-                toMilliseconds(item.timestamp),
-                item[cfg.field],
-              ]),
-              type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
-              xAxisIndex,
-              yAxisIndex,
-            }
-          }
-
-          case 'RfapDistance': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as RfapDistanceData[]
-
-            const cfg = config as RfapDistanceConfig
-            const field = cfg.field
-
-            if (field === 'rfap-stack') {
-              return [
-                {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.rf_count,
-                  ]),
-                  type: 'bar',
-                  stack: 'one',
+              const cfg = config as RsamSeismicConfig
+              const field = cfg.field
+              if (field === 'value-cumulative') {
+                return {
+                  data: cumulativeSum(
+                    rawData.map((item) => [
+                      toMilliseconds(item.timestamp),
+                      item[cfg.band],
+                    ])
+                  ),
+                  type: 'line',
+                  symbol: 'none',
                   xAxisIndex,
                   yAxisIndex,
-                },
-                {
+                }
+              } else {
+                return {
+                  data: rawData.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item[cfg.band],
+                  ]),
+                  type: 'line',
+                  symbol: 'none',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              }
+            }
+
+            case 'GpsBaseline': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as GpsBaselineData[]
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.baseline,
+                ]),
+                type: 'line',
+                symbolSize: 6,
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'GpsCoordinate': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as GpsCoordinateData[]
+
+              const cfg = config as GpsCoordinateConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: 'scatter',
+                symbolSize: 6,
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'Tiltmeter': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as TiltmeterData[]
+
+              const cfg = config as TiltmeterConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'VogamosEmission': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as VogamosEmissionData[]
+
+              const cfg = config as VogamosEmissionConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'VogamosTemperature': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as VogamosTemperatureData[]
+
+              const cfg = config as VogamosTemperatureConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: 'line',
+                symbol: 'none',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'Doas': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as DoasData[]
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.starttime),
+                  item.flux,
+                ]),
+                type: 'scatter',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'LavaDomes': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as LavaDomesData[]
+
+              const cfg = config as LavaDomesConfig
+              const field = cfg.field
+
+              if (field === 'volume') {
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item.volume,
+                  ]),
+                  areaStyle: {},
+                  type: 'line',
+                  symbol: 'none',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else {
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item.rate,
+                  ]),
+                  type: 'line',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              }
+            }
+
+            case 'WeatherPasarbubar': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as WeatherPasarbubarData[]
+
+              const cfg = config as WeatherPasarbubarConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'WeatherBabadan': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as WeatherBabadanData[]
+
+              const cfg = config as WeatherBabadanConfig
+
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item[cfg.field],
+                ]),
+                type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
+                xAxisIndex,
+                yAxisIndex,
+              }
+            }
+
+            case 'RfapDistance': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as RfapDistanceData[]
+
+              const cfg = config as RfapDistanceConfig
+              const field = cfg.field
+
+              if (field === 'rfap-stack') {
+                return [
+                  {
+                    data: data.map((item) => [
+                      toMilliseconds(item.timestamp),
+                      item.rf_count,
+                    ]),
+                    type: 'bar',
+                    stack: 'one',
+                    xAxisIndex,
+                    yAxisIndex,
+                  },
+                  {
+                    data: data.map((item) => [
+                      toMilliseconds(item.timestamp),
+                      item.ap_count,
+                    ]),
+                    type: 'bar',
+                    stack: 'one',
+                    xAxisIndex,
+                    yAxisIndex,
+                  },
+                ]
+              } else if (field === 'ap-count') {
+                return {
                   data: data.map((item) => [
                     toMilliseconds(item.timestamp),
                     item.ap_count,
                   ]),
                   type: 'bar',
-                  stack: 'one',
                   xAxisIndex,
                   yAxisIndex,
-                },
-              ]
-            } else if (field === 'ap-count') {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.ap_count,
-                ]),
-                type: 'bar',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else if (field === 'ap-dist') {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  isDef(item.ap_dist)
-                    ? toKilometers(item.ap_dist)
-                    : item.ap_dist,
-                ]),
-                type: 'scatter',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else if (field === 'rf-dist') {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  isDef(item.rf_dist)
-                    ? toKilometers(item.rf_dist)
-                    : item.rf_dist,
-                ]),
-                type: 'scatter',
-                xAxisIndex,
-                yAxisIndex,
-              }
-            } else {
-              // Default. field = rf-count.
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.rf_count,
-                ]),
-                type: 'bar',
-                xAxisIndex,
-                yAxisIndex,
+                }
+              } else if (field === 'ap-dist') {
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    isDef(item.ap_dist)
+                      ? toKilometers(item.ap_dist)
+                      : item.ap_dist,
+                  ]),
+                  type: 'scatter',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else if (field === 'rf-dist') {
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    isDef(item.rf_dist)
+                      ? toKilometers(item.rf_dist)
+                      : item.rf_dist,
+                  ]),
+                  type: 'scatter',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else {
+                // Default. field = rf-count.
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item.rf_count,
+                  ]),
+                  type: 'bar',
+                  xAxisIndex,
+                  yAxisIndex,
+                }
               }
             }
-          }
 
-          case 'RfapDirection': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as RfapDirectionData[]
+            case 'RfapDirection': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as RfapDirectionData[]
 
-            const cfg = config as RfapDirectionConfig
-            const field = cfg.field
+              const cfg = config as RfapDirectionConfig
+              const field = cfg.field
 
-            if (field === 'distance') {
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  toKilometers(item.distance),
-                ]),
-                type: 'scatter',
-                symbol: 'circle',
-                symbolSize: 7,
-                xAxisIndex,
-                yAxisIndex,
+              if (field === 'distance') {
+                return {
+                  data: data.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    toKilometers(item.distance),
+                  ]),
+                  type: 'scatter',
+                  symbol: 'circle',
+                  symbolSize: 7,
+                  xAxisIndex,
+                  yAxisIndex,
+                }
+              } else {
+                return createRfapDirectionSeries(data, xAxisIndex, yAxisIndex)
               }
-            } else {
-              return createRfapDirectionSeries(data, xAxisIndex, yAxisIndex)
             }
+
+            case 'RfapType': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as RfapTypeData[]
+
+              const cfg = config as RfapTypeConfig
+              return createRfapTypeSeries(data, xAxisIndex, yAxisIndex, {
+                type: cfg.field,
+              })
+            }
+
+            case 'Magnetic': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as MagneticData[]
+
+              const cfg = config as MagneticConfig
+              return createMagneticSeries(data, cfg, { xAxisIndex, yAxisIndex })
+            }
+
+            case 'Thermal': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : []
+              ) as ThermalData[]
+
+              const cfg = config as ThermalConfig
+              return createThermalSeries(data, cfg, { xAxisIndex, yAxisIndex })
+            }
+
+            default:
+              return {
+                data: [],
+                type: 'line',
+              } as SeriesOption
           }
-
-          case 'RfapType': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as RfapTypeData[]
-
-            const cfg = config as RfapTypeConfig
-            return createRfapTypeSeries(data, xAxisIndex, yAxisIndex, {
-              type: cfg.field,
-            })
-          }
-
-          case 'Magnetic': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as MagneticData[]
-
-            const cfg = config as MagneticConfig
-            return createMagneticSeries(data, cfg, { xAxisIndex, yAxisIndex })
-          }
-
-          case 'Thermal': {
-            const data = (
-              key in dataRepository ? dataRepository[key] : []
-            ) as ThermalData[]
-
-            const cfg = config as ThermalConfig
-            return createThermalSeries(data, cfg, { xAxisIndex, yAxisIndex })
-          }
-
-          default:
-            return {
-              data: [],
-              type: 'line',
-            } as SeriesOption
-        }
-      }) as (SeriesOption | SeriesOption[])[]
+        }) as (SeriesOption | SeriesOption[])[]
     })
     .flat(2)
 
