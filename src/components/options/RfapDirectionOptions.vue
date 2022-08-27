@@ -6,28 +6,29 @@
 </template>
 
 <script setup lang="ts">
-import { RfapEnergyConfig } from '@/model/types'
-import { computed, ref } from 'vue'
+import { RfapDirectionConfig } from '@/model/types'
+import { computed, Ref, ref } from 'vue'
 
 interface Props {
-  config?: RfapEnergyConfig
+  config?: RfapDirectionConfig
 }
 
 interface Emits {
-  (event: 'update', config: RfapEnergyConfig): void
+  (event: 'update', config: RfapDirectionConfig): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const fields = ref([
-  { value: 'count', text: 'RF & AP Daily Count' },
-  { value: 'energy', text: 'RF & AP Daily Energy' },
-  { value: 'count-rf', text: 'RF Daily Count' },
-  { value: 'count-ap', text: 'AP Daily Count' },
-  { value: 'rfap-stack', text: 'RF & AP Daily Count Stack' },
-  { value: 'energy-cumulative', text: 'RF & AP Daily Energy Cumulative' },
-])
+  { value: 'count', text: 'RF & AP Count' },
+  { value: 'distance', text: 'RF & AP Max Distance' },
+]) as Ref<
+  {
+    value: RfapDirectionConfig['field']
+    text: string
+  }[]
+>
 
 const field = computed({
   get() {

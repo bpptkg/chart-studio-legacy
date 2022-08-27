@@ -41,7 +41,7 @@ export function createSeriesConfig<T extends DataType = DataType>(
 
     case 'GpsBaseline':
       return {
-        station1: 'pasarbubar',
+        station1: 'klatakan',
         station2: 'plawangan',
       }
 
@@ -56,6 +56,66 @@ export function createSeriesConfig<T extends DataType = DataType>(
         type: 'platform',
         station: 'babadan',
         field: 'x',
+      }
+
+    case 'VogamosEmission':
+      return {
+        field: 'co2_avg',
+      }
+
+    case 'VogamosTemperature':
+      return {
+        field: 'temperature1',
+      }
+
+    case 'Doas':
+      return {
+        station: 'babadan',
+      }
+
+    case 'LavaDomes':
+      return {
+        location: 'BARAT DAYA',
+        field: 'volume',
+      }
+
+    case 'WeatherPasarbubar':
+      return {
+        field: 'air_humidity',
+      }
+
+    case 'WeatherBabadan':
+      return {
+        field: 'relative_humidity',
+      }
+
+    case 'RfapDistance':
+      return {
+        field: 'rf-count',
+      }
+
+    case 'RfapDirection':
+      return {
+        field: 'count',
+      }
+
+    case 'RfapType':
+      return {
+        type: 'all',
+        field: 'count',
+      }
+
+    case 'Magnetic':
+      return {
+        station: 'imogiri',
+        field: 'x',
+      }
+
+    case 'Thermal':
+      return {
+        station: 'babadan',
+        area: 'baba-kubah-bd',
+        field: 'temperature',
       }
 
     default:

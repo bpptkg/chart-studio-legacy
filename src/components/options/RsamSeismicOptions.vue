@@ -2,6 +2,7 @@
   <div>
     <v-select v-model="station" :items="stations" label="Station"></v-select>
     <v-select v-model="band" :items="bands" label="Band Frequency"></v-select>
+    <slot></slot>
   </div>
 </template>
 

@@ -17,6 +17,7 @@
       </v-col>
     </v-row>
     <v-select v-model="fieldType" :items="fieldTypes" label="Type"></v-select>
+    <slot></slot>
   </div>
 </template>
 

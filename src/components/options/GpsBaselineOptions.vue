@@ -2,6 +2,7 @@
   <div>
     <v-select v-model="station1" :items="stations" label="Station 1"></v-select>
     <v-select v-model="station2" :items="stations" label="Station 2"></v-select>
+    <slot></slot>
   </div>
 </template>
 

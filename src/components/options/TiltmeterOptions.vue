@@ -3,6 +3,7 @@
     <v-select v-model="type" :items="types" label="Type"></v-select>
     <v-select v-model="station" :items="stations" label="Station"></v-select>
     <v-select v-model="field" :items="fields" label="Field"></v-select>
+    <slot></slot>
   </div>
 </template>
 

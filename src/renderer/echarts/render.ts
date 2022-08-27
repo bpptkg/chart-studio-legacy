@@ -2,17 +2,22 @@ import {
   DoasData,
   EdmConfig,
   EdmData,
-  GpsBaselineConfig,
   GpsBaselineData,
   GpsCoordinateConfig,
   GpsCoordinateData,
   LavaDomesConfig,
   LavaDomesData,
+  MagneticConfig,
+  MagneticData,
   RenderModel,
+  RfapDirectionConfig,
+  RfapDirectionData,
   RfapDistanceConfig,
   RfapDistanceData,
   RfapEnergyConfig,
   RfapEnergyData,
+  RfapTypeConfig,
+  RfapTypeData,
   RsamSeismicConfig,
   RsamSeismicData,
   SeismicEnergyConfig,
@@ -21,6 +26,8 @@ import {
   SeriesConfig,
   SeriesDataKey,
   SubplotConfig,
+  ThermalConfig,
+  ThermalData,
   TiltmeterConfig,
   TiltmeterData,
   VogamosEmissionConfig,
@@ -33,39 +40,16 @@ import {
   WeatherPasarbubarData,
 } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
-import { isDef, toPlain } from '@/shared/util'
+import { isDef } from '@/shared/util'
 import { EChartsOption, SeriesOption } from 'echarts'
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
-import moment from 'moment'
 import objectHash from 'object-hash'
 import { createRowGrid } from './grid'
-
-// Second to millisecond conversion factor.
-export const SECOND_TO_MILLISECOND = 1000
-
-// 10^12 erg to MJ conversion factor.
-export const ERG_TO_MEGA_JOULE = 1 / 10
-
-/**
- * Convert timestamp number or string to Unix milliseconds.
- */
-export function toMs(v: number | string): number {
-  return moment(v).unix() * SECOND_TO_MILLISECOND
-}
-
-/**
- * Convert 10^12 erg to Mega Joule.
- */
-export function toMJ(v: number): number {
-  return v * ERG_TO_MEGA_JOULE
-}
-
-/**
- * Convert meter to kilometer.
- */
-export function toKM(v: number): number {
-  return v / 1000
-}
+import { createMagneticSeries } from './magnetic'
+import { createRfapDirectionSeries } from './rfapDirection'
+import { createRfapTypeSeries } from './rfapType'
+import { createThermalSeries } from './thermal'
+import { toMilliseconds, toKilometers, toMegajoules } from './util'
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
   const isLavaDomesRate = (seriesConfig: SeriesConfig) => {
@@ -133,24 +117,14 @@ export function findYAxisIndex(
 
 export function renderToECharts(model: RenderModel): EChartsOption {
   const {
+    subplots,
     interval,
     dataRepository,
     title = '',
     subtitle = '',
     backgroundColor = '#fff',
     margin = {},
-  } = toPlain(model) as RenderModel
-
-  const originalSubplots = model.subplots
-
-  // Filter subplot series visibility.
-  const subplots: SubplotConfig[] = originalSubplots.map((subplot) => {
-    const { series } = subplot
-    const filteredSeries = series.filter(({ config }) =>
-      isDef(config.visible) ? config.visible : true
-    )
-    return { ...subplot, series: filteredSeries }
-  })
+  } = model as RenderModel
 
   // Render grid spec.
   const grid = createRowGrid(subplots.length > 0 ? subplots.length : 1, margin)
@@ -204,8 +178,13 @@ export function renderToECharts(model: RenderModel): EChartsOption {
 
   // Render each series in the subplot.
   const series: SeriesOption[] = subplots
+    .filter((subplot) =>
+      subplot.series.filter(({ config }) =>
+        isDef(config.visible) ? config.visible : true
+      )
+    )
     .map((subplot, subplotIndex) => {
-      const renderedSeries = subplot.series.map((seriesConfig, seriesIndex) => {
+      return subplot.series.map((seriesConfig, seriesIndex) => {
         const { dataType, config } = seriesConfig
         const dataKey: SeriesDataKey = {
           interval,
@@ -230,7 +209,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 : 'slope_distance'
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[fieldName]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[fieldName],
+              ]),
               type: 'line',
               xAxisIndex,
               yAxisIndex,
@@ -249,7 +231,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             if (field === 'energy') {
               option = {
                 data: rawData.map((item) => [
-                  toMs(item.timestamp),
+                  toMilliseconds(item.timestamp),
                   item.energy,
                 ]),
                 type: 'line',
@@ -260,7 +242,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else if (field === 'count-rf') {
               option = {
                 data: rawData.map((item) => [
-                  toMs(item.timestamp),
+                  toMilliseconds(item.timestamp),
                   item.count_ROCKFALL,
                 ]),
                 type: 'bar',
@@ -273,7 +255,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else if (field === 'count-ap') {
               option = {
                 data: rawData.map((item) => [
-                  toMs(item.timestamp),
+                  toMilliseconds(item.timestamp),
                   item.count_AWANPANAS,
                 ]),
                 type: 'bar',
@@ -287,7 +269,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               option = [
                 {
                   data: rawData.map((item) => [
-                    toMs(item.timestamp),
+                    toMilliseconds(item.timestamp),
                     item.count_ROCKFALL,
                   ]),
                   type: 'bar',
@@ -300,7 +282,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 },
                 {
                   data: rawData.map((item) => [
-                    toMs(item.timestamp),
+                    toMilliseconds(item.timestamp),
                     item.count_AWANPANAS,
                   ]),
                   type: 'bar',
@@ -314,7 +296,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ] as SeriesOption[]
             } else if (field === 'energy-cumulative') {
               const data = rawData.map((item) => [
-                toMs(item.timestamp),
+                toMilliseconds(item.timestamp),
                 item.energy,
               ])
               option = {
@@ -327,7 +309,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else {
               // Default. field = 'count'.
               option = {
-                data: rawData.map((item) => [toMs(item.timestamp), item.count]),
+                data: rawData.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.count,
+                ]),
                 type: 'bar',
                 barGap: '5%',
                 barWidth: '80%',
@@ -347,8 +332,8 @@ export function renderToECharts(model: RenderModel): EChartsOption {
 
             const cfg = config as SeismicEnergyConfig
             const data = rawData.map((item) => [
-              toMs(item.timestamp),
-              toMJ(item.energy),
+              toMilliseconds(item.timestamp),
+              toMegajoules(item.energy),
             ])
 
             if (cfg.aggregate === 'daily-cumulative') {
@@ -379,7 +364,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             ) as SeismicityData[]
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item.count]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item.count,
+              ]),
               type: 'bar',
               barGap: '5%',
               barWidth: '80%',
@@ -399,7 +387,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             if (field === 'value-cumulative') {
               return {
                 data: cumulativeSum(
-                  rawData.map((item) => [toMs(item.timestamp), item[cfg.band]])
+                  rawData.map((item) => [
+                    toMilliseconds(item.timestamp),
+                    item[cfg.band],
+                  ])
                 ),
                 type: 'line',
                 symbol: 'none',
@@ -409,7 +400,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else {
               return {
                 data: rawData.map((item) => [
-                  toMs(item.timestamp),
+                  toMilliseconds(item.timestamp),
                   item[cfg.band],
                 ]),
                 type: 'line',
@@ -426,7 +417,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             ) as GpsBaselineData[]
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item.baseline]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item.baseline,
+              ]),
               type: 'line',
               symbolSize: 6,
               xAxisIndex,
@@ -442,7 +436,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as GpsCoordinateConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: 'scatter',
               symbolSize: 6,
               xAxisIndex,
@@ -458,7 +455,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as TiltmeterConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: 'line',
               symbol: 'none',
               xAxisIndex,
@@ -474,7 +474,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as VogamosEmissionConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: 'line',
               symbol: 'none',
               xAxisIndex,
@@ -490,7 +493,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as VogamosTemperatureConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: 'line',
               symbol: 'none',
               xAxisIndex,
@@ -504,7 +510,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             ) as DoasData[]
 
             return {
-              data: data.map((item) => [toMs(item.starttime), item.flux]),
+              data: data.map((item) => [
+                toMilliseconds(item.starttime),
+                item.flux,
+              ]),
               type: 'scatter',
               xAxisIndex,
               yAxisIndex,
@@ -521,7 +530,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
 
             if (field === 'volume') {
               return {
-                data: data.map((item) => [toMs(item.timestamp), item.volume]),
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.volume,
+                ]),
                 areaStyle: {},
                 type: 'line',
                 symbol: 'none',
@@ -530,7 +542,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               }
             } else {
               return {
-                data: data.map((item) => [toMs(item.timestamp), item.rate]),
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.rate,
+                ]),
                 type: 'line',
                 xAxisIndex,
                 yAxisIndex,
@@ -546,7 +561,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as WeatherPasarbubarConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
               xAxisIndex,
               yAxisIndex,
@@ -561,7 +579,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             const cfg = config as WeatherBabadanConfig
 
             return {
-              data: data.map((item) => [toMs(item.timestamp), item[cfg.field]]),
+              data: data.map((item) => [
+                toMilliseconds(item.timestamp),
+                item[cfg.field],
+              ]),
               type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
               xAxisIndex,
               yAxisIndex,
@@ -580,7 +601,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               return [
                 {
                   data: data.map((item) => [
-                    toMs(item.timestamp),
+                    toMilliseconds(item.timestamp),
                     item.rf_count,
                   ]),
                   type: 'bar',
@@ -590,7 +611,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 },
                 {
                   data: data.map((item) => [
-                    toMs(item.timestamp),
+                    toMilliseconds(item.timestamp),
                     item.ap_count,
                   ]),
                   type: 'bar',
@@ -601,7 +622,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ]
             } else if (field === 'ap-count') {
               return {
-                data: data.map((item) => [toMs(item.timestamp), item.ap_count]),
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.ap_count,
+                ]),
                 type: 'bar',
                 xAxisIndex,
                 yAxisIndex,
@@ -609,8 +633,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else if (field === 'ap-dist') {
               return {
                 data: data.map((item) => [
-                  toMs(item.timestamp),
-                  isDef(item.ap_dist) ? toKM(item.ap_dist) : item.ap_dist,
+                  toMilliseconds(item.timestamp),
+                  isDef(item.ap_dist)
+                    ? toKilometers(item.ap_dist)
+                    : item.ap_dist,
                 ]),
                 type: 'scatter',
                 xAxisIndex,
@@ -619,8 +645,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else if (field === 'rf-dist') {
               return {
                 data: data.map((item) => [
-                  toMs(item.timestamp),
-                  isDef(item.rf_dist) ? toKM(item.rf_dist) : item.rf_dist,
+                  toMilliseconds(item.timestamp),
+                  isDef(item.rf_dist)
+                    ? toKilometers(item.rf_dist)
+                    : item.rf_dist,
                 ]),
                 type: 'scatter',
                 xAxisIndex,
@@ -629,12 +657,69 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             } else {
               // Default. field = rf-count.
               return {
-                data: data.map((item) => [toMs(item.timestamp), item.rf_count]),
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  item.rf_count,
+                ]),
                 type: 'bar',
                 xAxisIndex,
                 yAxisIndex,
               }
             }
+          }
+
+          case 'RfapDirection': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as RfapDirectionData[]
+
+            const cfg = config as RfapDirectionConfig
+            const field = cfg.field
+
+            if (field === 'distance') {
+              return {
+                data: data.map((item) => [
+                  toMilliseconds(item.timestamp),
+                  toKilometers(item.distance),
+                ]),
+                type: 'scatter',
+                symbol: 'circle',
+                symbolSize: 7,
+                xAxisIndex,
+                yAxisIndex,
+              }
+            } else {
+              return createRfapDirectionSeries(data, xAxisIndex, yAxisIndex)
+            }
+          }
+
+          case 'RfapType': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as RfapTypeData[]
+
+            const cfg = config as RfapTypeConfig
+            return createRfapTypeSeries(data, xAxisIndex, yAxisIndex, {
+              type: cfg.field,
+            })
+          }
+
+          case 'Magnetic': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as MagneticData[]
+
+            const cfg = config as MagneticConfig
+            return createMagneticSeries(data, cfg, { xAxisIndex, yAxisIndex })
+          }
+
+          case 'Thermal': {
+            const data = (
+              key in dataRepository ? dataRepository[key] : []
+            ) as ThermalData[]
+
+            const cfg = config as ThermalConfig
+            return createThermalSeries(data, cfg, { xAxisIndex, yAxisIndex })
           }
 
           default:
@@ -643,9 +728,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               type: 'line',
             } as SeriesOption
         }
-      }) as Array<Array<SeriesOption> | SeriesOption>
-
-      return renderedSeries
+      }) as (SeriesOption | SeriesOption[])[]
     })
     .flat(2)
 

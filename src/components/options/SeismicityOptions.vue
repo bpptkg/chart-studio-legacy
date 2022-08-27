@@ -5,6 +5,7 @@
       :items="eventTypes"
       label="Event Type"
     ></v-select>
+    <slot></slot>
   </div>
 </template>
 

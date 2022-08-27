@@ -127,19 +127,19 @@ export interface RfapDirectionParameterConfig {
 }
 
 export interface RfapTypeParameterConfig {
-  type: 'seen' | 'heard' | 'seen-heard'
+  type: 'all' | 'seen' | 'heard' | 'seen-heard'
   field: 'count' | 'distance'
 }
 
 export interface MagneticParameterConfig {
   station: string
-  field: string
+  field: 'x' | 'y' | 'z'
 }
 
 export interface ThermalParameterConfig {
   station: string
   area: string
-  field: string
+  field: 'temperature' | 'density'
 }
 
 export type SeismicityConfig = ParameterConfig<SeismicityParameterConfig>
@@ -190,51 +190,50 @@ export type ParameterConfigType =
   | WeatherPasarbubarConfig
 
 export interface ParameterConfigMap {
-  Seismicity: SeismicityConfig
+  Doas: DoasConfig
   Edm: EdmConfig
-  SeismicEnergy: SeismicEnergyConfig
-  RfapEnergy: RfapEnergyConfig
-  RsamSeismic: RsamSeismicConfig
   GpsBaseline: GpsBaselineConfig
   GpsCoordinate: GpsCoordinateConfig
+  LavaDomes: LavaDomesConfig
+  Magnetic: MagneticConfig
+  RfapDirection: RfapDirectionConfig
+  RfapDistance: RfapDistanceConfig
+  RfapEnergy: RfapEnergyConfig
+  RfapType: RfapTypeConfig
+  RsamSeismic: RsamSeismicConfig
+  SeismicEnergy: SeismicEnergyConfig
+  Seismicity: SeismicityConfig
+  Thermal: ThermalConfig
   Tiltmeter: TiltmeterConfig
   VogamosEmission: VogamosEmissionConfig
   VogamosTemperature: VogamosTemperatureConfig
-  Doas: DoasConfig
-  LavaDomes: LavaDomesConfig
   WeatherBabadan: WeatherBabadanConfig
   WeatherPasarbubar: WeatherPasarbubarConfig
-  RfapDistance: RfapDistanceConfig
-  RfapDirection: RfapDirectionConfig
-  RfapType: RfapTypeConfig
-  Magnetic: MagneticConfig
-  Thermal: ThermalConfig
 }
 
 export type DataType = keyof ParameterConfigMap
+export type DataTypeNameMapInternal = { [key in DataType]: string }
 
-export const DataTypeNameMap: {
-  [key in DataType]: string
-} = {
-  Seismicity: 'Seismicity',
+export const DataTypeNameMap: DataTypeNameMapInternal = {
+  Doas: 'DOAS',
   Edm: 'EDM',
-  SeismicEnergy: 'Seismic Energy',
-  RfapEnergy: 'RF & AP Energy',
-  RsamSeismic: 'RSAM Seismic',
   GpsBaseline: 'GPS Baseline',
   GpsCoordinate: 'GPS Coordinate',
+  LavaDomes: 'Lava Domes',
+  Magnetic: 'Magnetic',
+  RfapDirection: 'RF & AP Direction',
+  RfapDistance: 'RF & AP Distance',
+  RfapEnergy: 'RF & AP Energy',
+  RfapType: 'RF & AP Type',
+  RsamSeismic: 'RSAM Seismic',
+  SeismicEnergy: 'Seismic Energy',
+  Seismicity: 'Seismicity',
+  Thermal: 'Thermal',
   Tiltmeter: 'Tiltmeter',
   VogamosEmission: 'Vogamos Emission',
   VogamosTemperature: 'Vogamos Temperature',
-  Doas: 'DOAS',
-  LavaDomes: 'Lava Domes',
   WeatherBabadan: 'Weather Babadan',
   WeatherPasarbubar: 'Weather Pasarbubar',
-  RfapDistance: 'RF & AP Distance',
-  RfapDirection: 'RF & AP Direction',
-  RfapType: 'RF & AP Type',
-  Magnetic: 'Magnetic',
-  Thermal: 'Thermal',
 }
 
 export interface SeismicityData {
@@ -352,9 +351,9 @@ export interface WeatherPasarbubarData {
   readonly amount: number
   readonly battery_voltage: number
   readonly power_temperature: number
-  readonly actual_rainfall: number | null
-  readonly cumulative_rainfall: number | null
-  readonly rate: number | null
+  readonly actual_rainfall: number
+  readonly cumulative_rainfall: number
+  readonly rate: number
 }
 
 export interface RainfallEvent {
@@ -379,29 +378,29 @@ export interface WeatherPasarbubarResponseData {
 
 export interface WeatherBabadanData {
   readonly timestamp: string
-  readonly air_temperature: number | null
-  readonly relative_humidity: number | null
-  readonly air_pressure: number | null
-  readonly internal_temperature: number | null
-  readonly wind_direction_min: number | null
-  readonly wind_direction_avg: number | null
-  readonly wind_direction_max: number | null
-  readonly wind_speed_min: number | null
-  readonly wind_speed_avg: number | null
-  readonly wind_speed_max: number | null
-  readonly rain_acc: number | null
-  readonly rain_duration: number | null
-  readonly rain_intensity: number | null
-  readonly rain_peak_intensity: number | null
-  readonly hail_acc: number | null
-  readonly hail_duration: number | null
-  readonly hail_intensity: number | null
-  readonly hail_peak_intensity: number | null
-  readonly heating_temperature: number | null
-  readonly supply_voltage: number | null
-  readonly ref_voltage: number | null
-  readonly heating_voltage: number | null
-  readonly id: string | null
+  readonly air_temperature: number
+  readonly relative_humidity: number
+  readonly air_pressure: number
+  readonly internal_temperature: number
+  readonly wind_direction_min: number
+  readonly wind_direction_avg: number
+  readonly wind_direction_max: number
+  readonly wind_speed_min: number
+  readonly wind_speed_avg: number
+  readonly wind_speed_max: number
+  readonly rain_acc: number
+  readonly rain_duration: number
+  readonly rain_intensity: number
+  readonly rain_peak_intensity: number
+  readonly hail_acc: number
+  readonly hail_duration: number
+  readonly hail_intensity: number
+  readonly hail_peak_intensity: number
+  readonly heating_temperature: number
+  readonly supply_voltage: number
+  readonly ref_voltage: number
+  readonly heating_voltage: number
+  readonly id: string
 }
 
 export interface WeatherBabadanResponseData {
@@ -413,40 +412,40 @@ export interface WeatherBabadanResponseData {
 export interface RainfallStationData {
   readonly timestamp: string
   readonly sharp: number
-  readonly rainfall: number | null
-  readonly cumulative_rainfall: number | null
-  readonly rate: number | null
+  readonly rainfall: number
+  readonly cumulative_rainfall: number
+  readonly rate: number
 }
 
 export interface RfapDistanceData {
   readonly timestamp: string
-  readonly rf_count: number | null
-  readonly rf_dist: number | null
-  readonly ap_count: number | null
-  readonly ap_dist: number | null
+  readonly rf_count: number
+  readonly rf_dist: number
+  readonly ap_count: number
+  readonly ap_dist: number
 }
 
 export interface RfapDirectionData {
   readonly timestamp: string
   readonly count: number
-  readonly distance: number | null
-  readonly rf_count: number | null
-  readonly ap_count: number | null
-  readonly rf_distance: number | null
-  readonly ap_distance: number | null
-  readonly countdir: { [key: string]: number } | null
-  readonly distdir: { [key: string]: number } | null
+  readonly distance: number
+  readonly rf_count: number
+  readonly ap_count: number
+  readonly rf_distance: number
+  readonly ap_distance: number
+  readonly countdir: { [key: string]: number }
+  readonly distdir: { [key: string]: number }
 }
 
 export interface RfapTypeData {
   readonly timestamp: string
   readonly count: number
-  readonly distance: number | null
-  readonly rf_count: number | null
-  readonly ap_count: number | null
-  readonly rf_distance: number | null
-  readonly ap_distance: number | null
-  readonly countsta: { [key: string]: number } | null
+  readonly distance: number
+  readonly rf_count: number
+  readonly ap_count: number
+  readonly rf_distance: number
+  readonly ap_distance: number
+  readonly countsta: { [key: string]: number }
 }
 
 export interface MagneticData {
@@ -455,19 +454,12 @@ export interface MagneticData {
   readonly y: number
   readonly z: number
   readonly r: number
-  readonly temperature: number | null
-  readonly battery: number | null
+  readonly temperature: number
+  readonly battery: number
 }
 
 export interface ThermalData {
-  readonly id?: number
-  readonly filename?: string
-  readonly area?: string
-  readonly timestamp: string
-  readonly temperature: number
-  readonly density: number
-  readonly created?: string
-  readonly updated?: string
+  [k: string]: number
 }
 
 export interface DataItemTypeMap {

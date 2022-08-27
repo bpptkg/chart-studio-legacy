@@ -30,7 +30,7 @@ export const useChartStore = defineStore('chart', {
       subplots: [],
       interval: {
         end: moment().format(DATE_FORMAT),
-        start: moment().subtract(7, 'days').format(DATE_FORMAT),
+        start: moment().subtract(3, 'days').format(DATE_FORMAT),
       },
       title: '',
       subtitle: '',

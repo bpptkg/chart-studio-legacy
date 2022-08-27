@@ -7,6 +7,7 @@
       label="Field"
       type="text"
     ></v-select>
+    <slot></slot>
   </div>
 </template>
 

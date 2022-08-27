@@ -7,30 +7,44 @@
 </template>
 
 <script setup lang="ts">
-import { GpsCoordinateConfig } from '@/model/types'
-import { computed } from 'vue'
-import stations from './gpsStations'
+import { MagneticConfig } from '@/model/types'
+import { computed, Ref, ref } from 'vue'
 
 interface Props {
-  config?: GpsCoordinateConfig
+  config?: MagneticConfig
 }
 
 interface Emits {
-  (event: 'update', config: GpsCoordinateConfig): void
+  (event: 'update', config: MagneticConfig): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const fields = [
-  { value: 'east', text: 'UTM Easting' },
-  { value: 'north', text: 'UTM Northing' },
-  { value: 'up', text: 'Elevation' },
-]
+const stations = ref([
+  { value: 'babadan', text: 'Babadan' },
+  { value: 'imogiri', text: 'Imogiri' },
+]) as Ref<
+  {
+    value: MagneticConfig['station']
+    text: string
+  }[]
+>
+
+const fields = ref([
+  { value: 'x', text: 'X Component' },
+  { value: 'y', text: 'Y Component' },
+  { value: 'z', text: 'Z Component' },
+]) as Ref<
+  {
+    value: MagneticConfig['field']
+    text: string
+  }[]
+>
 
 const station = computed({
   get() {
-    return props.config?.station || stations[0].value
+    return props.config?.station || 'babadan'
   },
   set(value) {
     emit(
@@ -48,7 +62,7 @@ const station = computed({
 
 const field = computed({
   get() {
-    return props.config?.field || 'east'
+    return props.config?.field || 'x'
   },
   set(value) {
     emit(
