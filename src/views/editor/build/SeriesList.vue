@@ -31,13 +31,14 @@
             :is="ComponentOptionsMap[series.dataType]"
             :config="series.config"
             @update="handleUpdate"
-          ></component>
-          <v-select
-            v-model="yAxisPosition"
-            :items="yAxisPositionOptions"
-            label="Y Axis"
-          ></v-select>
-          <v-switch v-model="visible" label="Visible" inset></v-switch>
+          >
+            <v-select
+              v-model="yAxisPosition"
+              :items="yAxisPositionOptions"
+              label="Y Axis"
+            ></v-select>
+            <v-switch v-model="visible" label="Visible"></v-switch>
+          </component>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
