@@ -46,10 +46,12 @@ export function createRfapTypeSeries(
     })
   } else {
     return {
-      data: data.map((item) => [
-        toMilliseconds(item.timestamp),
-        toKilometers(item.distance),
-      ]),
+      data: data
+        .map((item) => [
+          toMilliseconds(item.timestamp),
+          item.distance ? toKilometers(item.distance) : 0,
+        ])
+        .filter((v) => v[1] > 0),
       type: 'scatter',
       symbol: 'circle',
       symbolSize: 7,

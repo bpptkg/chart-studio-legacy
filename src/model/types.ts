@@ -459,7 +459,9 @@ export interface MagneticData {
 }
 
 export interface ThermalData {
-  [k: string]: number
+  readonly timestamp: string
+  readonly temperature: number
+  readonly density: number
 }
 
 export interface DataItemTypeMap {

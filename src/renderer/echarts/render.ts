@@ -65,7 +65,10 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
         'GpsBaseline',
         'GpsCoordinate',
         'Magnetic',
+        'Thermal',
         'Tiltmeter',
+        'WeatherBabadan',
+        'WeatherPasarbubar',
       ].includes(series.dataType) || isLavaDomesRateSeries(series)
     )
   })
@@ -194,9 +197,13 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             interval,
             series: seriesConfig,
           }
-          const key = objectHash.sha1(dataKey)
-          const xAxisIndex = subplotIndex
-          const yAxisIndex = findYAxisIndex(subplots, subplotIndex, seriesIndex)
+          const key: string = objectHash.sha1(dataKey)
+          const xAxisIndex: number = subplotIndex
+          const yAxisIndex: number = findYAxisIndex(
+            subplots,
+            subplotIndex,
+            seriesIndex
+          )
 
           switch (dataType) {
             case 'Edm': {
@@ -276,6 +283,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                       toMilliseconds(item.timestamp),
                       item.count_ROCKFALL,
                     ]),
+                    name: 'RF Count',
                     type: 'bar',
                     barGap: '5%',
                     barWidth: '80%',
@@ -289,6 +297,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                       toMilliseconds(item.timestamp),
                       item.count_AWANPANAS,
                     ]),
+                    itemStyle: {
+                      color: '#c12e34',
+                    },
+                    name: 'AP Count',
                     type: 'bar',
                     barGap: '5%',
                     barWidth: '80%',
@@ -570,6 +582,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                   item[cfg.field],
                 ]),
                 type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
+                symbol: cfg.field === 'wind_direction' ? 'circle' : 'none',
                 xAxisIndex,
                 yAxisIndex,
               }
@@ -588,6 +601,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                   item[cfg.field],
                 ]),
                 type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
+                symbol: cfg.field === 'wind_direction_avg' ? 'circle' : 'none',
                 xAxisIndex,
                 yAxisIndex,
               }

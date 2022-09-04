@@ -17,7 +17,7 @@ export function createThermalSeries(
   return {
     data: data.map((item) => [
       toMilliseconds(item.timestamp),
-      item[`${config.field}_${config.area}`],
+      item[config.field],
     ]),
     type: 'line',
     symbol: 'none',

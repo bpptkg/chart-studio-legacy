@@ -405,20 +405,13 @@ export function createRequest<T extends DataType>(
     case 'Thermal': {
       const config = seriesConfig.config as ThermalConfig
 
-      const station = config.station
-      let area_list
-      if (station === 'babadan') {
-        area_list = BABADAN_THERMAL_AREAS
-      } else {
-        area_list = KALIURANG_THERMAL_AREAS
-      }
-
       return api.get('/thermal2/', {
         params: {
-          start: start,
-          end: end,
-          stddev_mode: true,
-          area_list: area_list.map((area) => area.id).join(','),
+          timestamp__gte: start,
+          timestamp__lt: end,
+          area: config.area,
+          nolimit: true,
+          fields: 'timestamp,temperature,density',
         },
         signal: controller.signal,
       })
