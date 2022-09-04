@@ -124,18 +124,18 @@ export function createRfapDirectionSeries(
     }> = []
 
     Object.values(DIRECTION).forEach((direction) => {
-      const filteredData = data
-        .map((item) => {
-          return [
-            toMilliseconds(item.timestamp),
-            _.get(item.countdir, direction, 0),
-          ]
-        })
-        .filter((v) => v[1] > 0)
+      const directionData = data.map((item) => {
+        return [
+          toMilliseconds(item.timestamp),
+          _.get(item.countdir, direction, 0),
+        ]
+      })
 
-      // Only append non-empty data.
-      if (filteredData.length) {
-        nonEmptyDirectionData.push({ direction, data: filteredData })
+      // ECharts 5 cannot stack time axis whose y data only partially complete.
+      // So, only append direction data whose one or more non-zero count values
+      // and exclude direction data if all count values are zero.
+      if (directionData.some((v) => v[1] > 0)) {
+        nonEmptyDirectionData.push({ direction, data: directionData })
       }
     })
 
