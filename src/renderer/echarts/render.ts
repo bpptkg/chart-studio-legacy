@@ -51,6 +51,11 @@ import { createRfapTypeSeries } from './rfapType'
 import { createThermalSeries } from './thermal'
 import { toMilliseconds, toKilometers, toMegajoules } from './util'
 
+/**
+ * It specifies whether not to contain zero position of axis compulsively. When
+ * the axis scale is set to be true, the axis may not contain zero position,
+ * which is useful in the scatter chart for both value axes.
+ */
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
   const isLavaDomesRateSeries = (seriesConfig: SeriesConfig): boolean => {
     const series = seriesConfig as SeriesConfig<'LavaDomes'>
@@ -74,10 +79,17 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
   })
 }
 
+/**
+ * Check whether particular subplot has multiple series or not.
+ */
 export function hasMultipleSeries(subplot: SubplotConfig): boolean {
   return subplot.series.length > 1
 }
 
+/**
+ * Check whether particular subplot has secondary y axis or not. Particular
+ * subplot has secondary y axis if it has both left and right y axes.
+ */
 export function hasSecondaryYAxis(subplot: SubplotConfig): boolean {
   if (hasMultipleSeries(subplot)) {
     let foundLeft = true
@@ -99,6 +111,9 @@ export function hasSecondaryYAxis(subplot: SubplotConfig): boolean {
   }
 }
 
+/**
+ * Determine y axis index for particular series in the subplot.
+ */
 export function findYAxisIndex(
   subplots: SubplotConfig[],
   subplotIndex: number,
@@ -123,6 +138,12 @@ export function findYAxisIndex(
   }
 }
 
+/**
+ * Render chart model to ECharts chart option.
+ *
+ * @param model Chart model.
+ * @returns ECharts chart option.
+ */
 export function renderToECharts(model: RenderModel): EChartsOption {
   const {
     subplots,

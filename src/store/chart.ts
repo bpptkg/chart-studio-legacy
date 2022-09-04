@@ -13,14 +13,41 @@ import moment from 'moment'
 import { defineStore } from 'pinia'
 
 interface State {
+  /**
+   * Array of subplots configuration.
+   */
   subplots: SubplotConfig[]
+  /**
+   * Date interval.
+   */
   interval: DateInterval
+  /**
+   * Chart title.
+   */
   title: string
+  /**
+   * Chart subtitle.
+   */
   subtitle: string
+  /**
+   * Chart width.
+   */
   width: number
+  /**
+   * Chart height.
+   */
   height: number
+  /**
+   * Chart pixel density.
+   */
   devicePixelRatio: number
+  /**
+   * Chart background color.
+   */
   backgroundColor: string
+  /**
+   * Canvas margin.
+   */
   margin: Margin
 }
 

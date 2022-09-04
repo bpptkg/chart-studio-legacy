@@ -13,8 +13,17 @@ interface State {
    * Tabs Build | Compare.
    */
   viewIndex: string
+  /**
+   * Whether to show build view left panel or not.
+   */
   showBuildLeftSidebar: boolean
+  /**
+   * Whether to show build view right panel or not.
+   */
   showBuildRightSidebar: boolean
+  /**
+   * Whether to show compare view left panel or not.
+   */
   showCompareLeftSidebar: boolean
 }
 

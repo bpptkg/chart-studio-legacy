@@ -11,6 +11,9 @@ import { useChartStore } from './chart'
 import { useCompareStore } from './compare'
 
 interface State {
+  /**
+   * Data repository object.
+   */
   data: DataRepository
 }
 

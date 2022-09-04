@@ -2,7 +2,13 @@ import { defineStore } from 'pinia'
 import { useWorkspaceStore } from './workspace'
 
 interface State {
+  /**
+   * Size of left pane.
+   */
   leftPaneSize: number
+  /**
+   * Size of right pane.
+   */
   rightPaneSize: number
 }
 

@@ -9,14 +9,17 @@ import objectHash from 'object-hash'
 import { defineStore } from 'pinia'
 import { useChartStore } from './chart'
 
-export interface UpdateOptions {
-  update: 'light' | 'full'
+interface State {
+  /**
+   * Data repository object.
+   */
+  data: DataRepository
 }
 
 export const useDataStore = defineStore('data', {
-  state: () => {
+  state: (): State => {
     return {
-      data: {} as DataRepository,
+      data: {},
     }
   },
   getters: {

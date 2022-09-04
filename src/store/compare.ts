@@ -3,6 +3,9 @@ import { assert } from '@/shared/assertions'
 import { defineStore } from 'pinia'
 
 interface State {
+  /**
+   * Array of date intervals.
+   */
   intervals: DateInterval[]
 }
 

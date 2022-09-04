@@ -7,6 +7,9 @@ interface User {
 }
 
 interface State {
+  /**
+   * Authenticated user information or null if user is not logged in.
+   */
   user: User | null
 }
 
