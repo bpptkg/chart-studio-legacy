@@ -59,9 +59,14 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
 
   return subplot.series.some((series) => {
     return (
-      ['Doas', 'Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
-        series.dataType
-      ) || isLavaDomesRate(series)
+      [
+        'Doas',
+        'Edm',
+        'GpsBaseline',
+        'GpsCoordinate',
+        'Magnetic',
+        'Tiltmeter',
+      ].includes(series.dataType) || isLavaDomesRate(series)
     )
   })
 }
