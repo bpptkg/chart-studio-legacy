@@ -59,7 +59,7 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
 
   return subplot.series.some((series) => {
     return (
-      ['Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
+      ['Doas', 'Edm', 'GpsBaseline', 'GpsCoordinate', 'Tiltmeter'].includes(
         series.dataType
       ) || isLavaDomesRate(series)
     )
@@ -171,6 +171,8 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       },
       gridIndex: index,
       position: 'bottom',
+      min: toMilliseconds(interval.start),
+      max: toMilliseconds(interval.end),
       splitLine: { show: false },
       type: 'time',
     }
