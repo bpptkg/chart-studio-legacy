@@ -52,7 +52,7 @@ import { createThermalSeries } from './thermal'
 import { toMilliseconds, toKilometers, toMegajoules } from './util'
 
 export function shouldAxisScale(subplot: SubplotConfig): boolean {
-  const isLavaDomesRate = (seriesConfig: SeriesConfig) => {
+  const isLavaDomesRateSeries = (seriesConfig: SeriesConfig): boolean => {
     const series = seriesConfig as SeriesConfig<'LavaDomes'>
     return series.config.field === 'rate'
   }
@@ -66,7 +66,7 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
         'GpsCoordinate',
         'Magnetic',
         'Tiltmeter',
-      ].includes(series.dataType) || isLavaDomesRate(series)
+      ].includes(series.dataType) || isLavaDomesRateSeries(series)
     )
   })
 }
@@ -684,7 +684,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 return {
                   data: data.map((item) => [
                     toMilliseconds(item.timestamp),
-                    toKilometers(item.distance),
+                    item.distance ? toKilometers(item.distance) : null,
                   ]),
                   type: 'scatter',
                   symbol: 'circle',

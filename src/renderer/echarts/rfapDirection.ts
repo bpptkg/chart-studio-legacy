@@ -105,6 +105,7 @@ export function createRfapDirectionSeries(
       }
 
       return {
+        areaStyle: {},
         data: data.map((item) => [
           toMilliseconds(item.timestamp),
           sumCountDir(item.countdir),
@@ -123,12 +124,14 @@ export function createRfapDirectionSeries(
     }> = []
 
     Object.values(DIRECTION).forEach((direction) => {
-      const filteredData = data.map((item) => {
-        return [
-          toMilliseconds(item.timestamp),
-          _.get(item.countdir, direction, 0),
-        ]
-      })
+      const filteredData = data
+        .map((item) => {
+          return [
+            toMilliseconds(item.timestamp),
+            _.get(item.countdir, direction, 0),
+          ]
+        })
+        .filter((v) => v[1] > 0)
 
       // Only append non-empty data.
       if (filteredData.length) {
@@ -138,6 +141,7 @@ export function createRfapDirectionSeries(
 
     return nonEmptyDirectionData.map((direction, index) => {
       return {
+        areaStyle: {},
         data: direction.data,
         itemStyle: {
           color:
@@ -149,6 +153,7 @@ export function createRfapDirectionSeries(
               )
             ],
         },
+        name: direction.direction,
         type: 'bar',
         stack: 'one',
         xAxisIndex,
