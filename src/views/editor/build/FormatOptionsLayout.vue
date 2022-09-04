@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme'
+import { useTheme } from '@/composable/theme'
 import { isNumeric } from '@/shared/number'
 import { useChartStore } from '@/store/chart'
 import { storeToRefs } from 'pinia'

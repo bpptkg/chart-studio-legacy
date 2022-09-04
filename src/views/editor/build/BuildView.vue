@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme'
+import { useTheme } from '@/composable/theme'
 import { PaneDimension } from '@/shared/pane'
 import { useBuildViewStore } from '@/store/buildview'
 import { useWorkspaceStore } from '@/store/workspace'

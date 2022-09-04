@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme'
+import { useTheme } from '@/composable/theme'
 
 const { isDarkTheme } = useTheme()
 </script>

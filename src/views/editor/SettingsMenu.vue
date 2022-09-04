@@ -17,7 +17,7 @@
     </template>
 
     <v-list dense>
-      <v-list-item @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+      <v-list-item @click="toggleDarkTheme">
         <v-list-item-icon>
           <v-icon>mdi-weather-night</v-icon>
         </v-list-item-icon>
@@ -79,7 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import { useTheme } from '@/composables/theme'
+import { THEME_KEY, useTheme } from '@/composable/theme'
+import { getCurrentInstance } from 'vue'
 
 const { isDarkTheme } = useTheme()
+
+const app = getCurrentInstance()
+
+function toggleDarkTheme() {
+  if (app) {
+    const goDark = app.proxy.$vuetify.theme.dark
+    app.proxy.$vuetify.theme.dark = !goDark
+    localStorage.setItem(THEME_KEY, app.proxy.$vuetify.theme.dark.toString())
+  }
+}
 </script>

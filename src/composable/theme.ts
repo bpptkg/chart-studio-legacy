@@ -1,5 +1,7 @@
 import { computed, getCurrentInstance } from 'vue'
 
+export const THEME_KEY = 'cs:dark-theme'
+
 export function useTheme() {
   const app = getCurrentInstance()
   const isDarkTheme = computed(() => {

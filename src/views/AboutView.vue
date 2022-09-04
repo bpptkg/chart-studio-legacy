@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :dark="isDarkTheme">
     <v-main>
       <v-container>
         <v-row justify="center">
@@ -88,7 +88,23 @@
 </template>
 
 <script setup lang="ts">
+import { THEME_KEY, useTheme } from '@/composable/theme'
+import { getCurrentInstance, onMounted } from 'vue'
+
 const version = process.env.VUE_APP_VERSION
 const commitHash = process.env.VUE_APP_COMMIT_HASH
 const buildDate = process.env.VUE_APP_BUILD_DATE
+
+const { isDarkTheme } = useTheme()
+
+const app = getCurrentInstance()
+
+onMounted(() => {
+  const theme = localStorage.getItem(THEME_KEY)
+  if (theme && theme === 'true') {
+    if (app) {
+      app.proxy.$vuetify.theme.dark = true
+    }
+  }
+})
 </script>
