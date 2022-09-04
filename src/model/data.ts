@@ -357,7 +357,7 @@ export function createRequest<T extends DataType>(
     }
 
     case 'RfapDistance': {
-      return api.get('/rfap-distance', {
+      return api.get('/rfap-distance/', {
         params: {
           start: start,
           end: end,
@@ -367,7 +367,7 @@ export function createRequest<T extends DataType>(
     }
 
     case 'RfapDirection': {
-      return api.get('/rfap-distdir', {
+      return api.get('/rfap-distdir/', {
         params: {
           start: start,
           end: end,
@@ -379,7 +379,7 @@ export function createRequest<T extends DataType>(
     case 'RfapType': {
       const config = seriesConfig.config as RfapTypeConfig
 
-      return api.get('/rfap-type', {
+      return api.get('/rfap-type/', {
         params: {
           start: start,
           end: end,
