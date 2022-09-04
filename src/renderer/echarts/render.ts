@@ -608,6 +608,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                       toMilliseconds(item.timestamp),
                       item.rf_count,
                     ]),
+                    name: 'RF Count',
                     type: 'bar',
                     stack: 'one',
                     xAxisIndex,
@@ -618,6 +619,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                       toMilliseconds(item.timestamp),
                       item.ap_count,
                     ]),
+                    itemStyle: {
+                      color: '#c12e34',
+                    },
+                    name: 'AP Count',
                     type: 'bar',
                     stack: 'one',
                     xAxisIndex,
@@ -638,9 +643,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 return {
                   data: data.map((item) => [
                     toMilliseconds(item.timestamp),
-                    isDef(item.ap_dist)
-                      ? toKilometers(item.ap_dist)
-                      : item.ap_dist,
+                    item.ap_dist ? toKilometers(item.ap_dist) : null,
                   ]),
                   type: 'scatter',
                   xAxisIndex,
@@ -650,9 +653,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 return {
                   data: data.map((item) => [
                     toMilliseconds(item.timestamp),
-                    isDef(item.rf_dist)
-                      ? toKilometers(item.rf_dist)
-                      : item.rf_dist,
+                    item.rf_dist ? toKilometers(item.rf_dist) : null,
                   ]),
                   type: 'scatter',
                   xAxisIndex,

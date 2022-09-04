@@ -1,3 +1,1 @@
-import { renderToECharts } from './render'
-
-export default renderToECharts
+export { renderToECharts } from './render'
