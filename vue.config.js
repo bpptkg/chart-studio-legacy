@@ -4,7 +4,7 @@ const process = require('process')
 process.env.VUE_APP_VERSION = require('./package.json').version
 
 process.env.VUE_APP_COMMIT_HASH = require('child_process')
-  .execSync('git rev-parse --short HEAD')
+  .execSync('git rev-parse HEAD')
   .toString()
 
 process.env.VUE_APP_BUILD_DATE = new Date().toISOString()
