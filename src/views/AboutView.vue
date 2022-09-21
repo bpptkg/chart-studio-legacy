@@ -30,12 +30,14 @@
                       <span class="text--secondary">{{ version }} (Beta)</span>
                     </div>
                     <div class="my-1">
-                      Build:
+                      Commit:
                       <span class="text--secondary">{{ commitHash }}</span>
                     </div>
                     <div>
                       Build date:
-                      <span class="text--secondary">{{ buildDate }} UTC</span>
+                      <span class="text--secondary">
+                        {{ buildDate }} ({{ buildDuration }})
+                      </span>
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -89,11 +91,14 @@
 
 <script setup lang="ts">
 import { THEME_KEY, useTheme } from '@/composable/theme'
+import moment from 'moment'
 import { getCurrentInstance, onMounted } from 'vue'
 
 const version = process.env.VUE_APP_VERSION
 const commitHash = process.env.VUE_APP_COMMIT_HASH
 const buildDate = process.env.VUE_APP_BUILD_DATE
+
+const buildDuration = moment(buildDate).fromNow()
 
 const { isDarkTheme } = useTheme()
 
