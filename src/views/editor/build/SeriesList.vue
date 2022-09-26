@@ -94,8 +94,8 @@ function handleUpdate<T extends DataType = DataType>(
 
 // Handle series shared properties for all data types.
 const yAxisPositionOptions = ref([
-  { value: 'left', text: 'Primary' },
-  { value: 'right', text: 'Secondary' },
+  { value: 'left', text: 'Left' },
+  { value: 'right', text: 'Right' },
 ])
 
 const defaultYAxisPosition = 'left'
