@@ -5,6 +5,7 @@ export interface YAxisOption {
 export interface ParameterConfigCommon {
   visible?: boolean
   yAxis?: YAxisOption
+  name?: string
 }
 
 export type ParameterConfig<T> = T & ParameterConfigCommon

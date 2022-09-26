@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { ThermalConfig } from '@/model/types'
 import { computed, reactive, Ref, ref } from 'vue'
+import thermalAreas from './thermalAreas'
 
 interface Props {
   config?: ThermalConfig
@@ -32,23 +33,8 @@ const stations = ref([
   }[]
 >
 
-const areasMap: { [key: string]: { value: string; text: string }[] } = reactive(
-  {
-    kaliurang: [
-      { value: 'kal-kubah-bd', text: 'Kubah Barat Daya' },
-      { value: 'kal-asap', text: 'Asap' },
-      { value: 'kal-gendol', text: 'Gendol' },
-      { value: 'kal-boyong', text: 'Boyong' },
-      { value: 'kal-krasak', text: 'Krasak' },
-      { value: 'kal-bebeng', text: 'Bebeng' },
-    ],
-    babadan: [
-      { value: 'baba-kubah-bd', text: 'Kubah Barat Daya' },
-      { value: 'baba-asap', text: 'Asap' },
-      { value: 'baba-barat-laut', text: 'Barat Laut' },
-    ],
-  }
-)
+const areasMap: { [key: string]: { value: string; text: string }[] } =
+  reactive(thermalAreas)
 
 const fields = ref([
   { value: 'temperature', text: 'Max Temperature' },

@@ -131,7 +131,7 @@ export function createRequest<T extends DataType>(
     case 'Edm': {
       const config = seriesConfig.config as EdmConfig
 
-      return api.get('/edm/csdr/', {
+      return api.get('/edm/', {
         params: {
           start_at: start,
           end_at: end,
@@ -139,6 +139,8 @@ export function createRequest<T extends DataType>(
           benchmark: config.benchmark,
           reflector: config.reflector,
           compact: true,
+          rate: true,
+          ordering: 'timestamp',
         },
         signal: controller.signal,
       })

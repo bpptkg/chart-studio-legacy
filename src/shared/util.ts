@@ -318,3 +318,17 @@ export function hasChanged(x: unknown, y: unknown): boolean {
 export function toPlain(obj: unknown): unknown {
   return JSON.parse(JSON.stringify(obj))
 }
+
+/**
+ * Convert object to JSON string.
+ */
+export function objectStringify(obj: object): string {
+  return JSON.stringify(obj)
+}
+
+/**
+ * Convert JSON string into an object.
+ */
+export function objectParse(obj: string): object {
+  return JSON.parse(obj)
+}

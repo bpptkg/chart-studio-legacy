@@ -1,8 +1,21 @@
+import moment from 'moment'
 import _ from 'lodash'
-import { RfapDirectionData } from '@/model/types'
+import { CallbackDataParams } from 'echarts/types/dist/shared'
 import { SeriesOption } from 'echarts'
-import { toMilliseconds, getNearestCmapIndex } from './util'
+import {
+  RfapDirectionConfig,
+  RfapDirectionData,
+  SeriesConfig,
+} from '@/model/types'
+import { objectParse, objectStringify } from '@/shared/util'
+import {
+  toMilliseconds,
+  getNearestCmapIndex,
+  toKilometers,
+  circle,
+} from './util'
 import { tab20ColorMap } from './colors'
+import { CallbackDataParamsCasted, NO_DATA, TooltipNameData } from './shared'
 
 // List of all RF & AP directions.
 export const DIRECTION = {
@@ -81,84 +94,172 @@ export const DIRECTION_GROUP_INDEX = [
   'NW [Barat Laut]',
 ]
 
-interface RfapDirectionSeriesOptions {
+export interface RfapDirectionSeriesOptions {
   useDirectionGroup?: boolean
+  xAxisIndex?: number
+  yAxisIndex?: number
+}
+
+export interface RfapDirectionTooltipNameData extends TooltipNameData {
+  seriesConfig: SeriesConfig
+  seriesOptions: RfapDirectionSeriesOptions
+  name: string
 }
 
 export function createRfapDirectionSeries(
   data: RfapDirectionData[],
-  xAxisIndex: number,
-  yAxisIndex: number,
+  config: RfapDirectionConfig,
   options: RfapDirectionSeriesOptions = {}
-): SeriesOption[] {
-  const { useDirectionGroup = false } = options
+): SeriesOption | SeriesOption[] {
+  const { useDirectionGroup = false, xAxisIndex = 0, yAxisIndex = 0 } = options
+  const seriesConfig: SeriesConfig = {
+    dataType: 'RfapDirection',
+    config,
+  }
 
-  if (useDirectionGroup) {
-    return DIRECTION_GROUP.map((group, index) => {
-      const sumCountDir = (countdir: { [key: string]: number }): number => {
-        const caseInsensitiveDirectionGroup = group.map((v) => v.toLowerCase())
-        // Sum count per direction group.
-        const keys = Object.keys(countdir || {}).filter((k) =>
-          caseInsensitiveDirectionGroup.includes(k.toLowerCase())
-        )
-        return _.sum(keys.map((k) => countdir[k]))
-      }
-
-      return {
-        areaStyle: {},
-        data: data.map((item) => [
-          toMilliseconds(item.timestamp),
-          sumCountDir(item.countdir),
-        ]),
-        name: DIRECTION_GROUP_INDEX[index],
-        type: 'bar',
-        stack: 'one',
-        xAxisIndex,
-        yAxisIndex,
-      }
-    })
+  if (config.field === 'distance') {
+    return {
+      data: data.map((item) => [
+        toMilliseconds(item.timestamp),
+        item.distance ? toKilometers(item.distance) : null,
+      ]),
+      name: objectStringify({
+        dataType: 'RfapDirection',
+        seriesConfig,
+        seriesOptions: options,
+        name: 'Max. Distance',
+      } as RfapDirectionTooltipNameData),
+      type: 'scatter',
+      symbol: 'circle',
+      symbolSize: 7,
+      xAxisIndex,
+      yAxisIndex,
+    } as SeriesOption
   } else {
-    const nonEmptyDirectionData: Array<{
-      direction: string
-      data: number[][]
-    }> = []
+    if (useDirectionGroup) {
+      return DIRECTION_GROUP.map((group, index) => {
+        const sumCountDir = (countdir: { [key: string]: number }): number => {
+          const caseInsensitiveDirectionGroup = group.map((v) =>
+            v.toLowerCase()
+          )
+          // Sum count per direction group.
+          const keys = Object.keys(countdir || {}).filter((k) =>
+            caseInsensitiveDirectionGroup.includes(k.toLowerCase())
+          )
+          return _.sum(keys.map((k) => countdir[k]))
+        }
 
-    Object.values(DIRECTION).forEach((direction) => {
-      const directionData = data.map((item) => {
-        return [
-          toMilliseconds(item.timestamp),
-          _.get(item.countdir, direction, 0),
-        ]
+        return {
+          areaStyle: {},
+          data: data.map((item) => [
+            toMilliseconds(item.timestamp),
+            sumCountDir(item.countdir),
+          ]),
+          name: objectStringify({
+            dataType: 'RfapDirection',
+            seriesConfig,
+            seriesOptions: options,
+            name: DIRECTION_GROUP_INDEX[index],
+          } as RfapDirectionTooltipNameData),
+          type: 'bar',
+          stack: 'one',
+          xAxisIndex,
+          yAxisIndex,
+        }
+      })
+    } else {
+      const nonEmptyDirectionData: Array<{
+        direction: string
+        data: number[][]
+      }> = []
+
+      Object.values(DIRECTION).forEach((direction) => {
+        const directionData = data.map((item) => {
+          return [
+            toMilliseconds(item.timestamp),
+            _.get(item.countdir, direction, 0),
+          ]
+        })
+
+        // ECharts 5 cannot stack time axis whose y data only partially complete.
+        // So, only append direction data whose one or more non-zero count values
+        // and exclude direction data if all count values are zero.
+        if (directionData.some((v) => v[1] > 0)) {
+          nonEmptyDirectionData.push({ direction, data: directionData })
+        }
       })
 
-      // ECharts 5 cannot stack time axis whose y data only partially complete.
-      // So, only append direction data whose one or more non-zero count values
-      // and exclude direction data if all count values are zero.
-      if (directionData.some((v) => v[1] > 0)) {
-        nonEmptyDirectionData.push({ direction, data: directionData })
-      }
-    })
-
-    return nonEmptyDirectionData.map((direction, index) => {
-      return {
-        areaStyle: {},
-        data: direction.data,
-        itemStyle: {
-          color:
-            tab20ColorMap[
-              getNearestCmapIndex(
-                index,
-                nonEmptyDirectionData.length,
-                tab20ColorMap.length
-              )
-            ],
-        },
-        name: direction.direction,
-        type: 'bar',
-        stack: 'one',
-        xAxisIndex,
-        yAxisIndex,
-      }
-    })
+      return nonEmptyDirectionData.map((direction, index) => {
+        return {
+          areaStyle: {},
+          data: direction.data,
+          itemStyle: {
+            color:
+              tab20ColorMap[
+                getNearestCmapIndex(
+                  index,
+                  nonEmptyDirectionData.length,
+                  tab20ColorMap.length
+                )
+              ],
+          },
+          name: objectStringify({
+            dataType: 'RfapDirection',
+            seriesConfig,
+            seriesOptions: options,
+            name: direction.direction,
+          } as RfapDirectionTooltipNameData),
+          type: 'bar',
+          stack: 'one',
+          xAxisIndex,
+          yAxisIndex,
+        }
+      })
+    }
   }
+}
+
+export function createRfapDirectionSeriesTooltip(
+  params: CallbackDataParams,
+  index = 0
+): string {
+  const tooltip: string[] = []
+  const { seriesName, value, color } = params as CallbackDataParamsCasted
+
+  if (index === 0) {
+    tooltip.push(`<div>${moment(value[0]).format('YYYY-MM-DD')}</div>`)
+  }
+
+  const tooltipData = objectParse(seriesName) as RfapDirectionTooltipNameData
+  const config = tooltipData.seriesConfig.config as RfapDirectionConfig
+
+  if (config.field === 'distance') {
+    tooltip.push(
+      `<div>
+      ${circle(color)}
+      ${tooltipData.name}: ${value[1] ? value[1].toFixed(1) : NO_DATA} km
+      </div>
+      `
+    )
+  } else {
+    if (tooltipData.seriesOptions.useDirectionGroup) {
+      tooltip.push(
+        `<div>
+        ${circle(color)}
+        ${tooltipData.name}: ${value[1] ? value[1].toFixed(0) : NO_DATA}
+        </div>
+        `
+      )
+    } else {
+      tooltip.push(
+        `<div>
+        ${circle(color)}
+        ${tooltipData.name}: ${value[1] ? value[1].toFixed(0) : NO_DATA}
+        </div>
+        `
+      )
+    }
+  }
+
+  return tooltip.join('')
 }

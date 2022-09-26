@@ -22,6 +22,7 @@ import {
   RsamSeismicData,
   SeismicEnergyConfig,
   SeismicEnergyData,
+  SeismicityConfig,
   SeismicityData,
   SeriesConfig,
   SeriesDataKey,
@@ -44,12 +45,17 @@ import { isDef } from '@/shared/util'
 import { EChartsOption, SeriesOption } from 'echarts'
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
 import objectHash from 'object-hash'
+
+import { createEdmSeries } from './edm'
 import { createRowGrid } from './grid'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
 import { createRfapTypeSeries } from './rfapType'
+import { createSeismicEnergySeries } from './seismicEnergy'
+import { createSeismicitySeries } from './seismicity'
 import { createThermalSeries } from './thermal'
-import { toMilliseconds, toKilometers, toMegajoules } from './util'
+import { renderTooltip } from './tooltip'
+import { toMilliseconds, toKilometers } from './util'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
@@ -207,6 +213,9 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     }
   })
 
+  // Render series tooltip.
+  const tooltip = renderTooltip()
+
   // Render each series in the subplot.
   const series: SeriesOption[] = subplots
     .map((subplot, subplotIndex) => {
@@ -233,22 +242,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as EdmData[]
 
               const cfg = config as EdmConfig
-              const fieldName =
-                cfg.type === 'csd'
-                  ? 'csd'
-                  : cfg.type === 'rate'
-                  ? 'rate'
-                  : 'slope_distance'
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[fieldName],
-                ]),
-                type: 'line',
-                xAxisIndex,
-                yAxisIndex,
-              } as SeriesOption
+              return createEdmSeries(data, cfg, { xAxisIndex, yAxisIndex })
             }
 
             case 'RfapEnergy': {
@@ -363,36 +357,15 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             }
 
             case 'SeismicEnergy': {
-              const rawData = (
+              const data = (
                 key in dataRepository ? dataRepository[key] : []
               ) as SeismicEnergyData[]
 
               const cfg = config as SeismicEnergyConfig
-              const data = rawData.map((item) => [
-                toMilliseconds(item.timestamp),
-                toMegajoules(item.energy),
-              ])
-
-              if (cfg.aggregate === 'daily-cumulative') {
-                return {
-                  data: cumulativeSum(data),
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                } as SeriesOption
-              } else {
-                // Default. aggregate = daily.
-                return {
-                  data: data,
-                  type: 'bar',
-                  barGap: '5%',
-                  barWidth: '80%',
-                  barCategoryGap: '0%',
-                  xAxisIndex,
-                  yAxisIndex,
-                } as SeriesOption
-              }
+              return createSeismicEnergySeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'Seismicity': {
@@ -400,18 +373,11 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 key in dataRepository ? dataRepository[key] : []
               ) as SeismicityData[]
 
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.count,
-                ]),
-                type: 'bar',
-                barGap: '5%',
-                barWidth: '80%',
-                barCategoryGap: '0%',
+              const cfg = config as SeismicityConfig
+              return createSeismicitySeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              } as SeriesOption
+              })
             }
 
             case 'RsamSeismic': {
@@ -714,23 +680,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as RfapDirectionData[]
 
               const cfg = config as RfapDirectionConfig
-              const field = cfg.field
-
-              if (field === 'distance') {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.distance ? toKilometers(item.distance) : null,
-                  ]),
-                  type: 'scatter',
-                  symbol: 'circle',
-                  symbolSize: 7,
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else {
-                return createRfapDirectionSeries(data, xAxisIndex, yAxisIndex)
-              }
+              return createRfapDirectionSeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'RfapType': {
@@ -739,8 +692,9 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as RfapTypeData[]
 
               const cfg = config as RfapTypeConfig
-              return createRfapTypeSeries(data, xAxisIndex, yAxisIndex, {
-                type: cfg.field,
+              return createRfapTypeSeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
               })
             }
 
@@ -765,6 +719,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             default:
               return {
                 data: [],
+                name: '{}',
                 type: 'line',
               } as SeriesOption
           }
@@ -781,6 +736,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       textStyle: { fontSize: 14 },
     },
     grid,
+    tooltip,
     xAxis,
     yAxis,
     series,
