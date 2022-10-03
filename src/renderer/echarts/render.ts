@@ -48,6 +48,7 @@ import objectHash from 'object-hash'
 
 import { createEdmSeries } from './edm'
 import { createGpsBaselineSeries } from './gpsBaseline'
+import { createGpsCoordinateSeries } from './gpsCoordinate'
 import { createRowGrid } from './grid'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
@@ -314,17 +315,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as GpsCoordinateData[]
 
               const cfg = config as GpsCoordinateConfig
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.field],
-                ]),
-                type: 'scatter',
-                symbolSize: 6,
+              return createGpsCoordinateSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'Tiltmeter': {

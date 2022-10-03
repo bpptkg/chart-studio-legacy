@@ -8,6 +8,7 @@ import {
 
 import { createEdmSeriesTooltip } from './edm'
 import { createGpsBaselineSeriesTooltip } from './gpsBaseline'
+import { createGpsCoordinateSeriesTooltip } from './gpsCoordinate'
 import { createMagneticSeriesTooltip } from './magnetic'
 import { createRfapDirectionSeriesTooltip } from './rfapDirection'
 import { createRfapEnergySeriesTooltip } from './rfapEnergy'
@@ -32,6 +33,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'GpsBaseline':
           tooltip.push(createGpsBaselineSeriesTooltip(params, index))
+          break
+        case 'GpsCoordinate':
+          tooltip.push(createGpsCoordinateSeriesTooltip(params, index))
           break
         case 'Magnetic':
           tooltip.push(createMagneticSeriesTooltip(params, index))
