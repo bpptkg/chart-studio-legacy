@@ -40,7 +40,6 @@ import {
   WeatherPasarbubarConfig,
   WeatherPasarbubarData,
 } from '@/model/types'
-import { cumulativeSum } from '@/shared/math'
 import { isDef } from '@/shared/util'
 import { EChartsOption, SeriesOption } from 'echarts'
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
