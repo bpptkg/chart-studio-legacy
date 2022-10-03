@@ -9,6 +9,7 @@ import {
 import { createEdmSeriesTooltip } from './edm'
 import { createMagneticSeriesTooltip } from './magnetic'
 import { createRfapDirectionSeriesTooltip } from './rfapDirection'
+import { createRfapEnergySeriesTooltip } from './rfapEnergy'
 import { createRfapTypeSeriesTooltip } from './rfapType'
 import { createSeismicEnergySeriesTooltip } from './seismicEnergy'
 import { createSeismicitySeriesTooltip } from './seismicity'
@@ -32,6 +33,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'RfapDirection':
           tooltip.push(createRfapDirectionSeriesTooltip(params, index))
+          break
+        case 'RfapEnergy':
+          tooltip.push(createRfapEnergySeriesTooltip(params, index))
           break
         case 'RfapType':
           tooltip.push(createRfapTypeSeriesTooltip(params, index))

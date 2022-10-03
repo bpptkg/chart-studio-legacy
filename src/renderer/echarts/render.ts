@@ -50,6 +50,7 @@ import { createEdmSeries } from './edm'
 import { createRowGrid } from './grid'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
+import { createRfapEnergySeries } from './rfapEnergy'
 import { createRfapTypeSeries } from './rfapType'
 import { createSeismicEnergySeries } from './seismicEnergy'
 import { createSeismicitySeries } from './seismicity'
@@ -246,114 +247,15 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             }
 
             case 'RfapEnergy': {
-              const rawData = (
+              const data = (
                 key in dataRepository ? dataRepository[key] : []
               ) as RfapEnergyData[]
 
               const cfg = config as RfapEnergyConfig
-              const field = cfg.field
-              let option: SeriesOption | SeriesOption[]
-
-              if (field === 'energy') {
-                option = {
-                  data: rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.energy,
-                  ]),
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else if (field === 'count-rf') {
-                option = {
-                  data: rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.count_ROCKFALL,
-                  ]),
-                  type: 'bar',
-                  barGap: '5%',
-                  barWidth: '80%',
-                  barCategoryGap: '0%',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else if (field === 'count-ap') {
-                option = {
-                  data: rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.count_AWANPANAS,
-                  ]),
-                  type: 'bar',
-                  barGap: '5%',
-                  barWidth: '80%',
-                  barCategoryGap: '0%',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else if (field === 'rfap-stack') {
-                option = [
-                  {
-                    data: rawData.map((item) => [
-                      toMilliseconds(item.timestamp),
-                      item.count_ROCKFALL,
-                    ]),
-                    name: 'RF Count',
-                    type: 'bar',
-                    barGap: '5%',
-                    barWidth: '80%',
-                    barCategoryGap: '0%',
-                    stack: 'one',
-                    xAxisIndex,
-                    yAxisIndex,
-                  },
-                  {
-                    data: rawData.map((item) => [
-                      toMilliseconds(item.timestamp),
-                      item.count_AWANPANAS,
-                    ]),
-                    itemStyle: {
-                      color: '#c12e34',
-                    },
-                    name: 'AP Count',
-                    type: 'bar',
-                    barGap: '5%',
-                    barWidth: '80%',
-                    barCategoryGap: '0%',
-                    stack: 'one',
-                    xAxisIndex,
-                    yAxisIndex,
-                  },
-                ] as SeriesOption[]
-              } else if (field === 'energy-cumulative') {
-                const data = rawData.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.energy,
-                ])
-                option = {
-                  data: cumulativeSum(data),
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else {
-                // Default. field = 'count'.
-                option = {
-                  data: rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.count,
-                  ]),
-                  type: 'bar',
-                  barGap: '5%',
-                  barWidth: '80%',
-                  barCategoryGap: '0%',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              }
-
-              return option
+              return createRfapEnergySeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'SeismicEnergy': {
