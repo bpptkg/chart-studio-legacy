@@ -2,6 +2,7 @@ import {
   DoasData,
   EdmConfig,
   EdmData,
+  GpsBaselineConfig,
   GpsBaselineData,
   GpsCoordinateConfig,
   GpsCoordinateData,
@@ -46,6 +47,7 @@ import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
 import objectHash from 'object-hash'
 
 import { createEdmSeries } from './edm'
+import { createGpsBaselineSeries } from './gpsBaseline'
 import { createRowGrid } from './grid'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
@@ -299,16 +301,11 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 key in dataRepository ? dataRepository[key] : []
               ) as GpsBaselineData[]
 
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item.baseline,
-                ]),
-                type: 'line',
-                symbolSize: 6,
+              const cfg = config as GpsBaselineConfig
+              return createGpsBaselineSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'GpsCoordinate': {

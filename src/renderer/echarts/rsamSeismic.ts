@@ -72,11 +72,10 @@ export function createRsamSeismicSeriesTooltip(
   const { seriesName, value, color } = params as CallbackDataParamsCasted
 
   if (index === 0) {
-    tooltip.push(`<div>${moment(value[0]).format('YYYY-MM-DD')}</div>`)
+    tooltip.push(`<div>${moment(value[0]).format('YYYY-MM-DD HH:mm:ss')}</div>`)
   }
 
   const tooltipData = objectParse(seriesName) as RsamSeismicTooltipNameData
-  //   const config = tooltipData.seriesConfig.config as RsamSeismicConfig
 
   tooltip.push(
     `<div>

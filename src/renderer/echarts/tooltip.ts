@@ -7,6 +7,7 @@ import {
 } from 'echarts/types/dist/shared'
 
 import { createEdmSeriesTooltip } from './edm'
+import { createGpsBaselineSeriesTooltip } from './gpsBaseline'
 import { createMagneticSeriesTooltip } from './magnetic'
 import { createRfapDirectionSeriesTooltip } from './rfapDirection'
 import { createRfapEnergySeriesTooltip } from './rfapEnergy'
@@ -28,6 +29,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
       switch (dataType) {
         case 'Edm':
           tooltip.push(createEdmSeriesTooltip(params, index))
+          break
+        case 'GpsBaseline':
+          tooltip.push(createGpsBaselineSeriesTooltip(params, index))
           break
         case 'Magnetic':
           tooltip.push(createMagneticSeriesTooltip(params, index))
