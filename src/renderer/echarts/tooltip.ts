@@ -19,6 +19,7 @@ import { createSeismicitySeriesTooltip } from './seismicity'
 import { createThermalSeriesTooltip } from './thermal'
 import { createTiltmeterSeriesTooltip } from './tiltmeter'
 import { createVogamosEmissionSeriesTooltip } from './vogamosEmission'
+import { createVogamosTemperatureSeriesTooltip } from './vogamosTemperature'
 
 export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
   const tooltip: string[] = []
@@ -68,6 +69,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'VogamosEmission':
           tooltip.push(createVogamosEmissionSeriesTooltip(params, index))
+          break
+        case 'VogamosTemperature':
+          tooltip.push(createVogamosTemperatureSeriesTooltip(params, index))
           break
       }
     } catch (error) {

@@ -62,6 +62,7 @@ import { createTiltmeterSeries } from './tiltmeter'
 import { renderTooltip } from './tooltip'
 import { toMilliseconds, toKilometers } from './util'
 import { createVogamosEmissionSeries } from './vogamosEmission'
+import { createVogamosTemperatureSeries } from './vogamosTemperature'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
@@ -341,7 +342,6 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as VogamosEmissionData[]
 
               const cfg = config as VogamosEmissionConfig
-
               return createVogamosEmissionSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
@@ -354,17 +354,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as VogamosTemperatureData[]
 
               const cfg = config as VogamosTemperatureConfig
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.field],
-                ]),
-                type: 'line',
-                symbol: 'none',
+              return createVogamosTemperatureSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'Doas': {

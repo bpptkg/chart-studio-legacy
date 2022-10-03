@@ -21,9 +21,9 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const fields = ref([
-  { value: 'temperature1', text: 'Temperature 1' },
-  { value: 'temperature2', text: 'Temperature 2' },
-  { value: 'temperature3', text: 'Temperature 3' },
+  { value: 'temperature1', text: 'Termocouple 1' },
+  { value: 'temperature2', text: 'Termocouple 2' },
+  { value: 'temperature3', text: 'Soil' },
   { value: 'temperature4', text: 'Temperature 4' },
 ]) as Ref<{ value: VogamosTemperatureConfig['field']; text: string }[]>
 
