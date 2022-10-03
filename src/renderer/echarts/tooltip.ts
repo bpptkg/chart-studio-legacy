@@ -17,6 +17,7 @@ import { createRsamSeismicSeriesTooltip } from './rsamSeismic'
 import { createSeismicEnergySeriesTooltip } from './seismicEnergy'
 import { createSeismicitySeriesTooltip } from './seismicity'
 import { createThermalSeriesTooltip } from './thermal'
+import { createTiltmeterSeriesTooltip } from './tiltmeter'
 
 export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
   const tooltip: string[] = []
@@ -60,6 +61,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'Thermal':
           tooltip.push(createThermalSeriesTooltip(params, index))
+          break
+        case 'Tiltmeter':
+          tooltip.push(createTiltmeterSeriesTooltip(params, index))
           break
       }
     } catch (error) {

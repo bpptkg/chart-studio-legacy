@@ -58,6 +58,7 @@ import { createRsamSeismicSeries } from './rsamSeismic'
 import { createSeismicEnergySeries } from './seismicEnergy'
 import { createSeismicitySeries } from './seismicity'
 import { createThermalSeries } from './thermal'
+import { createTiltmeterSeries } from './tiltmeter'
 import { renderTooltip } from './tooltip'
 import { toMilliseconds, toKilometers } from './util'
 
@@ -327,17 +328,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as TiltmeterData[]
 
               const cfg = config as TiltmeterConfig
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.field],
-                ]),
-                type: 'line',
-                symbol: 'none',
+              return createTiltmeterSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'VogamosEmission': {
