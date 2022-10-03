@@ -2,6 +2,7 @@
   <div>
     <v-select v-model="station" :items="stations" label="Station"></v-select>
     <v-select v-model="band" :items="bands" label="Band Frequency"></v-select>
+    <v-select v-model="field" :items="fields" label="Field"></v-select>
     <slot></slot>
   </div>
 </template>
@@ -44,6 +45,16 @@ const bands = ref([
 ]) as Ref<
   {
     value: RsamSeismicConfig['band']
+    text: string
+  }[]
+>
+
+const fields = ref([
+  { value: 'value', text: 'Value' },
+  { value: 'value-cumulative', text: 'Cum. Value' },
+]) as Ref<
+  {
+    value: RsamSeismicConfig['field']
     text: string
   }[]
 >

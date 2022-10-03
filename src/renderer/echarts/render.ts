@@ -52,6 +52,7 @@ import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
 import { createRfapEnergySeries } from './rfapEnergy'
 import { createRfapTypeSeries } from './rfapType'
+import { createRsamSeismicSeries } from './rsamSeismic'
 import { createSeismicEnergySeries } from './seismicEnergy'
 import { createSeismicitySeries } from './seismicity'
 import { createThermalSeries } from './thermal'
@@ -283,37 +284,15 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             }
 
             case 'RsamSeismic': {
-              const rawData = (
+              const data = (
                 key in dataRepository ? dataRepository[key] : []
               ) as RsamSeismicData[]
 
               const cfg = config as RsamSeismicConfig
-              const field = cfg.field
-              if (field === 'value-cumulative') {
-                return {
-                  data: cumulativeSum(
-                    rawData.map((item) => [
-                      toMilliseconds(item.timestamp),
-                      item[cfg.band],
-                    ])
-                  ),
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else {
-                return {
-                  data: rawData.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item[cfg.band],
-                  ]),
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              }
+              return createRsamSeismicSeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'GpsBaseline': {
