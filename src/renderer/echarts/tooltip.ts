@@ -10,6 +10,7 @@ import { createDoasSeriesTooltip } from './doas'
 import { createEdmSeriesTooltip } from './edm'
 import { createGpsBaselineSeriesTooltip } from './gpsBaseline'
 import { createGpsCoordinateSeriesTooltip } from './gpsCoordinate'
+import { createLavaDomesSeriesTooltip } from './lavaDomes'
 import { createMagneticSeriesTooltip } from './magnetic'
 import { createRfapDirectionSeriesTooltip } from './rfapDirection'
 import { createRfapEnergySeriesTooltip } from './rfapEnergy'
@@ -43,6 +44,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'GpsCoordinate':
           tooltip.push(createGpsCoordinateSeriesTooltip(params, index))
+          break
+        case 'LavaDomes':
+          tooltip.push(createLavaDomesSeriesTooltip(params, index))
           break
         case 'Magnetic':
           tooltip.push(createMagneticSeriesTooltip(params, index))

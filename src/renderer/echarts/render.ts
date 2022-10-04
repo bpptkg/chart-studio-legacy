@@ -52,6 +52,7 @@ import { createEdmSeries } from './edm'
 import { createGpsBaselineSeries } from './gpsBaseline'
 import { createGpsCoordinateSeries } from './gpsCoordinate'
 import { createRowGrid } from './grid'
+import { createLavaDomesSeries } from './lavaDomes'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
 import { createRfapEnergySeries } from './rfapEnergy'
@@ -377,31 +378,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as LavaDomesData[]
 
               const cfg = config as LavaDomesConfig
-              const field = cfg.field
-
-              if (field === 'volume') {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.volume,
-                  ]),
-                  areaStyle: {},
-                  type: 'line',
-                  symbol: 'none',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.rate,
-                  ]),
-                  type: 'line',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              }
+              return createLavaDomesSeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'WeatherPasarbubar': {
