@@ -1,5 +1,5 @@
 import { DoasConfig, DoasData, SeriesConfig } from '@/model/types'
-import { objectParse, objectStringify } from '@/shared/util'
+import { objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
 import { CallbackDataParams } from 'echarts/types/dist/shared'
 import moment from 'moment'
