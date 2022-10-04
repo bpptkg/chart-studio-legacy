@@ -55,6 +55,7 @@ import { createRowGrid } from './grid'
 import { createLavaDomesSeries } from './lavaDomes'
 import { createMagneticSeries } from './magnetic'
 import { createRfapDirectionSeries } from './rfapDirection'
+import { createRfapDistanceSeries } from './rfapDistance'
 import { createRfapEnergySeries } from './rfapEnergy'
 import { createRfapTypeSeries } from './rfapType'
 import { createRsamSeismicSeries } from './rsamSeismic'
@@ -63,7 +64,7 @@ import { createSeismicitySeries } from './seismicity'
 import { createThermalSeries } from './thermal'
 import { createTiltmeterSeries } from './tiltmeter'
 import { renderTooltip } from './tooltip'
-import { toMilliseconds, toKilometers } from './util'
+import { toMilliseconds } from './util'
 import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
 import { createWeatherBabadanSeries } from './weatherBabadan'
@@ -416,78 +417,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as RfapDistanceData[]
 
               const cfg = config as RfapDistanceConfig
-              const field = cfg.field
-
-              if (field === 'rfap-stack') {
-                return [
-                  {
-                    data: data.map((item) => [
-                      toMilliseconds(item.timestamp),
-                      item.rf_count,
-                    ]),
-                    name: 'RF Count',
-                    type: 'bar',
-                    stack: 'one',
-                    xAxisIndex,
-                    yAxisIndex,
-                  },
-                  {
-                    data: data.map((item) => [
-                      toMilliseconds(item.timestamp),
-                      item.ap_count,
-                    ]),
-                    itemStyle: {
-                      color: '#c12e34',
-                    },
-                    name: 'AP Count',
-                    type: 'bar',
-                    stack: 'one',
-                    xAxisIndex,
-                    yAxisIndex,
-                  },
-                ]
-              } else if (field === 'ap-count') {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.ap_count,
-                  ]),
-                  type: 'bar',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else if (field === 'ap-dist') {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.ap_dist ? toKilometers(item.ap_dist) : null,
-                  ]),
-                  type: 'scatter',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else if (field === 'rf-dist') {
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.rf_dist ? toKilometers(item.rf_dist) : null,
-                  ]),
-                  type: 'scatter',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              } else {
-                // Default. field = rf-count.
-                return {
-                  data: data.map((item) => [
-                    toMilliseconds(item.timestamp),
-                    item.rf_count,
-                  ]),
-                  type: 'bar',
-                  xAxisIndex,
-                  yAxisIndex,
-                }
-              }
+              return createRfapDistanceSeries(data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
             }
 
             case 'RfapDirection': {

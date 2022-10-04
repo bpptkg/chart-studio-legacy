@@ -13,6 +13,7 @@ import { createGpsCoordinateSeriesTooltip } from './gpsCoordinate'
 import { createLavaDomesSeriesTooltip } from './lavaDomes'
 import { createMagneticSeriesTooltip } from './magnetic'
 import { createRfapDirectionSeriesTooltip } from './rfapDirection'
+import { createRfapDistanceSeriesTooltip } from './rfapDistance'
 import { createRfapEnergySeriesTooltip } from './rfapEnergy'
 import { createRfapTypeSeriesTooltip } from './rfapType'
 import { createRsamSeismicSeriesTooltip } from './rsamSeismic'
@@ -55,6 +56,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'RfapDirection':
           tooltip.push(createRfapDirectionSeriesTooltip(params, index))
+          break
+        case 'RfapDistance':
+          tooltip.push(createRfapDistanceSeriesTooltip(params, index))
           break
         case 'RfapEnergy':
           tooltip.push(createRfapEnergySeriesTooltip(params, index))
