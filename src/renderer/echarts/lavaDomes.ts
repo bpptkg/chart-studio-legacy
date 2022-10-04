@@ -69,7 +69,7 @@ export function createLavaDomesSeriesTooltip(
       `<div>
       ${circle(color)}
       Rate: ${value[1] ? value[1].toFixed(2) : NO_DATA} m\u00B3/day
-       </div>`
+      </div>`
     )
   }
 
