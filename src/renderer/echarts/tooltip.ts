@@ -22,6 +22,7 @@ import { createThermalSeriesTooltip } from './thermal'
 import { createTiltmeterSeriesTooltip } from './tiltmeter'
 import { createVogamosEmissionSeriesTooltip } from './vogamosEmission'
 import { createVogamosTemperatureSeriesTooltip } from './vogamosTemperature'
+import { createWeatherBabadanSeriesTooltip } from './weatherBabadan'
 import { createWeatherPasarbubarSeriesTooltip } from './weatherPasarbubar'
 
 export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
@@ -81,6 +82,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'VogamosTemperature':
           tooltip.push(createVogamosTemperatureSeriesTooltip(params, index))
+          break
+        case 'WeatherBabadan':
+          tooltip.push(createWeatherBabadanSeriesTooltip(params, index))
           break
         case 'WeatherPasarbubar':
           tooltip.push(createWeatherPasarbubarSeriesTooltip(params, index))

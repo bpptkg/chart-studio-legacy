@@ -99,20 +99,20 @@ export interface LavaDomesParameterConfig {
 
 export interface WeatherPasarbubarParameterConfig {
   field:
-    | 'wind_direction'
-    | 'wind_speed'
-    | 'air_temperature'
     | 'air_humidity'
     | 'air_pressure'
+    | 'air_temperature'
+    | 'wind_direction'
+    | 'wind_speed'
 }
 
 export interface WeatherBabadanParameterConfig {
   field:
-    | 'wind_direction_avg'
-    | 'wind_speed_avg'
+    | 'air_pressure'
     | 'air_temperature'
     | 'relative_humidity'
-    | 'air_pressure'
+    | 'wind_direction_avg'
+    | 'wind_speed_avg'
 }
 
 export interface RainfallStationParameterConfig {

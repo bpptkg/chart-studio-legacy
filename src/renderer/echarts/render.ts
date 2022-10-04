@@ -66,6 +66,7 @@ import { renderTooltip } from './tooltip'
 import { toMilliseconds, toKilometers } from './util'
 import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
+import { createWeatherBabadanSeries } from './weatherBabadan'
 import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
 
 /**
@@ -403,17 +404,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as WeatherBabadanData[]
 
               const cfg = config as WeatherBabadanConfig
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.field],
-                ]),
-                type: cfg.field === 'wind_direction_avg' ? 'scatter' : 'line',
-                symbol: cfg.field === 'wind_direction_avg' ? 'circle' : 'none',
+              return createWeatherBabadanSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'RfapDistance': {
