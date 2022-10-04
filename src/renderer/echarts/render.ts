@@ -1,4 +1,5 @@
 import {
+  DoasConfig,
   DoasData,
   EdmConfig,
   EdmData,
@@ -46,6 +47,7 @@ import { EChartsOption, SeriesOption } from 'echarts'
 import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared'
 import objectHash from 'object-hash'
 
+import { createDoasSeries } from './doas'
 import { createEdmSeries } from './edm'
 import { createGpsBaselineSeries } from './gpsBaseline'
 import { createGpsCoordinateSeries } from './gpsCoordinate'
@@ -365,15 +367,8 @@ export function renderToECharts(model: RenderModel): EChartsOption {
                 key in dataRepository ? dataRepository[key] : []
               ) as DoasData[]
 
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.starttime),
-                  item.flux,
-                ]),
-                type: 'scatter',
-                xAxisIndex,
-                yAxisIndex,
-              }
+              const cfg = config as DoasConfig
+              return createDoasSeries(data, cfg, { xAxisIndex, yAxisIndex })
             }
 
             case 'LavaDomes': {

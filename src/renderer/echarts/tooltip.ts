@@ -5,6 +5,7 @@ import {
   CallbackDataParams,
   TopLevelFormatterParams,
 } from 'echarts/types/dist/shared'
+import { createDoasSeriesTooltip } from './doas'
 
 import { createEdmSeriesTooltip } from './edm'
 import { createGpsBaselineSeriesTooltip } from './gpsBaseline'
@@ -31,6 +32,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
     try {
       const { dataType } = objectParse(seriesName) as { dataType: DataType }
       switch (dataType) {
+        case 'Doas':
+          tooltip.push(createDoasSeriesTooltip(params, index))
+          break
         case 'Edm':
           tooltip.push(createEdmSeriesTooltip(params, index))
           break
