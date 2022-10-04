@@ -49,6 +49,7 @@ import objectHash from 'object-hash'
 
 import { createDoasSeries } from './doas'
 import { createEdmSeries } from './edm'
+import { createEmptySeries } from './empty'
 import { createGpsBaselineSeries } from './gpsBaseline'
 import { createGpsCoordinateSeries } from './gpsCoordinate'
 import { createRowGrid } from './grid'
@@ -466,11 +467,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
             }
 
             default:
-              return {
-                data: [],
-                name: '{}',
-                type: 'line',
-              } as SeriesOption
+              return createEmptySeries()
           }
         }) as (SeriesOption | SeriesOption[])[]
     })
