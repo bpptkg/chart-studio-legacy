@@ -5,8 +5,8 @@ import {
   CallbackDataParams,
   TopLevelFormatterParams,
 } from 'echarts/types/dist/shared'
-import { createDoasSeriesTooltip } from './doas'
 
+import { createDoasSeriesTooltip } from './doas'
 import { createEdmSeriesTooltip } from './edm'
 import { createGpsBaselineSeriesTooltip } from './gpsBaseline'
 import { createGpsCoordinateSeriesTooltip } from './gpsCoordinate'
@@ -22,6 +22,7 @@ import { createThermalSeriesTooltip } from './thermal'
 import { createTiltmeterSeriesTooltip } from './tiltmeter'
 import { createVogamosEmissionSeriesTooltip } from './vogamosEmission'
 import { createVogamosTemperatureSeriesTooltip } from './vogamosTemperature'
+import { createWeatherPasarbubarSeriesTooltip } from './weatherPasarbubar'
 
 export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
   const tooltip: string[] = []
@@ -80,6 +81,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'VogamosTemperature':
           tooltip.push(createVogamosTemperatureSeriesTooltip(params, index))
+          break
+        case 'WeatherPasarbubar':
+          tooltip.push(createWeatherPasarbubarSeriesTooltip(params, index))
           break
       }
     } catch (error) {

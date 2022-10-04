@@ -66,6 +66,7 @@ import { renderTooltip } from './tooltip'
 import { toMilliseconds, toKilometers } from './util'
 import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
+import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
@@ -390,17 +391,10 @@ export function renderToECharts(model: RenderModel): EChartsOption {
               ) as WeatherPasarbubarData[]
 
               const cfg = config as WeatherPasarbubarConfig
-
-              return {
-                data: data.map((item) => [
-                  toMilliseconds(item.timestamp),
-                  item[cfg.field],
-                ]),
-                type: cfg.field === 'wind_direction' ? 'scatter' : 'line',
-                symbol: cfg.field === 'wind_direction' ? 'circle' : 'none',
+              return createWeatherPasarbubarSeries(data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
-              }
+              })
             }
 
             case 'WeatherBabadan': {
