@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'splitpanes' {
   let Splitpanes: any
   let Pane: any
