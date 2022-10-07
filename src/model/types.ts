@@ -510,6 +510,8 @@ export interface SeriesConfig<T extends DataType = DataType> {
 export interface SubplotConfig<T extends DataType = DataType> {
   dataType: T
   series: SeriesConfig[]
+  leftYAxisLabel?: string
+  rightYAxisLabel?: string
 }
 
 export interface SeriesDataKey<T extends DataType = DataType> {

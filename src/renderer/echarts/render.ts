@@ -65,11 +65,17 @@ import { createSeismicitySeries } from './seismicity'
 import { createThermalSeries } from './thermal'
 import { createTiltmeterSeries } from './tiltmeter'
 import { renderTooltip } from './tooltip'
-import { toMilliseconds } from './util'
+import {
+  findYAxisIndex,
+  hasMultipleSeries,
+  hasSecondaryYAxis,
+  toMilliseconds,
+} from './util'
 import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
 import { createWeatherBabadanSeries } from './weatherBabadan'
 import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
+import { deduceYAxisLabel } from './yAxisLabel'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
@@ -100,65 +106,6 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
 }
 
 /**
- * Check whether particular subplot has multiple series or not.
- */
-export function hasMultipleSeries(subplot: SubplotConfig): boolean {
-  return subplot.series.length > 1
-}
-
-/**
- * Check whether particular subplot has secondary y axis or not. Particular
- * subplot has secondary y axis if it has both left and right y axes.
- */
-export function hasSecondaryYAxis(subplot: SubplotConfig): boolean {
-  if (hasMultipleSeries(subplot)) {
-    let foundLeft = true
-    let foundRight = false
-
-    subplot.series.forEach((series) => {
-      const yAxis = series.config.yAxis
-      if (yAxis?.position === 'left') {
-        foundLeft = true
-      }
-      if (yAxis?.position === 'right') {
-        foundRight = true
-      }
-    })
-
-    return foundLeft && foundRight
-  } else {
-    return false
-  }
-}
-
-/**
- * Determine y axis index for particular series in the subplot.
- */
-export function findYAxisIndex(
-  subplots: SubplotConfig[],
-  subplotIndex: number,
-  seriesIndex: number
-): number {
-  const cfg = subplots[subplotIndex].series[seriesIndex].config
-  const isAxisPositionRight = cfg.yAxis?.position === 'right'
-  let offset = -1
-  for (let i = 0; i < subplotIndex + 1; i++) {
-    const subplot = subplots[i]
-    if (hasSecondaryYAxis(subplot)) {
-      offset += 2
-    } else {
-      offset += 1
-    }
-  }
-  const subplot = subplots[subplotIndex]
-  if (hasSecondaryYAxis(subplot)) {
-    return isAxisPositionRight ? offset : offset - 1
-  } else {
-    return offset
-  }
-}
-
-/**
  * Render chart model to ECharts chart option.
  *
  * @param model Chart model.
@@ -184,6 +131,8 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       const createAxis = (option: YAXisOption = {}): YAXisOption => {
         return {
           ...option,
+          nameGap: 30,
+          nameLocation: 'middle',
           gridIndex: index,
           splitLine: { show: false },
           type: 'value',
@@ -192,18 +141,25 @@ export function renderToECharts(model: RenderModel): EChartsOption {
       }
       const axes: YAXisOption[] = []
       if (hasMultipleSeries(subplot)) {
-        axes.push(createAxis())
+        axes.push(createAxis({ name: deduceYAxisLabel(subplot, 'left') }))
         if (hasSecondaryYAxis(subplot)) {
-          axes.push(createAxis({ position: 'right' }))
+          axes.push(
+            createAxis({
+              position: 'right',
+              name: deduceYAxisLabel(subplot, 'right'),
+            })
+          )
         }
       } else {
         const cfg = subplot.series[0] ? subplot.series[0].config : undefined
         const isAxisPositionRight = cfg
           ? cfg?.yAxis?.position === 'right'
           : false
+        const position = isAxisPositionRight ? 'right' : 'left'
         axes.push(
           createAxis({
-            position: isAxisPositionRight ? 'right' : 'left',
+            position,
+            name: deduceYAxisLabel(subplot, position),
           })
         )
       }
