@@ -6,7 +6,7 @@ import {
 import { cumulativeSum } from '@/shared/math'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMegajoules, toMilliseconds } from './util'
@@ -79,4 +79,23 @@ export function createSeismicEnergySeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createSeismicEnergyYAxisOption(
+  config: SeismicEnergyConfig
+): YAXisOption {
+  switch (config.aggregate) {
+    case 'daily':
+      return {
+        name: 'Energy (MJ)',
+        nameGap: 55,
+      }
+    case 'daily-cumulative':
+      return {
+        name: 'Cum. Energy (MJ)',
+        nameGap: 55,
+      }
+    default:
+      return {}
+  }
 }
