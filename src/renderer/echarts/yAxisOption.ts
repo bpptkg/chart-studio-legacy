@@ -14,6 +14,7 @@ import {
   SeriesConfig,
   SubplotConfig,
   ThermalConfig,
+  TiltmeterConfig,
   YAxisOption as CSYAxisOption,
 } from '@/model/types'
 import { YAXisOption } from 'echarts/types/dist/shared'
@@ -30,6 +31,7 @@ import { createRsamSeismicYAxisOption } from './rsamSeismic'
 import { createSeismicEnergyYAxisOption } from './seismicEnergy'
 import { createSeismicityYAxisOption } from './seismicity'
 import { createThermalYAxisOption } from './thermal'
+import { createTiltmeterYAxisOption } from './tiltmeter'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   return subplot.series.filter((series) => {
@@ -74,6 +76,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createSeismicityYAxisOption(config as SeismicityConfig)
       case 'Thermal':
         return createThermalYAxisOption(config as ThermalConfig)
+      case 'Tiltmeter':
+        return createTiltmeterYAxisOption(config as TiltmeterConfig)
       default:
         return {}
     }

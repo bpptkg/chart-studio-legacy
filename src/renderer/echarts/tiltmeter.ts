@@ -1,7 +1,7 @@
 import { SeriesConfig, TiltmeterConfig, TiltmeterData } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -61,4 +61,19 @@ export function createTiltmeterSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createTiltmeterYAxisOption(
+  config: TiltmeterConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'x':
+      return { name: 'X (\u00B5rad)', nameGap: 50 }
+    case 'y':
+      return { name: 'Y (\u00B5rad)', nameGap: 50 }
+    case 'temperature':
+      return { name: 'Temperature (\u00B0C)', nameGap: 50 }
+    default:
+      return {}
+  }
 }
