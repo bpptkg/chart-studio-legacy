@@ -3,6 +3,7 @@ import {
   GpsBaselineConfig,
   GpsCoordinateConfig,
   LavaDomesConfig,
+  MagneticConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -13,6 +14,7 @@ import { createEdmYAxisOption } from './edm'
 import { createGpsBaselineYAxisOption } from './gpsBaseline'
 import { createGpsCoordinateYAxisOption } from './gpsCoordinate'
 import { createLavaDomesYAxisOption } from './lavaDomes'
+import { createMagneticYAxisOption } from './magnetic'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -42,6 +44,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createGpsCoordinateYAxisOption(config as GpsCoordinateConfig)
       case 'LavaDomes':
         return createLavaDomesYAxisOption(config as LavaDomesConfig)
+      case 'Magnetic':
+        return createMagneticYAxisOption(config as MagneticConfig)
       default:
         return {}
     }

@@ -1,7 +1,7 @@
 import { MagneticConfig, MagneticData, SeriesConfig } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -80,4 +80,26 @@ export function createMagneticSeriesTooltip(
   }
 
   return tooltip.join('')
+}
+
+export function createMagneticYAxisOption(config: MagneticConfig): YAXisOption {
+  switch (config.field) {
+    case 'x':
+      return {
+        name: 'X (nT)',
+        nameGap: 60,
+      }
+    case 'y':
+      return {
+        name: 'Y (nT)',
+        nameGap: 60,
+      }
+    case 'z':
+      return {
+        name: 'Z (nT)',
+        nameGap: 60,
+      }
+    default:
+      return {}
+  }
 }
