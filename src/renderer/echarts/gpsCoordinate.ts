@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -67,4 +67,22 @@ export function createGpsCoordinateSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createGpsCoordinateYAxisOption(
+  config: GpsCoordinateConfig
+): YAXisOption {
+  return {
+    name:
+      config.field === 'east'
+        ? 'Easting (m)'
+        : config.field === 'north'
+        ? 'Northing (m)'
+        : 'Elevation (m)',
+    nameGap: 85,
+    axisLabel: {
+      formatter: (value: number | string) =>
+        typeof value === 'number' ? value.toFixed(3) : value,
+    },
+  }
 }
