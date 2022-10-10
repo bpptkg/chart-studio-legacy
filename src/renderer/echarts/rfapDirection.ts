@@ -1,6 +1,6 @@
 import moment from 'moment'
 import _ from 'lodash'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import { SeriesOption } from 'echarts'
 import {
   RfapDirectionConfig,
@@ -262,4 +262,21 @@ export function createRfapDirectionSeriesTooltip(
   }
 
   return tooltip.join('')
+}
+
+export function createRfapDirectionYAxisOption(
+  config: RfapDirectionConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'count':
+      return {
+        name: 'RF & AP Count',
+      }
+    case 'distance':
+      return {
+        name: 'Max. Distance (km)',
+      }
+    default:
+      return {}
+  }
 }

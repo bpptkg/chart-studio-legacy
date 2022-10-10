@@ -4,6 +4,7 @@ import {
   GpsCoordinateConfig,
   LavaDomesConfig,
   MagneticConfig,
+  RfapDirectionConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -15,6 +16,7 @@ import { createGpsBaselineYAxisOption } from './gpsBaseline'
 import { createGpsCoordinateYAxisOption } from './gpsCoordinate'
 import { createLavaDomesYAxisOption } from './lavaDomes'
 import { createMagneticYAxisOption } from './magnetic'
+import { createRfapDirectionYAxisOption } from './rfapDirection'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -46,6 +48,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createLavaDomesYAxisOption(config as LavaDomesConfig)
       case 'Magnetic':
         return createMagneticYAxisOption(config as MagneticConfig)
+      case 'RfapDirection':
+        return createRfapDirectionYAxisOption(config as RfapDirectionConfig)
       default:
         return {}
     }
