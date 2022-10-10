@@ -143,31 +143,31 @@ export interface ThermalParameterConfig {
   field: 'temperature' | 'density'
 }
 
-export type SeismicityConfig = ParameterConfig<SeismicityParameterConfig>
+export type DoasConfig = ParameterConfig<DoasParameterConfig>
 export type EdmConfig = ParameterConfig<EdmParameterConfig>
-export type SeismicEnergyConfig = ParameterConfig<SeismicEnergyParameterConfig>
-export type RfapEnergyConfig = ParameterConfig<RfapEnergyParameterConfig>
-export type RsamSeismicConfig = ParameterConfig<RsamSeismicParameterConfig>
 export type GpsBaselineConfig = ParameterConfig<GpsBaselineParameterConfig>
 export type GpsCoordinateConfig = ParameterConfig<GpsCoordinateParameterConfig>
+export type LavaDomesConfig = ParameterConfig<LavaDomesParameterConfig>
+export type MagneticConfig = ParameterConfig<MagneticParameterConfig>
+export type RainfallStationConfig =
+  ParameterConfig<RainfallStationParameterConfig>
+export type RfapDirectionConfig = ParameterConfig<RfapDirectionParameterConfig>
+export type RfapDistanceConfig = ParameterConfig<RfapDistanceParameterConfig>
+export type RfapEnergyConfig = ParameterConfig<RfapEnergyParameterConfig>
+export type RfapTypeConfig = ParameterConfig<RfapTypeParameterConfig>
+export type RsamSeismicConfig = ParameterConfig<RsamSeismicParameterConfig>
+export type SeismicEnergyConfig = ParameterConfig<SeismicEnergyParameterConfig>
+export type SeismicityConfig = ParameterConfig<SeismicityParameterConfig>
+export type ThermalConfig = ParameterConfig<ThermalParameterConfig>
 export type TiltmeterConfig = ParameterConfig<TiltmeterParameterConfig>
 export type VogamosEmissionConfig =
   ParameterConfig<VogamosEmissionParameterConfig>
 export type VogamosTemperatureConfig =
   ParameterConfig<VogamosTemperatureParameterConfig>
-export type DoasConfig = ParameterConfig<DoasParameterConfig>
-export type LavaDomesConfig = ParameterConfig<LavaDomesParameterConfig>
-export type WeatherPasarbubarConfig =
-  ParameterConfig<WeatherPasarbubarParameterConfig>
 export type WeatherBabadanConfig =
   ParameterConfig<WeatherBabadanParameterConfig>
-export type RainfallStationConfig =
-  ParameterConfig<RainfallStationParameterConfig>
-export type RfapDistanceConfig = ParameterConfig<RfapDistanceParameterConfig>
-export type RfapDirectionConfig = ParameterConfig<RfapDirectionParameterConfig>
-export type RfapTypeConfig = ParameterConfig<RfapTypeParameterConfig>
-export type MagneticConfig = ParameterConfig<MagneticParameterConfig>
-export type ThermalConfig = ParameterConfig<ThermalParameterConfig>
+export type WeatherPasarbubarConfig =
+  ParameterConfig<WeatherPasarbubarParameterConfig>
 
 export type ParameterConfigType =
   | DoasConfig
