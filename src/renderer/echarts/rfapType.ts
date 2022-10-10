@@ -1,7 +1,7 @@
 import { RfapTypeConfig, RfapTypeData, SeriesConfig } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import _ from 'lodash'
 import moment from 'moment'
 import { tab20ColorMap } from './colors'
@@ -127,4 +127,15 @@ export function createRfapTypeSeriesTooltip(
   }
 
   return tooltip.join('')
+}
+
+export function createRfapTypeYAxisOption(config: RfapTypeConfig): YAXisOption {
+  switch (config.field) {
+    case 'count':
+      return { name: 'Count' }
+    case 'distance':
+      return { name: 'Max. Distance (km)', nameGap: 40 }
+    default:
+      return {}
+  }
 }
