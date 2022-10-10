@@ -8,6 +8,7 @@ import {
   RfapDistanceConfig,
   RfapEnergyConfig,
   RfapTypeConfig,
+  RsamSeismicConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -23,6 +24,7 @@ import { createRfapDirectionYAxisOption } from './rfapDirection'
 import { createRfapDistanceYAxisOption } from './rfapDistance'
 import { createRfapEnergyYAxisOption } from './rfapEnergy'
 import { createRfapTypeYAxisOption } from './rfapType'
+import { createRsamSeismicYAxisOption } from './rsamSeismic'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -62,6 +64,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createRfapEnergyYAxisOption(config as RfapEnergyConfig)
       case 'RfapType':
         return createRfapTypeYAxisOption(config as RfapTypeConfig)
+      case 'RsamSeismic':
+        return createRsamSeismicYAxisOption(config as RsamSeismicConfig)
       default:
         return {}
     }

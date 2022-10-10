@@ -1,8 +1,9 @@
+import rsamBands from '@/components/options/rsamBands'
 import { RsamSeismicConfig, RsamSeismicData, SeriesConfig } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA, TooltipNameData } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -85,4 +86,13 @@ export function createRsamSeismicSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createRsamSeismicYAxisOption(
+  config: RsamSeismicConfig
+): YAXisOption {
+  return {
+    name: rsamBands.find((v) => v.value === config.band)?.text,
+    nameGap: 60,
+  }
 }
