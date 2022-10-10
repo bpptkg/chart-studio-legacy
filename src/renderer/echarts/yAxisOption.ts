@@ -2,6 +2,7 @@ import {
   EdmConfig,
   GpsBaselineConfig,
   GpsCoordinateConfig,
+  LavaDomesConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -11,6 +12,7 @@ import { YAXisOption } from 'echarts/types/dist/shared'
 import { createEdmYAxisOption } from './edm'
 import { createGpsBaselineYAxisOption } from './gpsBaseline'
 import { createGpsCoordinateYAxisOption } from './gpsCoordinate'
+import { createLavaDomesYAxisOption } from './lavaDomes'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -38,6 +40,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createGpsBaselineYAxisOption(config as GpsBaselineConfig)
       case 'GpsCoordinate':
         return createGpsCoordinateYAxisOption(config as GpsCoordinateConfig)
+      case 'LavaDomes':
+        return createLavaDomesYAxisOption(config as LavaDomesConfig)
       default:
         return {}
     }

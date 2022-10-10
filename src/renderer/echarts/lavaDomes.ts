@@ -1,7 +1,7 @@
 import { LavaDomesConfig, LavaDomesData, SeriesConfig } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -74,4 +74,18 @@ export function createLavaDomesSeriesTooltip(
   }
 
   return tooltip.join('')
+}
+
+export function createLavaDomesYAxisOption(
+  config: LavaDomesConfig
+): YAXisOption {
+  return {
+    name:
+      config.field === 'volume'
+        ? 'Volume (m\u00B3)'
+        : config.field === 'rate'
+        ? 'Rate (m\u00B3/day)'
+        : '',
+    nameGap: config.field === 'volume' ? 70 : 50,
+  }
 }
