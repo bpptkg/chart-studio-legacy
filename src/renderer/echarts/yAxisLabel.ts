@@ -1,4 +1,13 @@
-import { SeriesConfig, SubplotConfig, YAxisOption } from '@/model/types'
+import {
+  EdmConfig,
+  SeismicityConfig,
+  SeriesConfig,
+  SubplotConfig,
+  YAxisOption as CSYAxisOption,
+} from '@/model/types'
+import { YAXisOption } from 'echarts/types/dist/shared'
+import { createEdmYAxisOption } from './edm'
+import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   return subplot.series.filter((series) => {
@@ -14,25 +23,28 @@ export function getRightYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   })
 }
 
-export function getYAxisLabels(series: SeriesConfig[]): string[] {
-  return series.map((s) => {
-    if (s.dataType === 'Seismicity') {
-      return 'Count'
-    } else {
-      return ''
+export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
+  return series.map(({ dataType, config }) => {
+    switch (dataType) {
+      case 'Edm':
+        return createEdmYAxisOption(config as EdmConfig)
+      case 'Seismicity':
+        return createSeismicityYAxisOption(config as SeismicityConfig)
+      default:
+        return {}
     }
   })
 }
 
-export function deduceYAxisLabel(
+export function deduceYAxisOption(
   subplot: SubplotConfig,
-  position: YAxisOption['position']
-): string {
+  position: CSYAxisOption['position']
+): YAXisOption {
   const leftSeries = getLeftYAxisSeries(subplot)
   const rightSeries = getRightYAxisSeries(subplot)
-  const labels =
+  const options =
     position === 'left'
-      ? getYAxisLabels(leftSeries)
-      : getYAxisLabels(rightSeries)
-  return labels.length ? labels[0] : ''
+      ? getYAxisOption(leftSeries)
+      : getYAxisOption(rightSeries)
+  return options.length ? options[0] : {}
 }

@@ -1,7 +1,7 @@
 import { EdmConfig, EdmData, SeriesConfig } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -82,4 +82,24 @@ export function createEdmSeriesTooltip(
   }
 
   return template.join('')
+}
+
+export function createEdmYAxisOption(config: EdmConfig): YAXisOption {
+  switch (config.type) {
+    case 'slope':
+      return {
+        name: 'Slope (m)',
+        nameGap: 65,
+        axisLabel: {
+          formatter: (value: number | string) =>
+            typeof value === 'number' ? value.toFixed(3) : value,
+        },
+      }
+    case 'rate':
+      return { name: 'Rate (mm/day)', nameGap: 40 }
+    case 'csd':
+      return { name: 'CSD (cm)', nameGap: 40 }
+    default:
+      return {}
+  }
 }

@@ -1,7 +1,7 @@
 import { SeismicityConfig, SeismicityData, SeriesConfig } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -51,4 +51,11 @@ export function createSeismicitySeriesTooltip(
   )
 
   return template.join('')
+}
+
+export function createSeismicityYAxisOption(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  config: SeismicityConfig
+): YAXisOption {
+  return { name: 'Count' }
 }

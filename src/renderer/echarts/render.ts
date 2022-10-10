@@ -75,7 +75,7 @@ import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
 import { createWeatherBabadanSeries } from './weatherBabadan'
 import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
-import { deduceYAxisLabel } from './yAxisLabel'
+import { deduceYAxisOption } from './yAxisLabel'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
@@ -130,23 +130,23 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     .map((subplot, index) => {
       const createAxis = (option: YAXisOption = {}): YAXisOption => {
         return {
-          ...option,
           nameGap: 30,
           nameLocation: 'middle',
           gridIndex: index,
           splitLine: { show: false },
           type: 'value',
           scale: shouldAxisScale(subplot),
-        }
+          ...option,
+        } as YAXisOption
       }
       const axes: YAXisOption[] = []
       if (hasMultipleSeries(subplot)) {
-        axes.push(createAxis({ name: deduceYAxisLabel(subplot, 'left') }))
+        axes.push(createAxis({ ...deduceYAxisOption(subplot, 'left') }))
         if (hasSecondaryYAxis(subplot)) {
           axes.push(
             createAxis({
               position: 'right',
-              name: deduceYAxisLabel(subplot, 'right'),
+              ...deduceYAxisOption(subplot, 'right'),
             })
           )
         }
@@ -159,7 +159,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
         axes.push(
           createAxis({
             position,
-            name: deduceYAxisLabel(subplot, position),
+            ...deduceYAxisOption(subplot, position),
           })
         )
       }
