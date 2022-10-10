@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -89,4 +89,13 @@ export function createVogamosTemperatureSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createVogamosTemperatureYAxisOption(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  config: VogamosTemperatureConfig
+): YAXisOption {
+  return {
+    name: 'Temperature (\u00B0C)',
+  }
 }
