@@ -75,7 +75,7 @@ import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
 import { createWeatherBabadanSeries } from './weatherBabadan'
 import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
-import { deduceYAxisOption } from './yAxisLabel'
+import { deduceYAxisOption } from './yAxisOption'
 
 /**
  * It specifies whether not to contain zero position of axis compulsively. When
