@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -90,4 +90,33 @@ export function createWeatherBabadanSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createWeatherBabadanYAxisOption(
+  config: WeatherBabadanConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'air_pressure':
+      return {
+        name: 'Pressure (hPa)',
+      }
+    case 'air_temperature':
+      return {
+        name: 'Temperature (\u00B0C)',
+      }
+    case 'relative_humidity':
+      return {
+        name: 'Humidity (%)',
+      }
+    case 'wind_direction_avg':
+      return {
+        name: 'Wind Direction (\u00B0)',
+      }
+    case 'wind_speed_avg':
+      return {
+        name: 'Wind Speed (km/h)',
+      }
+    default:
+      return {}
+  }
 }
