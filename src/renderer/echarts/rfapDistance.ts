@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA, TooltipNameData } from './shared'
 import { circle, toKilometers, toMilliseconds } from './util'
@@ -163,4 +163,33 @@ export function createRfapDistanceSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createRfapDistanceYAxisOption(
+  config: RfapDistanceConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'ap-count':
+      return {
+        name: 'AP Count',
+      }
+    case 'ap-dist':
+      return {
+        name: 'AP Distance (km)',
+      }
+    case 'rf-count':
+      return {
+        name: 'RF Count',
+      }
+    case 'rf-dist':
+      return {
+        name: 'RF Distance (km)',
+      }
+    case 'rfap-stack':
+      return {
+        name: 'RF & AP Count',
+      }
+    default:
+      return {}
+  }
 }
