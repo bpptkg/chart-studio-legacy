@@ -68,6 +68,7 @@ export function createWeatherPasarbubarSeriesTooltip(
 
   let name = ''
   let unit = ''
+  let fractionDigits = 2
 
   switch (config.field) {
     case 'air_humidity':
@@ -88,6 +89,7 @@ export function createWeatherPasarbubarSeriesTooltip(
     case 'wind_direction':
       name = 'Wind Direction'
       unit = '\u00B0'
+      fractionDigits = 0
       break
 
     case 'wind_speed':
@@ -99,7 +101,7 @@ export function createWeatherPasarbubarSeriesTooltip(
   tooltip.push(
     `<div>
     ${circle(color)}
-    ${name}: ${value[1] ? value[1].toFixed(2) : NO_DATA} ${unit}
+    ${name}: ${value[1] ? value[1].toFixed(fractionDigits) : NO_DATA} ${unit}
     </div>`
   )
 
