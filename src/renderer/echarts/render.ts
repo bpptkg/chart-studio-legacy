@@ -130,7 +130,7 @@ export function renderToECharts(model: RenderModel): EChartsOption {
     .map((subplot, index) => {
       const createAxis = (option: YAXisOption = {}): YAXisOption => {
         return {
-          nameGap: 30,
+          nameGap: 35,
           nameLocation: 'middle',
           gridIndex: index,
           splitLine: { show: false },

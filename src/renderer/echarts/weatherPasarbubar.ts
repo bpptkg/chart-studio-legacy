@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -104,4 +104,33 @@ export function createWeatherPasarbubarSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createWeatherPasarbubarYAxisOption(
+  config: WeatherPasarbubarConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'air_humidity':
+      return {
+        name: 'Humidity (%)',
+      }
+    case 'air_pressure':
+      return {
+        name: 'Pressure (hPa)',
+      }
+    case 'air_temperature':
+      return {
+        name: 'Temperature (\u00B0C)',
+      }
+    case 'wind_direction':
+      return {
+        name: 'Wind Direction (\u00B0)',
+      }
+    case 'wind_speed':
+      return {
+        name: 'Wind Speed (km/h)',
+      }
+    default:
+      return {}
+  }
 }

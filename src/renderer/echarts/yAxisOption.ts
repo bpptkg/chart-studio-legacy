@@ -18,6 +18,7 @@ import {
   VogamosEmissionConfig,
   VogamosTemperatureConfig,
   WeatherBabadanConfig,
+  WeatherPasarbubarConfig,
   YAxisOption as CSYAxisOption,
 } from '@/model/types'
 import { YAXisOption } from 'echarts/types/dist/shared'
@@ -39,6 +40,7 @@ import { createTiltmeterYAxisOption } from './tiltmeter'
 import { createVogamosEmissionYAxisOption } from './vogamosEmission'
 import { createVogamosTemperatureYAxisOption } from './vogamosTemperature'
 import { createWeatherBabadanYAxisOption } from './weatherBabadan'
+import { createWeatherPasarbubarYAxisOption } from './weatherPasarbubar'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   return subplot.series.filter((series) => {
@@ -93,6 +95,10 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         )
       case 'WeatherBabadan':
         return createWeatherBabadanYAxisOption(config as WeatherBabadanConfig)
+      case 'WeatherPasarbubar':
+        return createWeatherPasarbubarYAxisOption(
+          config as WeatherPasarbubarConfig
+        )
       default:
         return {}
     }
