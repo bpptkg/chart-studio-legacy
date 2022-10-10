@@ -5,7 +5,7 @@ import {
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -117,4 +117,25 @@ export function createVogamosEmissionSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export function createVogamosEmissionYAxisOption(
+  config: VogamosEmissionConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'co2_avg':
+    case 'co2_max':
+    case 'co2_min':
+      return { name: 'CO\u2082 (ppm)' }
+    case 'humidity_avg':
+    case 'humidity_max':
+    case 'humidity_min':
+      return { name: 'CO\u2082 Humi. (%)' }
+    case 'temperature_avg':
+    case 'temperature_max':
+    case 'temperature_min':
+      return { name: 'CO\u2082 Temp. (\u00B0C)' }
+    default:
+      return {}
+  }
 }

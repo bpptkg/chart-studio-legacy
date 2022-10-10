@@ -15,9 +15,11 @@ import {
   SubplotConfig,
   ThermalConfig,
   TiltmeterConfig,
+  VogamosEmissionConfig,
   YAxisOption as CSYAxisOption,
 } from '@/model/types'
 import { YAXisOption } from 'echarts/types/dist/shared'
+
 import { createEdmYAxisOption } from './edm'
 import { createGpsBaselineYAxisOption } from './gpsBaseline'
 import { createGpsCoordinateYAxisOption } from './gpsCoordinate'
@@ -32,6 +34,7 @@ import { createSeismicEnergyYAxisOption } from './seismicEnergy'
 import { createSeismicityYAxisOption } from './seismicity'
 import { createThermalYAxisOption } from './thermal'
 import { createTiltmeterYAxisOption } from './tiltmeter'
+import { createVogamosEmissionYAxisOption } from './vogamosEmission'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   return subplot.series.filter((series) => {
@@ -78,6 +81,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createThermalYAxisOption(config as ThermalConfig)
       case 'Tiltmeter':
         return createTiltmeterYAxisOption(config as TiltmeterConfig)
+      case 'VogamosEmission':
+        return createVogamosEmissionYAxisOption(config as VogamosEmissionConfig)
       default:
         return {}
     }
