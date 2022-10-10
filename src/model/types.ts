@@ -27,12 +27,12 @@ export interface SeismicEnergyParameterConfig {
 
 export interface RfapEnergyParameterConfig {
   field:
-    | 'count'
-    | 'energy'
-    | 'count-rf'
     | 'count-ap'
-    | 'rfap-stack'
+    | 'count-rf'
+    | 'count'
     | 'energy-cumulative'
+    | 'energy'
+    | 'rfap-stack'
 }
 
 export interface RsamSeismicParameterConfig {

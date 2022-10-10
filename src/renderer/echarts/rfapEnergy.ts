@@ -2,7 +2,7 @@ import { RfapEnergyConfig, RfapEnergyData, SeriesConfig } from '@/model/types'
 import { cumulativeSum } from '@/shared/math'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA, TooltipNameData } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -193,4 +193,25 @@ export function createRfapEnergySeriesTooltip(
   }
 
   return tooltip.join('')
+}
+
+export function createRfapEnergyYAxisOption(
+  config: RfapEnergyConfig
+): YAXisOption {
+  switch (config.field) {
+    case 'count':
+      return { name: 'RF & AP Count' }
+    case 'count-ap':
+      return { name: 'AP Count' }
+    case 'count-rf':
+      return { name: 'RF Count' }
+    case 'energy':
+      return { name: 'Energy', nameGap: 60 }
+    case 'energy-cumulative':
+      return { name: 'Cum. Energy', nameGap: 60 }
+    case 'rfap-stack':
+      return { name: 'Count' }
+    default:
+      return {}
+  }
 }

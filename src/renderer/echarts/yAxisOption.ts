@@ -6,6 +6,7 @@ import {
   MagneticConfig,
   RfapDirectionConfig,
   RfapDistanceConfig,
+  RfapEnergyConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -19,6 +20,7 @@ import { createLavaDomesYAxisOption } from './lavaDomes'
 import { createMagneticYAxisOption } from './magnetic'
 import { createRfapDirectionYAxisOption } from './rfapDirection'
 import { createRfapDistanceYAxisOption } from './rfapDistance'
+import { createRfapEnergyYAxisOption } from './rfapEnergy'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -54,6 +56,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createRfapDirectionYAxisOption(config as RfapDirectionConfig)
       case 'RfapDistance':
         return createRfapDistanceYAxisOption(config as RfapDistanceConfig)
+      case 'RfapEnergy':
+        return createRfapEnergyYAxisOption(config as RfapEnergyConfig)
       default:
         return {}
     }
