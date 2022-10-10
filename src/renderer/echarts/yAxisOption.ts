@@ -1,5 +1,6 @@
 import {
   EdmConfig,
+  GpsBaselineConfig,
   SeismicityConfig,
   SeriesConfig,
   SubplotConfig,
@@ -7,6 +8,7 @@ import {
 } from '@/model/types'
 import { YAXisOption } from 'echarts/types/dist/shared'
 import { createEdmYAxisOption } from './edm'
+import { createGpsBaselineYAxisOption } from './gpsBaseline'
 import { createSeismicityYAxisOption } from './seismicity'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
@@ -30,6 +32,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createEdmYAxisOption(config as EdmConfig)
       case 'Seismicity':
         return createSeismicityYAxisOption(config as SeismicityConfig)
+      case 'GpsBaseline':
+        return createGpsBaselineYAxisOption(config as GpsBaselineConfig)
       default:
         return {}
     }

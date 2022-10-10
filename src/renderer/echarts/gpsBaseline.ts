@@ -1,7 +1,7 @@
 import { GpsBaselineConfig, GpsBaselineData, SeriesConfig } from '@/model/types'
 import { objectStringify } from '@/shared/util'
 import { SeriesOption } from 'echarts'
-import { CallbackDataParams } from 'echarts/types/dist/shared'
+import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
@@ -51,4 +51,33 @@ export function createGpsBaselineSeriesTooltip(
   )
 
   return tooltip.join('')
+}
+
+export const GpsStationCodeMap: { [key: string]: string } = {
+  babadan: 'BABA',
+  bpptkg: 'BPTK',
+  deles: 'DELS',
+  grawah: 'GRWH',
+  jrakah: 'JRKH',
+  kendit: 'KNDT',
+  klatakan: 'KLAT',
+  labuhan: 'LABH',
+  pasarbubar: 'PSBB',
+  plawangan: 'PLAW',
+  selo: 'SELO',
+}
+
+export function createGpsBaselineYAxisOption(
+  config: GpsBaselineConfig
+): YAXisOption {
+  const station1 = GpsStationCodeMap[config.station1]
+  const station2 = GpsStationCodeMap[config.station2]
+  return {
+    name: `${station1}-${station2} (m)`,
+    nameGap: 65,
+    axisLabel: {
+      formatter: (value: number | string) =>
+        typeof value === 'number' ? value.toFixed(3) : value,
+    },
+  }
 }
