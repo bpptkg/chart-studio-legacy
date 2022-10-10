@@ -48,8 +48,6 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
     switch (dataType) {
       case 'Edm':
         return createEdmYAxisOption(config as EdmConfig)
-      case 'Seismicity':
-        return createSeismicityYAxisOption(config as SeismicityConfig)
       case 'GpsBaseline':
         return createGpsBaselineYAxisOption(config as GpsBaselineConfig)
       case 'GpsCoordinate':
@@ -70,6 +68,8 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
         return createRsamSeismicYAxisOption(config as RsamSeismicConfig)
       case 'SeismicEnergy':
         return createSeismicEnergyYAxisOption(config as SeismicEnergyConfig)
+      case 'Seismicity':
+        return createSeismicityYAxisOption(config as SeismicityConfig)
       default:
         return {}
     }
