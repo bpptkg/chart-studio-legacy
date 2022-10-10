@@ -88,7 +88,7 @@ export function createEdmYAxisOption(config: EdmConfig): YAXisOption {
   switch (config.type) {
     case 'slope':
       return {
-        name: 'Slope (m)',
+        name: 'Slope Distance (m)',
         nameGap: 65,
         axisLabel: {
           formatter: (value: number | string) =>
