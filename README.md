@@ -1,6 +1,6 @@
-# ChartStudio
+# Chart Studio
 
-ChartStudio is a web app that enables users to create customizable charts of
+Chart Studio is a web app that enables users to create customizable charts of
 Merapi monitoring data using BMA Web Services for data correlation and
 analytics.
 
@@ -62,7 +62,7 @@ configuration:
         try_files $uri $uri/ /index.html = 404;
     }
 
-In order to build the project, ChartStudio needs to read Git commit to mark
+In order to build the project, Chart Studio needs to read Git commit to mark
 build revision. It may not work if you compile the source code without including
 Git history, i.e. downloading the source code instead of cloning.
 
