@@ -1,8 +1,7 @@
 # Chart Studio
 
 Chart Studio is a web app that enables users to create customizable charts of
-Merapi monitoring data using BMA Web Services for data correlation and
-analytics.
+Merapi monitoring data using [BMA](https://bma.cendana15.com/) Web Services.
 
 ## Environment Variable Settings
 
@@ -54,8 +53,8 @@ Finally, run `yarn build` to compile and minify for production.
 
 On production environment, we deploy the app using `/chart-studio/` public path.
 You can change this setting by adding `VUE_APP_PUBLIC_PATH` in your
-`.env.production.local` file. You have to also add the following to the Nginx
-configuration:
+`.env.production.local` file. You have to also adjust default Nginx
+configuration if you set it to the different public path:
 
     location /chart-studio {
         alias /path/to/chart-studio/dist/;
