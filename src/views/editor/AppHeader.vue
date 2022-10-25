@@ -127,7 +127,7 @@ import { useWorkspaceStore } from '@/store/workspace'
 import { storeToRefs } from 'pinia'
 import printJS from 'print-js'
 import router from '@/router'
-import SettingsMenu from './SettingsMenu.vue'
+import SettingsMenu from '../SettingsMenu.vue'
 import UserAvatar from '../UserAvatar.vue'
 import { SidebarLeftIcon, SidebarRightIcon } from '@/components/icons'
 
