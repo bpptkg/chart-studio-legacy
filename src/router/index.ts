@@ -12,6 +12,10 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    redirect: '/file',
+  },
+  {
+    path: '/files',
     component: FileManager,
   },
   {
