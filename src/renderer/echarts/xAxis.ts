@@ -2,6 +2,10 @@ import { DateInterval, SubplotConfig } from '@/model/types'
 import { XAXisOption } from 'echarts/types/dist/shared'
 import { toMilliseconds } from './util'
 
+/**
+ * Render subplots config to ECharts X axis option. Each subplot axis will be
+ * fitted to the interval value.
+ */
 export function renderXAxis(
   subplots: SubplotConfig[],
   interval: DateInterval

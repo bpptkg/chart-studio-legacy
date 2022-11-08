@@ -31,6 +31,9 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
   })
 }
 
+/**
+ * Render subplots config to ECharts Y axis option.
+ */
 export function renderYAxis(subplots: SubplotConfig[]): YAXisOption[] {
   return subplots
     .map((subplot, index) => {
