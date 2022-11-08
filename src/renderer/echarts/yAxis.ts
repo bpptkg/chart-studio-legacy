@@ -36,6 +36,8 @@ export function renderYAxis(subplots: SubplotConfig[]): YAXisOption[] {
     .map((subplot, index) => {
       const createAxis = (option: YAXisOption = {}): YAXisOption => {
         return {
+          axisLine: { show: true },
+          axisTick: { show: true },
           nameGap: 35,
           nameLocation: 'middle',
           gridIndex: index,
