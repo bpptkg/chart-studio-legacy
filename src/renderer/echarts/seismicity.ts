@@ -54,8 +54,7 @@ export function createSeismicitySeriesTooltip(
 }
 
 export function createSeismicityYAxisOption(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   config: SeismicityConfig
 ): YAXisOption {
-  return { name: 'Count' }
+  return { name: `${config.eventType} Count` }
 }
