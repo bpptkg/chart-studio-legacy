@@ -56,8 +56,8 @@ const benchmarks = ref([
 type ReflectorMap = Record<string, string[]>
 
 const reflectorsMap: ReflectorMap = reactive({
-  BAB0: ['RB1', 'RB2'],
-  BAB1: ['RB1', 'RB2'],
+  BAB0: ['RB1', 'RB2', 'RB3'],
+  BAB1: ['RB1', 'RB2', 'RB3'],
   BAT0: ['RK1', 'RK2'],
   BEL0: ['RM1', 'RM2'],
   DEL0: ['RD1'],
