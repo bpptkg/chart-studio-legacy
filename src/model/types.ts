@@ -500,6 +500,10 @@ export interface DateInterval {
   end: string
 }
 
+/**
+ * It stores series data for particular series config in the form of mapping.
+ * Its key refer to hashed series config and its value refer to its data.
+ */
 export type DataRepository = Record<string, unknown>
 
 export interface SeriesConfig<T extends DataType = DataType> {
@@ -526,6 +530,12 @@ export interface Margin {
   left: number
 }
 
+/**
+ * This object acts as a container to store several data necessarily for
+ * renderer function to convert the model into concrete object. For example, you
+ * can convert this RenderModel into ECharts chart option, into JSON object, or
+ * other chart vendor object.
+ */
 export interface RenderModel {
   subplots: SubplotConfig[]
   interval: DateInterval
