@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from 'lodash'
 import { useTheme } from '@/composable/theme'
 import { isNumeric } from '@/shared/number'
 import { useChartStore } from '@/store/chart'
@@ -68,45 +69,45 @@ const marginTop = computed({
   get() {
     return margin.value.top
   },
-  set(value) {
+  set: debounce((value) => {
     if (isNumeric(value)) {
       margin.value.top = typeof value === 'string' ? parseFloat(value) : value
     }
-  },
+  }, 500),
 })
 
 const marginRight = computed({
   get() {
     return margin.value.right
   },
-  set(value) {
+  set: debounce((value) => {
     if (isNumeric(value)) {
       margin.value.right = typeof value === 'string' ? parseFloat(value) : value
     }
-  },
+  }, 500),
 })
 
 const marginBottom = computed({
   get() {
     return margin.value.bottom
   },
-  set(value) {
+  set: debounce((value) => {
     if (isNumeric(value)) {
       margin.value.bottom =
         typeof value === 'string' ? parseFloat(value) : value
     }
-  },
+  }, 500),
 })
 
 const marginLeft = computed({
   get() {
     return margin.value.left
   },
-  set(value) {
+  set: debounce((value) => {
     if (isNumeric(value)) {
       margin.value.left = typeof value === 'string' ? parseFloat(value) : value
     }
-  },
+  }, 500),
 })
 </script>
 
