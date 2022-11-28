@@ -12,6 +12,8 @@ export type ParameterConfig<T> = T & ParameterConfigCommon
 
 export interface SeismicityParameterConfig {
   eventType: string
+  barGap?: number
+  barWidth?: number
 }
 
 export interface EdmParameterConfig {

@@ -20,6 +20,7 @@ export function createSeismicitySeries(
   options: SeismicitySeriesOptions = {}
 ): SeriesOption {
   const { xAxisIndex = 0, yAxisIndex = 0 } = options
+  const { barWidth = 80, barGap = 5 } = config
   const seriesConfig: SeriesConfig = {
     dataType: 'Seismicity',
     config,
@@ -28,8 +29,8 @@ export function createSeismicitySeries(
     data: data.map((item) => [toMilliseconds(item.timestamp), item.count]),
     name: objectStringify(seriesConfig),
     type: 'bar',
-    barGap: '5%',
-    barWidth: '80%',
+    barGap: `${barGap}%`,
+    barWidth: `${barWidth}%`,
     barCategoryGap: '0%',
     xAxisIndex,
     yAxisIndex,
