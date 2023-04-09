@@ -9,5 +9,6 @@ export default [
   { value: 'labuhan', text: 'Labuhan' },
   { value: 'pasarbubar', text: 'Pasarbubar' },
   { value: 'plawangan', text: 'Plawangan' },
+  { value: 'puncak', text: 'Puncak' },
   { value: 'selo', text: 'Selo' },
 ]

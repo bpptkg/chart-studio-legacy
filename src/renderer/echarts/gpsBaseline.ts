@@ -64,6 +64,7 @@ export const GpsStationCodeMap: { [key: string]: string } = {
   labuhan: 'LABH',
   pasarbubar: 'PSBB',
   plawangan: 'PLAW',
+  puncak: 'PNCK',
   selo: 'SELO',
 }
 
