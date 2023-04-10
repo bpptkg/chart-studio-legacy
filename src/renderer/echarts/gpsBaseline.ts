@@ -5,6 +5,7 @@ import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
+import { GpsStationCodeMap } from '@/components/options/gpsStations'
 
 export interface GpsBaselineSeriesOptions {
   xAxisIndex?: number
@@ -51,21 +52,6 @@ export function createGpsBaselineSeriesTooltip(
   )
 
   return tooltip.join('')
-}
-
-export const GpsStationCodeMap: { [key: string]: string } = {
-  babadan: 'BABA',
-  bpptkg: 'BPTK',
-  deles: 'DELS',
-  grawah: 'GRWH',
-  jrakah: 'JRKH',
-  kendit: 'KNDT',
-  klatakan: 'KLAT',
-  labuhan: 'LABH',
-  pasarbubar: 'PSBB',
-  plawangan: 'PLAW',
-  puncak: 'PNCK',
-  selo: 'SELO',
 }
 
 export function createGpsBaselineYAxisOption(

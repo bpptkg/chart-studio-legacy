@@ -1,3 +1,19 @@
+export const GpsStationCodeMap: { [key: string]: string } = {
+  babadan: 'BABA',
+  bpptkg: 'BPTK',
+  deles: 'DELS',
+  grawah: 'GRWH',
+  jrakah: 'JRKH',
+  kendit: 'KNDT',
+  klatakan: 'KLAT',
+  labuhan: 'LABH',
+  pasarbubar: 'PSBB',
+  plawangan: 'PLAW',
+  selo: 'SELO',
+  puncak: 'PNCK',
+  p1: 'P1',
+}
+
 export default [
   { value: 'babadan', text: 'Babadan' },
   { value: 'bpptkg', text: 'BPPTKG' },
@@ -9,6 +25,6 @@ export default [
   { value: 'labuhan', text: 'Labuhan' },
   { value: 'pasarbubar', text: 'Pasarbubar' },
   { value: 'plawangan', text: 'Plawangan' },
-  { value: 'puncak', text: 'Puncak' },
   { value: 'selo', text: 'Selo' },
+  { value: 'p1', text: '2km Depth' },
 ]
