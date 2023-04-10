@@ -14,6 +14,8 @@ export const GpsStationCodeMap: { [key: string]: string } = {
   p1: 'P1',
 }
 
+export const gpsPoints = ['p1']
+
 export default [
   { value: 'babadan', text: 'Babadan' },
   { value: 'bpptkg', text: 'BPPTKG' },
