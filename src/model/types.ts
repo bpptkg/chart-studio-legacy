@@ -106,6 +106,8 @@ export interface WeatherPasarbubarParameterConfig {
     | 'air_temperature'
     | 'wind_direction'
     | 'wind_speed'
+    | 'cumulative_rainfall'
+    | 'rate'
 }
 
 export interface WeatherBabadanParameterConfig {
@@ -115,6 +117,19 @@ export interface WeatherBabadanParameterConfig {
     | 'relative_humidity'
     | 'wind_direction_avg'
     | 'wind_speed_avg'
+    | 'cumulative_rainfall'
+    | 'rate'
+}
+
+export interface WeatherJurangJeroParameterConfig {
+  field:
+    | 'air_pressure'
+    | 'air_temperature'
+    | 'relative_humidity'
+    | 'wind_direction_avg'
+    | 'wind_speed_avg'
+    | 'cumulative_rainfall'
+    | 'rate'
 }
 
 export interface RainfallStationParameterConfig {
@@ -170,6 +185,8 @@ export type WeatherBabadanConfig =
   ParameterConfig<WeatherBabadanParameterConfig>
 export type WeatherPasarbubarConfig =
   ParameterConfig<WeatherPasarbubarParameterConfig>
+export type WeatherJurangJeroConfig =
+  ParameterConfig<WeatherJurangJeroParameterConfig>
 
 export type ParameterConfigType =
   | DoasConfig
@@ -191,6 +208,7 @@ export type ParameterConfigType =
   | VogamosTemperatureConfig
   | WeatherBabadanConfig
   | WeatherPasarbubarConfig
+  | WeatherJurangJeroConfig
 
 export interface ParameterConfigMap {
   Doas: DoasConfig
@@ -212,6 +230,7 @@ export interface ParameterConfigMap {
   VogamosTemperature: VogamosTemperatureConfig
   WeatherBabadan: WeatherBabadanConfig
   WeatherPasarbubar: WeatherPasarbubarConfig
+  WeatherJurangJero: WeatherJurangJeroConfig
 }
 
 export type DataType = keyof ParameterConfigMap
@@ -235,8 +254,9 @@ export const DataTypeNameMap: DataTypeNameMapInternal = {
   Tiltmeter: 'Tiltmeter',
   VogamosEmission: 'Vogamos Emission',
   VogamosTemperature: 'Vogamos Temperature',
-  WeatherBabadan: 'Weather Babadan',
   WeatherPasarbubar: 'Weather Pasarbubar',
+  WeatherJurangJero: 'Weather Jurang Jero',
+  WeatherBabadan: 'Weather Babadan',
 }
 
 export interface SeismicityData {
@@ -404,11 +424,21 @@ export interface WeatherBabadanData {
   readonly ref_voltage: number
   readonly heating_voltage: number
   readonly id: string
+  readonly actual_rainfall: number
+  readonly cumulative_rainfall: number
+  readonly rate: number
 }
 
 export interface WeatherBabadanResponseData {
   readonly events: RainfallRecord
   readonly data: WeatherBabadanData[]
+  readonly max_counter_value: number
+}
+
+export type WeatherJurangJeroData = WeatherBabadanData
+export interface WeatherJurangJeroResponseData {
+  readonly events: RainfallRecord
+  readonly data: WeatherJurangJeroData[]
   readonly max_counter_value: number
 }
 
@@ -488,6 +518,7 @@ export interface DataItemTypeMap {
   RfapType: RfapTypeData
   Magnetic: MagneticData
   Thermal: ThermalData
+  WeatherJurangJero: WeatherBabadanResponseData
 }
 
 export enum DateIntervalType {

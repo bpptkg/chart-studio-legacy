@@ -6,15 +6,15 @@
 </template>
 
 <script setup lang="ts">
-import { WeatherBabadanConfig } from '@/model/types'
+import { WeatherJurangJeroConfig } from '@/model/types'
 import { computed, Ref, ref } from 'vue'
 
 interface Props {
-  config?: WeatherBabadanConfig
+  config?: WeatherJurangJeroConfig
 }
 
 interface Emits {
-  (event: 'update', config: WeatherBabadanConfig): void
+  (event: 'update', config: WeatherJurangJeroConfig): void
 }
 
 const props = defineProps<Props>()
@@ -26,11 +26,11 @@ const fields = ref([
   { value: 'wind_direction_avg', text: 'Wind Direction' },
   { value: 'wind_speed_avg', text: 'Wind Speed' },
   { value: 'air_temperature', text: 'Air Temperature' },
-  { value: 'air_pressure', text: 'Air Pressure' },
   { value: 'relative_humidity', text: 'Air Humidity' },
+  { value: 'air_pressure', text: 'Air Pressure' },
 ]) as Ref<
   {
-    value: WeatherBabadanConfig['field']
+    value: WeatherJurangJeroConfig['field']
     text: string
   }[]
 >

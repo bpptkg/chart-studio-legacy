@@ -4,7 +4,7 @@ import {
   WeatherPasarbubarData,
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
-import { SeriesOption } from 'echarts'
+import { SeriesOption, LineSeriesOption } from 'echarts'
 import { CallbackDataParams, YAXisOption } from 'echarts/types/dist/shared'
 import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
@@ -40,14 +40,30 @@ export function createWeatherPasarbubarSeries(
     ])
   }
 
-  return {
+  let seriesType = 'line'
+  if (config.field === 'wind_direction') {
+    seriesType = 'scatter'
+  }
+
+  let symbol = 'none'
+  if (config.field === 'wind_direction') {
+    symbol = 'circle'
+  }
+
+  const option: LineSeriesOption = {
     data: seriesData,
     name: objectStringify(seriesConfig),
-    type: config.field === 'wind_direction' ? 'scatter' : 'line',
-    symbol: config.field === 'wind_direction' ? 'circle' : 'none',
+    type: seriesType,
+    symbol,
     xAxisIndex,
     yAxisIndex,
+  } as LineSeriesOption
+
+  if (config.field === 'cumulative_rainfall') {
+    option.areaStyle = {}
   }
+
+  return option
 }
 
 export function createWeatherPasarbubarSeriesTooltip(
@@ -96,6 +112,16 @@ export function createWeatherPasarbubarSeriesTooltip(
       name = 'Wind Speed'
       unit = 'km/h'
       break
+
+    case 'cumulative_rainfall':
+      name = 'Rainfall'
+      unit = 'mm'
+      break
+
+    case 'rate':
+      name = 'Rate'
+      unit = 'mm/h'
+      break
   }
 
   tooltip.push(
@@ -131,6 +157,14 @@ export function createWeatherPasarbubarYAxisOption(
     case 'wind_speed':
       return {
         name: 'Wind Speed (km/h)',
+      }
+    case 'cumulative_rainfall':
+      return {
+        name: 'Rainfall (mm)',
+      }
+    case 'rate':
+      return {
+        name: 'Rate (mm/h)',
       }
     default:
       return {}

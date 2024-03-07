@@ -21,6 +21,8 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const fields = ref([
+  { value: 'cumulative_rainfall', text: 'Rainfall' },
+  { value: 'rate', text: 'Rate' },
   { value: 'wind_direction', text: 'Wind Direction' },
   { value: 'wind_speed', text: 'Wind Speed' },
   { value: 'air_temperature', text: 'Air Temperature' },
@@ -35,7 +37,7 @@ const fields = ref([
 
 const field = computed({
   get() {
-    return props.config?.field || 'wind_direction'
+    return props.config?.field || 'cumulative_rainfall'
   },
   set(value) {
     emit(

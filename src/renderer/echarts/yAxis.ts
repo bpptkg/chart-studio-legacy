@@ -26,6 +26,7 @@ export function shouldAxisScale(subplot: SubplotConfig): boolean {
         'Tiltmeter',
         'WeatherBabadan',
         'WeatherPasarbubar',
+        'WeatherJurangJero',
       ].includes(series.dataType) || isLavaDomesRateSeries(series)
     )
   })

@@ -38,9 +38,11 @@ import {
   VogamosTemperatureConfig,
   VogamosTemperatureData,
   WeatherBabadanConfig,
-  WeatherBabadanData,
+  WeatherBabadanResponseData,
   WeatherPasarbubarConfig,
-  WeatherPasarbubarData,
+  WeatherPasarbubarResponseData,
+  WeatherJurangJeroConfig,
+  WeatherJurangJeroResponseData,
 } from '@/model/types'
 import { isDef } from '@/shared/util'
 import { SeriesOption } from 'echarts'
@@ -66,6 +68,7 @@ import { createVogamosEmissionSeries } from './vogamosEmission'
 import { createVogamosTemperatureSeries } from './vogamosTemperature'
 import { createWeatherBabadanSeries } from './weatherBabadan'
 import { createWeatherPasarbubarSeries } from './weatherPasarbubar'
+import { createWeatherJurangJeroSeries } from './weatherJurangJero'
 import { findYAxisIndex } from './util'
 
 export function renderSeries(
@@ -232,11 +235,11 @@ export function renderSeries(
 
             case 'WeatherPasarbubar': {
               const data = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as WeatherPasarbubarData[]
+                key in dataRepository ? dataRepository[key] : { data: [] }
+              ) as WeatherPasarbubarResponseData
 
               const cfg = config as WeatherPasarbubarConfig
-              return createWeatherPasarbubarSeries(data, cfg, {
+              return createWeatherPasarbubarSeries(data.data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
               })
@@ -244,11 +247,23 @@ export function renderSeries(
 
             case 'WeatherBabadan': {
               const data = (
-                key in dataRepository ? dataRepository[key] : []
-              ) as WeatherBabadanData[]
+                key in dataRepository ? dataRepository[key] : { data: [] }
+              ) as WeatherBabadanResponseData
 
               const cfg = config as WeatherBabadanConfig
-              return createWeatherBabadanSeries(data, cfg, {
+              return createWeatherBabadanSeries(data.data, cfg, {
+                xAxisIndex,
+                yAxisIndex,
+              })
+            }
+
+            case 'WeatherJurangJero': {
+              const data = (
+                key in dataRepository ? dataRepository[key] : { data: [] }
+              ) as WeatherJurangJeroResponseData
+
+              const cfg = config as WeatherJurangJeroConfig
+              return createWeatherJurangJeroSeries(data.data, cfg, {
                 xAxisIndex,
                 yAxisIndex,
               })

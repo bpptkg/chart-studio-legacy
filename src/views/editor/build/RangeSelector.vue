@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mr-6">
     <v-subheader>Date Interval</v-subheader>
     <date-range :interval="interval" @update="handleUpdate"></date-range>
   </div>

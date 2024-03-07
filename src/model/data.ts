@@ -337,22 +337,63 @@ export function createRequest<T extends DataType>(
     }
 
     case 'WeatherPasarbubar': {
-      return api.get('/meteorology/', {
+      return api.get('/meteorology/pasarbubar/rainfall/', {
         params: {
           timestamp__gte: start,
           timestamp__lt: end,
           nolimit: true,
+          fields: [
+            'timestamp',
+            'wind_direction',
+            'wind_speed',
+            'air_temperature',
+            'air_humidity',
+            'air_pressure',
+            'cumulative_rainfall',
+            'rate',
+          ].join(','),
         },
         signal: controller.signal,
       })
     }
 
     case 'WeatherBabadan': {
-      return api.get('/meteorology/babadan/', {
+      return api.get('/meteorology/babadan/rainfall/', {
         params: {
           timestamp__gte: start,
           timestamp__lt: end,
           nolimit: true,
+          fields: [
+            'timestamp',
+            'cumulative_rainfall',
+            'rate',
+            'wind_direction_avg',
+            'wind_speed_avg',
+            'air_temperature',
+            'air_pressure',
+            'relative_humidity',
+          ].join(','),
+        },
+        signal: controller.signal,
+      })
+    }
+
+    case 'WeatherJurangJero': {
+      return api.get('/meteorology/jurangjero/rainfall/', {
+        params: {
+          timestamp__gte: start,
+          timestamp__lt: end,
+          nolimit: true,
+          fields: [
+            'timestamp',
+            'cumulative_rainfall',
+            'rate',
+            'wind_direction_avg',
+            'wind_speed_avg',
+            'air_temperature',
+            'air_pressure',
+            'relative_humidity',
+          ].join(','),
         },
         signal: controller.signal,
       })

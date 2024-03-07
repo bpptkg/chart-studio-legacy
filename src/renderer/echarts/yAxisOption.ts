@@ -19,6 +19,7 @@ import {
   VogamosTemperatureConfig,
   WeatherBabadanConfig,
   WeatherPasarbubarConfig,
+  WeatherJurangJeroConfig,
   YAxisOption as CSYAxisOption,
 } from '@/model/types'
 import { YAXisOption } from 'echarts/types/dist/shared'
@@ -41,6 +42,7 @@ import { createVogamosEmissionYAxisOption } from './vogamosEmission'
 import { createVogamosTemperatureYAxisOption } from './vogamosTemperature'
 import { createWeatherBabadanYAxisOption } from './weatherBabadan'
 import { createWeatherPasarbubarYAxisOption } from './weatherPasarbubar'
+import { createWeatherJurangJeroYAxisOption } from './weatherJurangJero'
 
 export function getLeftYAxisSeries(subplot: SubplotConfig): SeriesConfig[] {
   return subplot.series.filter((series) => {
@@ -98,6 +100,10 @@ export function getYAxisOption(series: SeriesConfig[]): YAXisOption[] {
       case 'WeatherPasarbubar':
         return createWeatherPasarbubarYAxisOption(
           config as WeatherPasarbubarConfig
+        )
+      case 'WeatherJurangJero':
+        return createWeatherJurangJeroYAxisOption(
+          config as WeatherJurangJeroConfig
         )
       default:
         return {}

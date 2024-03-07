@@ -18,6 +18,7 @@ import VogamosEmissionOptions from './VogamosEmissionOptions.vue'
 import VogamosTemperatureOptions from './VogamosTemperatureOptions.vue'
 import WeatherBabadanOptions from './WeatherBabadanOptions.vue'
 import WeatherPasarbubarOptions from './WeatherPasarbubarOptions.vue'
+import WeatherJurangJeroOptions from './WeatherJurangJeroOptions.vue'
 
 export type ComponentOptions =
   | typeof DoasOptions
@@ -39,6 +40,7 @@ export type ComponentOptions =
   | typeof VogamosTemperatureOptions
   | typeof WeatherBabadanOptions
   | typeof WeatherPasarbubarOptions
+  | typeof WeatherJurangJeroOptions
 
 export type ComponentOptionsMapInternal = { [k in DataType]: ComponentOptions }
 
@@ -62,4 +64,5 @@ export const ComponentOptionsMap: ComponentOptionsMapInternal = {
   VogamosTemperature: VogamosTemperatureOptions,
   WeatherBabadan: WeatherBabadanOptions,
   WeatherPasarbubar: WeatherPasarbubarOptions,
+  WeatherJurangJero: WeatherJurangJeroOptions,
 }

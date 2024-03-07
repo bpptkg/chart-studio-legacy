@@ -1,7 +1,7 @@
 import {
   SeriesConfig,
-  WeatherBabadanConfig,
-  WeatherBabadanData,
+  WeatherJurangJeroConfig,
+  WeatherJurangJeroData,
 } from '@/model/types'
 import { objectParse, objectStringify } from '@/shared/util'
 import { SeriesOption, LineSeriesOption } from 'echarts'
@@ -10,19 +10,19 @@ import moment from 'moment'
 import { CallbackDataParamsCasted, NO_DATA } from './shared'
 import { circle, toMilliseconds } from './util'
 
-export interface WeatherBabadanSeriesOptions {
+export interface WeatherJurangJeroSeriesOptions {
   xAxisIndex?: number
   yAxisIndex?: number
 }
 
-export function createWeatherBabadanSeries(
-  data: WeatherBabadanData[],
-  config: WeatherBabadanConfig,
-  options: WeatherBabadanSeriesOptions = {}
+export function createWeatherJurangJeroSeries(
+  data: WeatherJurangJeroData[],
+  config: WeatherJurangJeroConfig,
+  options: WeatherJurangJeroSeriesOptions = {}
 ): SeriesOption {
   const { xAxisIndex = 0, yAxisIndex = 0 } = options
   const seriesConfig: SeriesConfig = {
-    dataType: 'WeatherBabadan',
+    dataType: 'WeatherJurangJero',
     config,
   }
 
@@ -36,11 +36,21 @@ export function createWeatherBabadanSeries(
     symbol = 'circle'
   }
 
-  const option = {
-    data: data.map((item) => [
+  let seriesData = []
+  if (config.field === 'wind_speed_avg') {
+    seriesData = data.map((item) => [
+      toMilliseconds(item.timestamp),
+      item[config.field] * 3.6, // m/s to km/h
+    ])
+  } else {
+    seriesData = data.map((item) => [
       toMilliseconds(item.timestamp),
       item[config.field],
-    ]),
+    ])
+  }
+
+  const option = {
+    data: seriesData,
     name: objectStringify(seriesConfig),
     type: seriesType,
     symbol,
@@ -55,7 +65,7 @@ export function createWeatherBabadanSeries(
   return option
 }
 
-export function createWeatherBabadanSeriesTooltip(
+export function createWeatherJurangJeroSeriesTooltip(
   params: CallbackDataParams,
   index = 0
 ): string {
@@ -66,7 +76,9 @@ export function createWeatherBabadanSeriesTooltip(
     tooltip.push(`<div>${moment(value[0]).format('YYYY-MM-DD HH:mm:ss')}</div>`)
   }
 
-  const seriesConfig = objectParse(seriesName) as SeriesConfig<'WeatherBabadan'>
+  const seriesConfig = objectParse(
+    seriesName
+  ) as SeriesConfig<'WeatherJurangJero'>
   const config = seriesConfig.config
 
   let name = ''
@@ -121,8 +133,8 @@ export function createWeatherBabadanSeriesTooltip(
   return tooltip.join('')
 }
 
-export function createWeatherBabadanYAxisOption(
-  config: WeatherBabadanConfig
+export function createWeatherJurangJeroYAxisOption(
+  config: WeatherJurangJeroConfig
 ): YAXisOption {
   switch (config.field) {
     case 'air_pressure':

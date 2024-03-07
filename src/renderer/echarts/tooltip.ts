@@ -25,6 +25,7 @@ import { createVogamosEmissionSeriesTooltip } from './vogamosEmission'
 import { createVogamosTemperatureSeriesTooltip } from './vogamosTemperature'
 import { createWeatherBabadanSeriesTooltip } from './weatherBabadan'
 import { createWeatherPasarbubarSeriesTooltip } from './weatherPasarbubar'
+import { createWeatherJurangJeroSeriesTooltip } from './weatherJurangJero'
 
 export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
   const tooltip: string[] = []
@@ -92,6 +93,9 @@ export function tooltipFormatter(formatterParams: TopLevelFormatterParams) {
           break
         case 'WeatherPasarbubar':
           tooltip.push(createWeatherPasarbubarSeriesTooltip(params, index))
+          break
+        case 'WeatherJurangJero':
+          tooltip.push(createWeatherJurangJeroSeriesTooltip(params, index))
           break
       }
     } catch (error) {

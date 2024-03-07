@@ -81,12 +81,17 @@ export function createSeriesConfig<T extends DataType = DataType>(
 
     case 'WeatherPasarbubar':
       return {
-        field: 'air_humidity',
+        field: 'cumulative_rainfall',
       }
 
     case 'WeatherBabadan':
       return {
-        field: 'relative_humidity',
+        field: 'cumulative_rainfall',
+      }
+
+    case 'WeatherJurangJero':
+      return {
+        field: 'cumulative_rainfall',
       }
 
     case 'RfapDistance':
