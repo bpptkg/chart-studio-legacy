@@ -45,6 +45,9 @@ export const useWorkspaceStore = defineStore('workspace', {
     isCompareView: (state) => {
       return state.viewIndex === '/file/compare'
     },
+    isRequestView: (state) => {
+      return state.viewIndex === '/file/request'
+    },
   },
   actions: {
     resetSubplotIndex(): void {

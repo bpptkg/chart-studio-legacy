@@ -4,11 +4,13 @@
       <v-tabs v-model="viewIndex" fixed-tabs background-color="transparent">
         <v-tab to="/file/build">Build</v-tab>
         <v-tab to="/file/compare">Compare</v-tab>
+        <v-tab to="/file/request">Request</v-tab>
       </v-tabs>
     </div>
 
     <div class="d-flex align-center ml-4">
       <v-tooltip
+        v-if="workspaceStore.isBuildView || workspaceStore.isCompareView"
         bottom
         :open-delay="500"
         :open-on-click="false"
@@ -23,6 +25,7 @@
       </v-tooltip>
 
       <v-tooltip
+        v-if="workspaceStore.isBuildView || workspaceStore.isCompareView"
         bottom
         :open-delay="500"
         :open-on-click="false"
@@ -37,6 +40,7 @@
       </v-tooltip>
 
       <v-tooltip
+        v-if="workspaceStore.isBuildView || workspaceStore.isCompareView"
         bottom
         :open-delay="500"
         :open-on-click="false"
@@ -51,6 +55,7 @@
       </v-tooltip>
 
       <v-tooltip
+        v-if="workspaceStore.isBuildView || workspaceStore.isCompareView"
         bottom
         :open-delay="500"
         :open-on-click="false"
@@ -70,6 +75,7 @@
     <div class="d-flex align-center">
       <div class="mx-2">
         <v-tooltip
+          v-if="workspaceStore.isBuildView || workspaceStore.isCompareView"
           bottom
           :open-delay="500"
           :open-on-click="false"

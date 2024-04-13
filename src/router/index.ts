@@ -5,6 +5,7 @@ import FileManager from '@/views/files/FileManager.vue'
 import ChartEditor from '@/views/editor/ChartEditor.vue'
 import BuildView from '@/views/editor/build/BuildView.vue'
 import CompareView from '@/views/editor/compare/CompareView.vue'
+import RequestView from '@/views/editor/request/RequestView.vue'
 import AboutView from '@/views/AboutView.vue'
 
 Vue.use(VueRouter)
@@ -30,6 +31,10 @@ const routes: Array<RouteConfig> = [
       {
         path: 'compare',
         component: CompareView,
+      },
+      {
+        path: 'request',
+        component: RequestView,
       },
     ],
   },
