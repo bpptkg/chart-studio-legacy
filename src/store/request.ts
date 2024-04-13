@@ -3,7 +3,7 @@ import moment from 'moment'
 import axios, { AxiosInstance } from 'axios'
 import { DATE_FORMAT } from '@/constants/datetime'
 import type { DateInterval } from '@/model/types'
-import type { GraphRequestResponse } from '@/types/chart-request'
+import type { GraphRequestResponse } from '@/types/chartRequest'
 
 export const api: AxiosInstance = axios.create({
   baseURL: `${process.env.VUE_APP_PLOTREQUEST_URL}`,
