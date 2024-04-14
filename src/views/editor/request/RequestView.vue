@@ -112,7 +112,8 @@ const { options, data, isBusy, snackbar, errorMessage } =
   storeToRefs(requestStore)
 
 const isDisabled = computed(
-  () => options.value.filter((opt) => opt.isChecked).length === 0
+  () =>
+    options.value.filter((opt) => opt.isChecked).length === 0 || isBusy.value
 )
 
 function handleRequest() {
