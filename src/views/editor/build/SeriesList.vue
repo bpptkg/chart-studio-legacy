@@ -3,7 +3,7 @@
     <div class="d-flex align-center justify-space-between pr-2">
       <v-subheader>Series</v-subheader>
 
-      <div class="d-flex align-center">
+      <div class="d-flex align-center mr-3">
         <series-selector></series-selector>
 
         <v-tooltip
