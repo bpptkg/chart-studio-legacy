@@ -119,7 +119,7 @@ import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { AxiosError } from 'axios'
 import { useWorkspaceStore } from '@/store/workspace'
 import { MAX_ZOOM_SCALE, MIN_ZOOM_SCALE, ZOOM_DELTA } from '@/constants/zoom'
-import { useCompareViewStore } from '@/store/compareview'
+import { useCompareViewStore } from '@/store/compareView'
 import { PaneDimension } from '@/shared/pane'
 
 const charts: Ref<Array<typeof VChart> | null> = ref(null)

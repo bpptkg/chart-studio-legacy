@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { useTheme } from '@/composable/theme'
 import { PaneDimension } from '@/shared/pane'
-import { useBuildViewStore } from '@/store/buildview'
+import { useBuildViewStore } from '@/store/buildView'
 import { useWorkspaceStore } from '@/store/workspace'
 import { storeToRefs } from 'pinia'
 import { Splitpanes, Pane } from 'splitpanes'

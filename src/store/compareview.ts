@@ -8,7 +8,7 @@ interface State {
   leftPaneSize: number
 }
 
-export const useCompareViewStore = defineStore('compareview', {
+export const useCompareViewStore = defineStore('compareView', {
   state: (): State => {
     return {
       leftPaneSize: 20,

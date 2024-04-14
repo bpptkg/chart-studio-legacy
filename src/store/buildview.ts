@@ -12,7 +12,7 @@ interface State {
   rightPaneSize: number
 }
 
-export const useBuildViewStore = defineStore('buildview', {
+export const useBuildViewStore = defineStore('buildView', {
   state: (): State => {
     return {
       leftPaneSize: 20,
