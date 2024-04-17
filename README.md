@@ -24,6 +24,15 @@ There are several required environment variables that need to be set in
   user account info and grant permissions to access the resources provided by
   Cendana15 web services.
 
+- VUE_APP_PLOTREQUEST_URL
+
+  Plotrequest service URL, e.g `https://plotrequest.cendana15.com` to request
+  predetermined charts of monitoring data.
+
+- VUE_APP_PLOTREQUEST_API_KEY
+
+  Plotrequest service API key credentials.
+
 ## Project Setup
 
 Clone the project from GitHub repository:
