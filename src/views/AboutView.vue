@@ -27,7 +27,7 @@
                   <v-list-item-content>
                     <div>
                       Version:
-                      <span class="text--secondary">{{ version }} (Beta)</span>
+                      <span class="text--secondary">{{ version }}</span>
                     </div>
                     <div class="my-1">
                       Commit:
