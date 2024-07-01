@@ -192,7 +192,7 @@ export function createRequest<T extends DataType>(
       const config = seriesConfig.config as SeismicityConfig
 
       const eventType = config.eventType
-      const params: Record<string, any> = {
+      const params: Record<string, unknown> = {
         eventdate__gte: start,
         eventdate__lt: end,
         nolimit: true,
