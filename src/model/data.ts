@@ -4,20 +4,20 @@ import { api } from './api'
 import {
   DataItemTypeMap,
   DataType,
+  DateInterval,
+  DoasConfig,
   EdmConfig,
+  GpsBaselineConfig,
+  GpsCoordinateConfig,
+  LavaDomesConfig,
+  MagneticConfig,
+  RfapTypeConfig,
+  RsamSeismicConfig,
   SeismicEnergyConfig,
   SeismicityConfig,
   SeriesConfig,
-  DateInterval,
-  RsamSeismicConfig,
-  GpsBaselineConfig,
-  GpsCoordinateConfig,
-  TiltmeterConfig,
-  DoasConfig,
-  LavaDomesConfig,
-  RfapTypeConfig,
-  MagneticConfig,
   ThermalConfig,
+  TiltmeterConfig,
 } from './types'
 
 export const controller = new AbortController()
@@ -191,16 +191,23 @@ export function createRequest<T extends DataType>(
     case 'Seismicity': {
       const config = seriesConfig.config as SeismicityConfig
 
+      const eventType = config.eventType
+      const params: Record<string, any> = {
+        eventdate__gte: start,
+        eventdate__lt: end,
+        nolimit: true,
+        reindex: true,
+        start: start,
+        end: end,
+      }
+      if (eventType.includes(',')) {
+        params['eventtype__in'] = eventType
+      } else {
+        params['eventtype'] = eventType
+      }
+
       return api.get('/seismicity/', {
-        params: {
-          eventdate__gte: start,
-          eventdate__lt: end,
-          eventtype: config.eventType,
-          nolimit: true,
-          reindex: true,
-          start: start,
-          end: end,
-        },
+        params,
         signal: controller.signal,
       })
     }

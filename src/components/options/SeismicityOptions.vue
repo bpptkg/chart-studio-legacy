@@ -67,6 +67,9 @@ const eventTypes = ref([
   { value: 'VTB', text: 'VTB' },
   { value: 'AWANPANAS', text: 'AWANPANAS' },
   { value: 'LAHAR', text: 'LAHAR' },
+  { value: 'VTA,VTB,MP', text: 'VTA+VTB+MP' },
+  { value: 'VTB,MP', text: 'VTB+MP' },
+  { value: 'RF,AWANPANAS', text: 'RF+AP' },
 ])
 
 const eventType = computed({
